@@ -1,0 +1,124 @@
+---
+title: 'Quick Ask'
+description: 'Get quick ask response for a ticker'
+openapi: 'GET /v2/chat/quick-ask/{ticker}'
+---
+
+## Overview
+
+Returns quick ask response content for a given ticker including title and answer content. Both ticker (path parameter) and template_id (query parameter) are required.
+
+## API Details
+
+**URL:** `GET https://api.asksurf.ai/huginn/v2/chat/quick-ask/{ticker}`
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| ticker | string (path) | Yes | Ticker symbol |
+| template_id | string (query) | Yes | Template ID |
+
+### Response
+
+Returns a `GenericResponse[AskResponse]` object with the following structure:
+
+```json
+{
+  "success": true,
+  "message": "success",
+  "error_code": "",
+  "data": {
+    "title": "string",
+    "content": "string"
+  }
+}
+```
+
+### Response Status Codes
+
+- **200**: Returns quick ask response on success
+- **400**: When ticker or template_id is missing
+- **500**: Internal server error
+
+<RequestExample>
+
+```bash cURL
+curl -X GET "https://api.asksurf.ai/huginn/v2/chat/quick-ask/BTC?template_id=template-123" \
+  -H "Content-Type: application/json"
+```
+
+```javascript JavaScript
+const ticker = "BTC";
+const templateId = "template-123";
+
+const response = await fetch(
+  `https://api.asksurf.ai/huginn/v2/chat/quick-ask/${ticker}?template_id=${templateId}`,
+  {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }
+);
+
+const data = await response.json();
+console.log(data);
+```
+
+```python Python
+import requests
+
+ticker = "BTC"
+template_id = "template-123"
+
+url = f"https://api.asksurf.ai/huginn/v2/chat/quick-ask/{ticker}"
+params = {"template_id": template_id}
+
+response = requests.get(url, params=params)
+data = response.json()
+print(data)
+```
+
+</RequestExample>
+
+<ResponseExample>
+
+```json 200 Success
+{
+  "success": true,
+  "message": "success",
+  "error_code": "",
+  "data": {
+    "title": "What is Bitcoin's current market position?",
+    "content": "Bitcoin (BTC) maintains its position as the leading cryptocurrency by market capitalization. Current metrics show strong network activity with increasing hash rate and growing wallet addresses..."
+  }
+}
+```
+
+```json 400 Bad Request
+{
+  "success": false,
+  "message": "ticker or template_id is required",
+  "error_code": "INVALID_PARAMS",
+  "data": null
+}
+```
+
+```json 500 Internal Server Error
+{
+  "success": false,
+  "message": "internal server error",
+  "error_code": "INTERNAL_ERROR",
+  "data": null
+}
+```
+
+</ResponseExample>
+
+## Notes
+
+- Both ticker and template_id parameters are required
+- The quick ask response provides concise, focused answers to common queries
+- Response content is tailored based on the specific template configuration
+- Ideal for getting rapid insights without requiring detailed research

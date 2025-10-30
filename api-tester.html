@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            padding: 16px;
+            font-size: 14px;
+        }
+        
+        .api-tester {
+            max-width: 100%;
+        }
+        
+        .try-it-button {
+            background: linear-gradient(to right, #4c9aff, #6366f1);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(76, 154, 255, 0.3);
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        
+        .try-it-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 154, 255, 0.4);
+        }
+        
+        .try-it-button:active {
+            transform: translateY(0);
+        }
+        
+        .test-section {
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        .test-section.active {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-group {
+            margin-bottom: 16px;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .curl-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 13px;
+            background: #f9fafb;
+            color: #1f2937;
+            resize: vertical;
+            min-height: 80px;
+            transition: all 0.2s;
+        }
+        
+        .curl-input:focus {
+            outline: none;
+            border-color: #4c9aff;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(76, 154, 255, 0.1);
+        }
+        
+        .curl-input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .execute-btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #000000;
+            color: white;
+        }
+        
+        .execute-btn:hover {
+            background: #1f2937;
+        }
+        
+        .execute-btn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+        }
+        
+        .clear-btn {
+            padding: 10px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+            color: #6b7280;
+        }
+        
+        .clear-btn:hover {
+            border-color: #d1d5db;
+            background: #f9fafb;
+        }
+        
+        .response-section {
+            display: none;
+            margin-top: 16px;
+        }
+        
+        .response-section.show {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px 8px 0 0;
+            border-bottom: none;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .time-badge {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .response-body {
+            background: #1f2937;
+            border: 1px solid #e5e7eb;
+            border-radius: 0 0 8px 8px;
+            padding: 16px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .response-body pre {
+            margin: 0;
+            color: #f9fafb;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        
+        .examples {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        
+        .examples-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+        
+        .example-item {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .example-item:hover {
+            border-color: #4c9aff;
+            box-shadow: 0 2px 4px rgba(76, 154, 255, 0.1);
+        }
+        
+        .example-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .example-cmd {
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 12px;
+            color: #1f2937;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #4c9aff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Scrollbar styling */
+        .response-body::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        .response-body::-webkit-scrollbar-track {
+            background: #374151;
+        }
+        
+        .response-body::-webkit-scrollbar-thumb {
+            background: #6b7280;
+            border-radius: 4px;
+        }
+        
+        .response-body::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="api-tester">
+        <button class="try-it-button" onclick="toggleTester()">
+            ▶ Try it
+        </button>
+        
+        <div class="test-section" id="testSection">
+            <div class="input-group">
+                <div class="section-title">Request</div>
+                <div class="input-wrapper">
+                    <textarea 
+                        class="curl-input" 
+                        id="curlInput" 
+                        placeholder='curl -X GET "https://api.asksurf.ai/huginn/v1/search?query=bitcoin&limit=5"'
+                    ></textarea>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="execute-btn" onclick="executeCurl()" id="executeBtn">
+                    Send Request
+                </button>
+                <button class="clear-btn" onclick="clearAll()">
+                    Clear
+                </button>
+            </div>
+            
+            <div class="response-section" id="responseSection">
+                <div class="section-title">Response</div>
+                <div class="response-header">
+                    <span class="status-badge" id="statusBadge"></span>
+                    <span class="time-badge" id="timeBadge"></span>
+                </div>
+                <div class="response-body">
+                    <pre id="responseBody"></pre>
+                </div>
+            </div>
+            
+            <div class="examples">
+                <div class="examples-title">📋 Quick Examples</div>
+                <div class="example-item" onclick="useExample(this)">
+                    <div class="example-label">Search API</div>
+                    <div class="example-cmd">curl -X GET "https://api.asksurf.ai/huginn/v1/search?query=bitcoin&limit=5"</div>
+                </div>
+                <div class="example-item" onclick="useExample(this)">
+                    <div class="example-label">Trending DEX</div>
+                    <div class="example-cmd">curl -X GET "https://api.asksurf.ai/huginn/v2/trendings/dex?offset=0&limit=10"</div>
+                </div>
+                <div class="example-item" onclick="useExample(this)">
+                    <div class="example-label">Trending Mind Shares</div>
+                    <div class="example-cmd">curl -X GET "https://api.asksurf.ai/huginn/v2/trendings/mind-shares?offset=0&limit=10"</div>
+                </div>
+                <div class="example-item" onclick="useExample(this)">
+                    <div class="example-label">Trending Smart Followings</div>
+                    <div class="example-cmd">curl -X GET "https://api.asksurf.ai/huginn/v2/trendings/smart-followings?offset=0&limit=10"</div>
+                </div>
+                <div class="example-item" onclick="useExample(this)">
+                    <div class="example-label">General Trendings</div>
+                    <div class="example-cmd">curl -X GET "https://api.asksurf.ai/huginn/v2/trendings/generals?offset=0&limit=10"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isOpen = false;
+        
+        function toggleTester() {
+            const testSection = document.getElementById('testSection');
+            const button = document.querySelector('.try-it-button');
+            
+            isOpen = !isOpen;
+            
+            if (isOpen) {
+                testSection.classList.add('active');
+                button.textContent = '▼ Hide';
+                button.style.background = 'linear-gradient(to right, #6366f1, #8b5cf6)';
+            } else {
+                testSection.classList.remove('active');
+                button.textContent = '▶ Try it';
+                button.style.background = 'linear-gradient(to right, #4c9aff, #6366f1)';
+            }
+        }
+        
+        function parseCurlCommand(curlCommand) {
+            const urlMatch = curlCommand.match(/["'](https?:\/\/[^"']+)["']/);
+            if (!urlMatch) {
+                throw new Error('Cannot parse URL from curl command');
+            }
+            
+            const url = urlMatch[1];
+            const methodMatch = curlCommand.match(/-X\s+(\w+)/i);
+            const method = methodMatch ? methodMatch[1].toUpperCase() : 'GET';
+            
+            const headers = {};
+            const headerMatches = curlCommand.matchAll(/-H\s+["']([^:]+):\s*([^"']+)["']/gi);
+            for (const match of headerMatches) {
+                headers[match[1].trim()] = match[2].trim();
+            }
+            
+            return { url, method, headers };
+        }
+        
+        async function executeCurl() {
+            const curlInput = document.getElementById('curlInput').value.trim();
+            const executeBtn = document.getElementById('executeBtn');
+            const responseSection = document.getElementById('responseSection');
+            const statusBadge = document.getElementById('statusBadge');
+            const timeBadge = document.getElementById('timeBadge');
+            const responseBody = document.getElementById('responseBody');
+            
+            if (!curlInput) {
+                alert('Please enter a curl command');
+                return;
+            }
+            
+            executeBtn.disabled = true;
+            executeBtn.innerHTML = '<span class="loading-spinner"></span>Sending...';
+            
+            try {
+                const { url, method, headers } = parseCurlCommand(curlInput);
+                
+                const startTime = Date.now();
+                const response = await fetch(url, {
+                    method: method,
+                    headers: headers
+                });
+                
+                const responseTime = Date.now() - startTime;
+                const data = await response.json();
+                
+                // Show response section
+                responseSection.classList.add('show');
+                
+                // Update status badge
+                if (response.ok) {
+                    statusBadge.className = 'status-badge status-success';
+                    statusBadge.textContent = `✓ ${response.status} ${response.statusText}`;
+                } else {
+                    statusBadge.className = 'status-badge status-error';
+                    statusBadge.textContent = `✗ ${response.status} ${response.statusText}`;
+                }
+                
+                // Update time badge
+                timeBadge.textContent = `${responseTime}ms`;
+                
+                // Format and display response
+                const formattedResponse = JSON.stringify(data, null, 2);
+                responseBody.textContent = formattedResponse;
+                
+            } catch (error) {
+                responseSection.classList.add('show');
+                statusBadge.className = 'status-badge status-error';
+                statusBadge.textContent = '✗ Request Failed';
+                timeBadge.textContent = '';
+                responseBody.textContent = `Error: ${error.message}`;
+            } finally {
+                executeBtn.disabled = false;
+                executeBtn.textContent = 'Send Request';
+            }
+        }
+        
+        function clearAll() {
+            document.getElementById('curlInput').value = '';
+            document.getElementById('responseSection').classList.remove('show');
+        }
+        
+        function useExample(element) {
+            const cmd = element.querySelector('.example-cmd').textContent;
+            document.getElementById('curlInput').value = cmd;
+            document.getElementById('curlInput').focus();
+        }
+        
+        // Support Enter key (Ctrl+Enter or Cmd+Enter)
+        document.getElementById('curlInput').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                executeCurl();
+            }
+        });
+    </script>
+</body>
+</html>
