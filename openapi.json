@@ -101,7 +101,7 @@
                 "x-public-api": true
             }
         },
-        "/enterprise-chat/score/{ticker}": {
+        "/enterprise-chat/scores/{ticker}": {
             "get": {
                 "description": "Returns various scores for a given ticker including average score, smart follower count score, mind share score, and cyber score\nBoth ticker (path parameter) and template_id (query parameter) are required",
                 "tags": [
