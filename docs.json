@@ -23,8 +23,22 @@
                     "GET /enterprise-chat/ask/{ticker}",
                     "GET /enterprise-chat/research/{ticker}",
                     "GET /enterprise-chat/score/{ticker}"
-                ]
+                ],
+                "api": {
+                    "playground": {
+                        "display": "interactive"
+                    },
+                    "examples": {
+                        "languages": ["curl", "python", "javascript"],
+                        "defaults": "required",
+                        "prefill": true
+                    }
+                }
             }
         ]
-    }
+    },
+    "servers": [{
+            "url": "https://api.asksurf.ai/huginn/v2"
+        }
+    ]
 }

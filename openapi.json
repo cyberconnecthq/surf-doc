@@ -174,7 +174,7 @@
     },
     "servers": [
         {
-            "url": "/huginn"
+            "url": "https://api.asksurf.ai/huginn/v2"
         }
     ],
     "components": {
