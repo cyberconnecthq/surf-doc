@@ -31,15 +31,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "description": "Template ID",
-                        "name": "template_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -83,15 +74,6 @@
                         "schema": {
                             "type": "string"
                         }
-                    },
-                    {
-                        "description": "Template ID",
-                        "name": "template_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -131,15 +113,6 @@
                         "description": "Ticker symbol",
                         "name": "ticker",
                         "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Template ID",
-                        "name": "template_id",
-                        "in": "query",
                         "required": true,
                         "schema": {
                             "type": "string"

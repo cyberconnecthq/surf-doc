@@ -30,15 +30,10 @@
                     },
                     "examples": {
                         "languages": ["curl", "python", "javascript"],
-                        "defaults": "required",
-                        "prefill": true
+                        "defaults": "required"
                     }
                 }
             }
         ]
-    },
-    "servers": [{
-            "url": "https://api.asksurf.ai/huginn/v2"
-        }
-    ]
+    }
 }
