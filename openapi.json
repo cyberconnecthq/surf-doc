@@ -1,0 +1,300 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "Official API documentation for Surf - Your gateway to Web3 exploration and discovery.",
+        "title": "Surf API Documentation",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "Surf Team",
+            "email": "backend@cybertinolab.com"
+        },
+        "license": {
+            "name": "GPL-3.0-or-later",
+            "url": "https://spdx.org/licenses/GPL-3.0-or-later.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/enterprise-chat/ask/{ticker}": {
+            "get": {
+                "description": "Returns quick ask response content for a given ticker including title and answer content\nBoth ticker (path parameter) and template_id (query parameter) are required",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Quick-Select",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Template ID",
+                        "name": "template_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns quick ask response on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_AskResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        },
+        "/enterprise-chat/research/{ticker}": {
+            "get": {
+                "description": "Returns research content for a given ticker including title and detailed content\nBoth ticker (path parameter) and template_id (query parameter) are required",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Token Research",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Template ID",
+                        "name": "template_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns research information on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_ResearchResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        },
+        "/enterprise-chat/score/{ticker}": {
+            "get": {
+                "description": "Returns various scores for a given ticker including average score, smart follower count score, mind share score, and cyber score\nBoth ticker (path parameter) and template_id (query parameter) are required",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Token Scoring",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Template ID",
+                        "name": "template_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns chat score information on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_GetChatScoreResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "/huginn"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "model.AskResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.BaseResponse": {
+                "type": "object",
+                "properties": {
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_AskResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.AskResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_GetChatScoreResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.GetChatScoreResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_ResearchResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.ResearchResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GetChatScoreResponse": {
+                "type": "object",
+                "properties": {
+                    "cyber_score_score": {
+                        "type": "number"
+                    },
+                    "mind_share_score": {
+                        "type": "number"
+                    },
+                    "score": {
+                        "type": "number"
+                    },
+                    "smart_followers_count_score": {
+                        "type": "number"
+                    }
+                }
+            },
+            "model.ResearchResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
