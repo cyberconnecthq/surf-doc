@@ -537,10 +537,10 @@
                     "mind_share_score": {
                         "type": "number"
                     },
-                    "score": {
+                    "smart_followers_count_score": {
                         "type": "number"
                     },
-                    "smart_followers_count_score": {
+                    "weighted_score": {
                         "type": "number"
                     }
                 }
