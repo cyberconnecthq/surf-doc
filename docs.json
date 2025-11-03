@@ -22,7 +22,11 @@
                 "pages": [
                     "GET /enterprise-chat/ask/{ticker}",
                     "GET /enterprise-chat/research/{ticker}",
-                    "GET /enterprise-chat/scores/{ticker}"
+                    "GET /enterprise-chat/scores/{ticker}",
+                    "GET /enterprise-chat/trends",
+                    "GET /enterprise-chat/news",
+                    "GET /enterprise-chat/sentiment",
+                    "GET /enterprise-chat/events"
                 ],
                 "api": {
                     "playground": {

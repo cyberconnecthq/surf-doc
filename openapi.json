@@ -17,7 +17,7 @@
     "paths": {
         "/enterprise-chat/ask/{ticker}": {
             "get": {
-                "description": "Returns quick ask response content for a given ticker including title and answer content\nBoth ticker (path parameter) and template_id (query parameter) are required",
+                "description": "Returns a quick recent price movement analysis of a selected token.\nToken ticker (path parameter) is required.",
                 "tags": [
                     "Enterprise Chat"
                 ],
@@ -58,9 +58,133 @@
                 "x-public-api": true
             }
         },
+        "/enterprise-chat/events": {
+            "get": {
+                "description": "Provides a forward-looking summary of significant scheduled economic or financial events expected to occur during the evening (based on Korean Standard Time) of a selected date.",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Major Events Tonight",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns major events on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When date format is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        },
+        "/enterprise-chat/news": {
+            "get": {
+                "description": "Returns a curated overview of the most important and widely discussed news relevant to the crypto market for a specified date.",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Must-Know News Today",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns news on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When date format is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        },
         "/enterprise-chat/research/{ticker}": {
             "get": {
-                "description": "Returns research content for a given ticker including title and detailed content\nBoth ticker (path parameter) and template_id (query parameter) are required",
+                "description": "Returns a detailed analysis on the possible factors that can influence the price of a given token in the future.\nToken ticker (path parameter) is required.",
                 "tags": [
                     "Enterprise Chat"
                 ],
@@ -103,7 +227,7 @@
         },
         "/enterprise-chat/scores/{ticker}": {
             "get": {
-                "description": "Returns various scores for a given ticker including average score, smart follower count score, mind share score, and cyber score\nBoth ticker (path parameter) and template_id (query parameter) are required",
+                "description": "Returns various sentiment scores for a given ticker including weighted score, smart follower count score, mind share score, and cyber score.\nToken ticker (path parameter) is required",
                 "tags": [
                     "Enterprise Chat"
                 ],
@@ -132,6 +256,130 @@
                     },
                     "400": {
                         "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        },
+        "/enterprise-chat/sentiment": {
+            "get": {
+                "description": "analyse the market sentiment of a selected date for tokens listed on Bithumb, including:\n1.The Fear & Greed Index for the crypto market.\n2.The number of tokens that have risen or fallen by more than 3%.\n3.The number of tokens whose change is within ±3% (i.e., neutral).",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Today's Market Sentiment",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns todays market sentiment on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_SentimentResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When date format is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When market sentiment not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "x-public-api": true
+            }
+        },
+        "/enterprise-chat/trends": {
+            "get": {
+                "description": "Delivers a high-level summary of the key crypto market trends and developments observed on a given date.",
+                "tags": [
+                    "Enterprise Chat"
+                ],
+                "summary": "Major Trends",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns major trends on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When date format is invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -220,11 +468,51 @@
                     }
                 }
             },
+            "model.GenericResponse-model_QuestionResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.QuestionResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
             "model.GenericResponse-model_ResearchResponse": {
                 "type": "object",
                 "properties": {
                     "data": {
                         "$ref": "#/components/schemas/model.ResearchResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_SentimentResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.SentimentResponse"
                     },
                     "error_code": {
                         "type": "string",
@@ -257,6 +545,14 @@
                     }
                 }
             },
+            "model.QuestionResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    }
+                }
+            },
             "model.ResearchResponse": {
                 "type": "object",
                 "properties": {
@@ -265,6 +561,26 @@
                     },
                     "title": {
                         "type": "string"
+                    }
+                }
+            },
+            "model.SentimentResponse": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string"
+                    },
+                    "fall_token_count": {
+                        "type": "integer"
+                    },
+                    "fear_greed_index": {
+                        "type": "number"
+                    },
+                    "neutral_token_count": {
+                        "type": "number"
+                    },
+                    "rise_token_count": {
+                        "type": "integer"
                     }
                 }
             }
