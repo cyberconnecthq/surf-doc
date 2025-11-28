@@ -20,21 +20,39 @@
                 "group": "API reference",
                 "openapi": "openapi.json",
                 "pages": [
-                    "GET /enterprise-chat/ask/{ticker}",
-                    "GET /enterprise-chat/research/{ticker}",
-                    "GET /enterprise-chat/scores/{ticker}",
-                    "GET /enterprise-chat/trends",
-                    "GET /enterprise-chat/news",
-                    "GET /enterprise-chat/sentiment",
-                    "GET /enterprise-chat/events"
+                    {
+                        "group": "token",
+                        "pages": [
+                            "GET /v1/token/ask/{ticker}",
+                            "GET /v1/token/research/{ticker}",
+                            "GET /v1/token/score/{ticker}"
+                        ]
+                    },
+                    {
+                        "group": "market",
+                        "pages": [
+                            "GET /v1/market/trends",
+                            "GET /v1/market/news",
+                            "GET /v1/market/sentiment",
+                            "GET /v1/market/events"
+                        ]
+                    },
+                    {
+                        "group": "chat",
+                        "pages": [
+                            "POST /v1/chat/completions"
+                        ]
+                    }
                 ],
                 "api": {
                     "playground": {
-                        "display": "interactive"
+                        "display": "interactive",
+                        "validation": {
+                            "enabled": true
+                        }
                     },
                     "examples": {
-                        "languages": ["curl", "python", "javascript"],
-                        "defaults": "required"
+                        "languages": ["curl", "python", "javascript"]
                     }
                 }
             }
