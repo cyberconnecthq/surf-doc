@@ -15,54 +15,161 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/enterprise-chat/ask/{ticker}": {
+        "/healthz": {
             "get": {
-                "description": "Returns a quick recent price movement analysis of a selected token.\nToken ticker (path parameter) is required.",
+                "description": "Service liveness check",
                 "tags": [
-                    "Enterprise Chat"
+                    "health"
                 ],
-                "summary": "Quick-Select",
-                "parameters": [
-                    {
-                        "description": "Ticker symbol",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
+                "summary": "Health check",
                 "responses": {
                     "200": {
-                        "description": "Returns quick ask response on success",
+                        "description": "OK",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_AskResponse"
+                                    "$ref": "#/components/schemas/start.HealthzResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/chat/completions": {
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "OpenAI-compatible Chat Completions. Use Bearer authorization. When stream=true, responds as Server-Sent Events (SSE); otherwise returns JSON.",
+                "tags": [
+                    "completions"
+                ],
+                "summary": "Chat Completions",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/model.CompletionsRequest"
+                            }
+                        }
+                    },
+                    "description": "Request body (OpenAI-compatible)",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Returns JSON when stream=false and SSE chunks when stream=true.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.CompletionsProxyResponse"
+                                },
+                                "examples": {
+                                    "json": {
+                                        "summary": "Non-streaming JSON response",
+                                        "value": {
+                                            "id": "chatcmpl-abc123",
+                                            "object": "chat.completion",
+                                            "created": 1699890366,
+                                            "model": "surf-ask",
+                                            "choices": [
+                                                {
+                                                    "index": 0,
+                                                    "finish_reason": "stop",
+                                                    "message": {
+                                                        "role": "assistant",
+                                                        "content": "BTC is trading flat in the last 24h with rising open interest."
+                                                    }
+                                                }
+                                            ],
+                                            "usage": {
+                                                "prompt_tokens": 23,
+                                                "completion_tokens": 12,
+                                                "total_tokens": 35
+                                            }
+                                        }
+                                    },
+                                    "sse": {
+                                        "summary": "Streaming SSE chunks (text/event-stream)",
+                                        "description": "Rendered in the doc tab to illustrate stream=true output.",
+                                        "value": "data: {\\\"id\\\":\\\"chatcmpl-abc123\\\",\\\"object\\\":\\\"chat.completion.chunk\\\",\\\"created\\\":1699890366,\\\"model\\\":\\\"surf-ask\\\",\\\"choices\\\":[{\\\"index\\\":0,\\\"delta\\\":{\\\"role\\\":\\\"assistant\\\",\\\"content\\\":\\\"Hello\\\"},\\\"finish_reason\\\":null}]}\\n\\ndata: {\\\"id\\\":\\\"chatcmpl-abc123\\\",\\\"object\\\":\\\"chat.completion.chunk\\\",\\\"created\\\":1699890366,\\\"model\\\":\\\"surf-ask\\\",\\\"choices\\\":[{\\\"index\\\":0,\\\"delta\\\":{\\\"content\\\":\\\" world\\\"},\\\"finish_reason\\\":null}]}\\n\\ndata: [DONE]\\n\\n"
+                                    }
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "examples": {
+                                    "sse": {
+                                        "summary": "Streaming SSE response",
+                                        "value": "data: {\\\"id\\\":\\\"chatcmpl-abc123\\\",\\\"object\\\":\\\"chat.completion.chunk\\\",\\\"created\\\":1699890366,\\\"model\\\":\\\"surf-ask\\\",\\\"choices\\\":[{\\\"index\\\":0,\\\"delta\\\":{\\\"role\\\":\\\"assistant\\\",\\\"content\\\":\\\"Hello\\\"},\\\"finish_reason\\\":null}]}\\n\\ndata: {\\\"id\\\":\\\"chatcmpl-abc123\\\",\\\"object\\\":\\\"chat.completion.chunk\\\",\\\"created\\\":1699890366,\\\"model\\\":\\\"surf-ask\\\",\\\"choices\\\":[{\\\"index\\\":0,\\\"delta\\\":{\\\"content\\\":\\\" world\\\"},\\\"finish_reason\\\":null}]}\\n\\ndata: [DONE]\\n\\n"
+                                    }
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "When ticker or template_id is missing",
+                        "description": "Bad Request",
                         "content": {
                             "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            },
+                            "text/event-stream": {
                                 "schema": {
                                     "$ref": "#/components/schemas/model.BaseResponse"
                                 }
                             }
                         }
                     }
-                },
-                "x-public-api": true
+                }
             }
         },
-        "/enterprise-chat/events": {
+        "/v1/market/events": {
             "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
                 "description": "Provides a forward-looking summary of significant scheduled economic or financial events expected to occur during the evening (based on Korean Standard Time) of a selected date.",
                 "tags": [
-                    "Enterprise Chat"
+                    "Market"
                 ],
                 "summary": "Major Events Tonight",
                 "parameters": [
@@ -116,15 +223,19 @@
                             }
                         }
                     }
-                },
-                "x-public-api": true
+                }
             }
         },
-        "/enterprise-chat/news": {
+        "/v1/market/news": {
             "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
                 "description": "Returns a curated overview of the most important and widely discussed news relevant to the crypto market for a specified date.",
                 "tags": [
-                    "Enterprise Chat"
+                    "Market"
                 ],
                 "summary": "Must-Know News Today",
                 "parameters": [
@@ -178,101 +289,19 @@
                             }
                         }
                     }
-                },
-                "x-public-api": true
+                }
             }
         },
-        "/enterprise-chat/research/{ticker}": {
+        "/v1/market/sentiment": {
             "get": {
-                "description": "Returns a detailed analysis on the possible factors that can influence the price of a given token in the future.\nToken ticker (path parameter) is required.",
-                "tags": [
-                    "Enterprise Chat"
-                ],
-                "summary": "Token Research",
-                "parameters": [
+                "security": [
                     {
-                        "description": "Ticker symbol",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
+                        "AccessToken": []
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Returns research information on success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_ResearchResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "When ticker or template_id is missing",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.BaseResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "x-public-api": true
-            }
-        },
-        "/enterprise-chat/scores/{ticker}": {
-            "get": {
-                "description": "Returns various sentiment scores for a given ticker including weighted score, smart follower count score, mind share score, and cyber score.\nToken ticker (path parameter) is required",
-                "tags": [
-                    "Enterprise Chat"
-                ],
-                "summary": "Token Scoring",
-                "parameters": [
-                    {
-                        "description": "Ticker symbol",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns chat score information on success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_GetChatScoreResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "When ticker or template_id is missing",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.BaseResponse"
-                                }
-                            }
-                        }
-                    }
-                },
-                "x-public-api": true
-            }
-        },
-        "/enterprise-chat/sentiment": {
-            "get": {
                 "description": "analyse the market sentiment of a selected date for tokens listed on Bithumb, including:\n1.The Fear & Greed Index for the crypto market.\n2.The number of tokens that have risen or fallen by more than 3%.\n3.The number of tokens whose change is within ±3% (i.e., neutral).",
                 "tags": [
-                    "Enterprise Chat"
+                    "Market"
                 ],
                 "summary": "Today's Market Sentiment",
                 "parameters": [
@@ -326,15 +355,19 @@
                             }
                         }
                     }
-                },
-                "x-public-api": true
+                }
             }
         },
-        "/enterprise-chat/trends": {
+        "/v1/market/trends": {
             "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
                 "description": "Delivers a high-level summary of the key crypto market trends and developments observed on a given date.",
                 "tags": [
-                    "Enterprise Chat"
+                    "Market"
                 ],
                 "summary": "Major Trends",
                 "parameters": [
@@ -388,17 +421,164 @@
                             }
                         }
                     }
-                },
-                "x-public-api": true
+                }
+            }
+        },
+        "/v1/token/ask/{ticker}": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Returns a quick recent price movement analysis of a selected token.\nToken ticker (path parameter) is required.",
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Quick-Select",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns quick ask response on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_AskResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/token/research/{ticker}": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Returns a detailed analysis on the possible factors that can influence the price of a given token in the future.\nToken ticker (path parameter) is required.",
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Token Research",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns research information on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_ResearchResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/token/score/{ticker}": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Returns various sentiment scores for a given ticker including weighted score, smart follower count score, mind share score, and cyber score.\nToken ticker (path parameter) is required",
+                "tags": [
+                    "Token"
+                ],
+                "summary": "Token Scoring",
+                "parameters": [
+                    {
+                        "description": "Ticker symbol",
+                        "name": "ticker",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns chat score information on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_GetChatScoreResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When ticker or template_id is missing",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
     "servers": [
         {
-            "url": "https://api.asksurf.ai/huginn/v2"
+            "url": "https://api.asksurf.ai/surf-ai"
         }
     ],
     "components": {
+        "securitySchemes": {
+            "AccessToken": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        },
         "schemas": {
             "model.AskResponse": {
                 "type": "object",
@@ -425,6 +605,118 @@
                     "success": {
                         "type": "boolean",
                         "example": true
+                    }
+                }
+            },
+            "model.CompletionsChoice": {
+                "type": "object",
+                "properties": {
+                    "finish_reason": {
+                        "description": "Indicates why the model stopped generating. Common values:\n- stop — normal completion\n- length — hit max token limit\n- tool_calls — model invoked a tool\n- content_filter — blocked by safety filters\n- error — unexpected interruption",
+                        "type": "string",
+                        "example": "stop"
+                    },
+                    "index": {
+                        "description": "The index of the choice",
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "message": {
+                        "$ref": "#/components/schemas/model.CompletionsMessage"
+                    }
+                }
+            },
+            "model.CompletionsMessage": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "type": "string",
+                        "example": "Here is a summary of today's Bitcoin market..."
+                    },
+                    "reasoning": {
+                        "description": "A field to showcase model's thinking process.",
+                        "type": "string",
+                        "example": "Internal chain-of-thought or brief rationale"
+                    },
+                    "role": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.Role"
+                            }
+                        ],
+                        "example": "assistant"
+                    }
+                }
+            },
+            "model.CompletionsProxyResponse": {
+                "type": "object",
+                "properties": {
+                    "choices": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.CompletionsChoice"
+                        }
+                    },
+                    "created": {
+                        "description": "Timestamp indicating when the message was generated.",
+                        "type": "integer",
+                        "example": 1764312947
+                    },
+                    "id": {
+                        "description": "A unique identifier for the generated message. Used for internal tracking.",
+                        "type": "string",
+                        "example": "chatcmpl-1764312947577"
+                    },
+                    "model": {
+                        "type": "string",
+                        "example": "surf-ask"
+                    },
+                    "object": {
+                        "type": "string",
+                        "example": "chat.completion"
+                    },
+                    "usage": {
+                        "$ref": "#/components/schemas/model.CompletionsUsage"
+                    }
+                }
+            },
+            "model.CompletionsRequest": {
+                "type": "object",
+                "properties": {
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Message"
+                        }
+                    },
+                    "model": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.LLMModel"
+                            }
+                        ],
+                        "example": "surf-ask"
+                    },
+                    "stream": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                }
+            },
+            "model.CompletionsUsage": {
+                "type": "object",
+                "properties": {
+                    "completion_tokens": {
+                        "type": "integer",
+                        "example": 113
+                    },
+                    "prompt_tokens": {
+                        "type": "integer",
+                        "example": 13026
+                    },
+                    "total_tokens": {
+                        "type": "integer",
+                        "example": 13760
                     }
                 }
             },
@@ -545,6 +837,36 @@
                     }
                 }
             },
+            "model.LLMModel": {
+                "type": "string",
+                "enum": [
+                    "surf-ask",
+                    "surf-research"
+                ],
+                "x-enum-varnames": [
+                    "LLMModelSURFASK",
+                    "LLMModelSURFRESEARCH"
+                ]
+            },
+            "model.Message": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "description": "The final user-visible text generated by the assistant.",
+                        "type": "string",
+                        "example": "Summarize today's Bitcoin market."
+                    },
+                    "role": {
+                        "description": "The role of the message. The source of the message. Include:\n- system — system instructions\n- user — user input\n- assistant — model output\n- tool — tool responses",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.Role"
+                            }
+                        ],
+                        "example": "user"
+                    }
+                }
+            },
             "model.QuestionResponse": {
                 "type": "object",
                 "properties": {
@@ -564,6 +886,19 @@
                     }
                 }
             },
+            "model.Role": {
+                "type": "string",
+                "enum": [
+                    "user",
+                    "assistant",
+                    "system"
+                ],
+                "x-enum-varnames": [
+                    "RoleUSER",
+                    "RoleASSISTANT",
+                    "RoleSYSTEM"
+                ]
+            },
             "model.SentimentResponse": {
                 "type": "object",
                 "properties": {
@@ -581,6 +916,15 @@
                     },
                     "rise_token_count": {
                         "type": "integer"
+                    }
+                }
+            },
+            "start.HealthzResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "example": "ok"
                     }
                 }
             }
