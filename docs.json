@@ -20,29 +20,7 @@
                 "group": "API reference",
                 "openapi": "openapi.json",
                 "pages": [
-                    {
-                        "group": "token",
-                        "pages": [
-                            "GET /v1/token/ask/{ticker}",
-                            "GET /v1/token/research/{ticker}",
-                            "GET /v1/token/score/{ticker}"
-                        ]
-                    },
-                    {
-                        "group": "market",
-                        "pages": [
-                            "GET /v1/market/trends",
-                            "GET /v1/market/news",
-                            "GET /v1/market/sentiment",
-                            "GET /v1/market/events"
-                        ]
-                    },
-                    {
-                        "group": "chat",
-                        "pages": [
-                            "POST /v1/chat/completions"
-                        ]
-                    }
+                    "POST /v1/chat/completions"
                 ],
                 "api": {
                     "playground": {
