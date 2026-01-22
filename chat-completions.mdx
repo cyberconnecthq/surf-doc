@@ -6,17 +6,43 @@ openapi: openapi.json POST /v1/chat/completions
 
 ## Overview
 
-- **Method**: POST
-- **Path**: `/v1/chat/completions`
-- **Authentication**: `Authorization: Bearer <API_KEY>`
-- **Request body**: `application/json`
-- **Response**:
-  - **Non-streaming**: `application/json`
-  - **Streaming**: `text/event-stream` (SSE)
+| Item | Value |
+| --- | --- |
+| **Method** | `POST` |
+| **Path** | `/v1/chat/completions` |
+| **Authentication** | `Authorization: Bearer <API_KEY>` |
+| **Content-Type** | `application/json` |
+| **Response (non-streaming)** | `application/json` |
+| **Response (streaming)** | `text/event-stream` (SSE) |
 
 ## Quick Start
 
-### Full request body example (with field annotations)
+Send a request with `model` and `messages`. Use `stream=true` to receive SSE chunks.
+
+> **Supported models**: `surf-ask`, `surf-research`, `surf-1.5`.
+>
+> `surf-ask` and `surf-research` are **legacy** models. `surf-1.5` is the **new** model. Legacy models remain available and the request format is unchanged.
+
+### What’s new in `surf-1.5`
+
+`surf-1.5` is the recommended, next-generation model. Compared to legacy models, it’s designed for more advanced workflows:
+
+- **Custom tool calls (function calling)**: Better support for defining tools via `tools` and orchestrating multi-step tool-augmented tasks.
+- **Configurable reasoning depth**: Use `reasoning_effort` (`low` / `medium` / `high`) to trade off speed vs. deeper analysis.
+- **Built for agent-style workflows**: Works well with Surf extensions like `ability` (capability constraints) and `citation` (citation formats) in the same request shape.
+
+### Summary (What you can do)
+
+- **OpenAI-compatible**: Use the OpenAI Chat Completions shape (`model`, `messages`, optional `stream`) and standard `Authorization: Bearer <API_KEY>`.
+- **Streaming (SSE)**: Set `stream=true` to receive incremental chunks (`text/event-stream`) and terminate on `data: [DONE]`.
+- **Custom tool calls**: Provide `tools` (OpenAI function calling). The model may request tool executions during generation.
+- **Reasoning depth**: Control analysis strength with `reasoning_effort`: `low` / `medium` / `high`.
+- **Surf extensions**: Use `ability` to constrain available capability domains and `citation` to request output citation formats.
+- **Errors**: This endpoint may return `400`, `401`, or `502` (both streaming and non-streaming).
+
+### Examples
+
+<CodeGroup>
 
 ```jsonc
 {
@@ -116,6 +142,8 @@ const resp = await fetch(url, {
 console.log(await resp.json());
 ```
 
+</CodeGroup>
+
 ## Non-streaming response example (with field annotations)
 
 ```jsonc
@@ -138,7 +166,7 @@ console.log(await resp.json());
   "usage": { // Token usage statistics
     "prompt_tokens": 23, // Input tokens
     "completion_tokens": 12, // Output tokens
-    "total_tokens": 35 // Total tokens
+    "total_tokens": 35 // Total tokens (input + output)
   }
 }
 ```
