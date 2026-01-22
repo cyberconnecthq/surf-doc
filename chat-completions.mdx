@@ -1,0 +1,245 @@
+---
+title: "POST /v1/chat/completions"
+description: "OpenAI-compatible Chat Completions API (with field-level annotations and streaming SSE details)"
+openapi: openapi.json POST /v1/chat/completions
+---
+
+## Overview
+
+- **Method**: POST
+- **Path**: `/v1/chat/completions`
+- **Authentication**: `Authorization: Bearer <API_KEY>`
+- **Request body**: `application/json`
+- **Response**:
+  - **Non-streaming**: `application/json`
+  - **Streaming**: `text/event-stream` (SSE)
+
+## Quick Start
+
+### Full request body example (with field annotations)
+
+```jsonc
+{
+  "model": "surf-ask", // Required: model identifier. Options: surf-ask / surf-research / surf-1.5
+  "messages": [ // Required: list of chat messages (recommended: at least one role=user message)
+    {
+      "role": "system", // Required: system / user / assistant
+      "content": "You are Surf, an analysis assistant focused on crypto markets and on-chain data." // Required: message content
+    },
+    {
+      "role": "user", // Required: user input
+      "content": "Summarize today's BTC market conditions and list the key drivers." // Required: your question/task
+    }
+  ],
+  "stream": false, // Optional: enable streaming output. true -> SSE(text/event-stream), false -> JSON
+  "reasoning_effort": "medium", // Optional: reasoning strength low / medium / high
+  "ability": [ // Optional: Surf extension: capability-domain constraints/hints
+    "evm_onchain", // search / evm_onchain / solana_onchain / market_analysis / calculate
+    "market_analysis"
+  ],
+  "citation": [ // Optional: Surf extension: citation formats to include
+    "source", // source / chart
+    "chart"
+  ],
+  "tools": [ // Optional: tool definitions (OpenAI tools/function calling)
+    {
+      "type": "function", // Required: currently fixed to function
+      "function": { // Required: function tool definition
+        "name": "calculate_portfolio_value", // Required: tool name (function name)
+        "description": "Calculate total portfolio value", // Optional: tool purpose
+        "parameters": { // Optional: parameters JSON Schema
+          "type": "object",
+          "properties": {
+            "symbols": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["symbols"]
+        }
+      }
+    }
+  ]
+}
+```
+
+```bash
+curl -X POST "https://YOUR_HOST/v1/chat/completions" \
+  -H "Authorization: Bearer $SURF_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "surf-ask",
+    "messages": [
+      { "role": "system", "content": "You are Surf, an analysis assistant focused on crypto markets and on-chain data." },
+      { "role": "user", "content": "Summarize today's BTC market conditions and list the key drivers." }
+    ],
+    "stream": false
+  }'
+```
+
+```python
+import requests
+
+url = "https://YOUR_HOST/v1/chat/completions"
+headers = {
+    "Authorization": f"Bearer {SURF_API_KEY}",
+    "Content-Type": "application/json",
+}
+payload = {
+    "model": "surf-ask",
+    "messages": [
+        {"role": "user", "content": "Summarize BTC price action over the past 24 hours in three bullet points."},
+    ],
+    "stream": False,
+}
+
+resp = requests.post(url, headers=headers, json=payload, timeout=60)
+resp.raise_for_status()
+print(resp.json())
+```
+
+```javascript
+const url = "https://YOUR_HOST/v1/chat/completions";
+const resp = await fetch(url, {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.SURF_API_KEY}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "surf-ask",
+    messages: [{ role: "user", content: "Explain what it usually means when BTC open interest rises while price trades sideways." }],
+    stream: false,
+  }),
+});
+
+console.log(await resp.json());
+```
+
+## Non-streaming response example (with field annotations)
+
+```jsonc
+{
+  "id": "chatcmpl-abc123", // Unique identifier for this completion
+  "object": "chat.completion", // Object type (non-streaming responses are typically chat.completion)
+  "created": 1699890366, // Creation timestamp (seconds)
+  "model": "surf-ask", // Model identifier actually used
+  "choices": [ // List of generated results (usually only 1)
+    {
+      "index": 0, // Choice index
+      "finish_reason": "stop", // Finish reason: stop/length/tool_calls/content_filter/error (may also be null)
+      "message": { // Final message (assistant)
+        "role": "assistant", // Role (typically assistant)
+        "content": "BTC is trading flat in the last 24h with rising open interest.", // Model output text
+        "reasoning": "Internal chain-of-thought or brief rationale" // (If returned) reasoning/rationale field
+      }
+    }
+  ],
+  "usage": { // Token usage statistics
+    "prompt_tokens": 23, // Input tokens
+    "completion_tokens": 12, // Output tokens
+    "total_tokens": 35 // Total tokens
+  }
+}
+```
+
+## Request fields (`model.CompletionsRequest`)
+
+> Note: This endpoint follows the overall structure of OpenAI `chat.completions`, and additionally provides Surf extension fields such as `ability` and `citation`.
+
+| Field | Type | Required | Description (Notes) |
+| --- | --- | --- | --- |
+| `model` | string (enum) | Yes | Model identifier to use. Current options: `surf-ask` / `surf-research` / `surf-1.5`. |
+| `messages` | array\<object\> | Yes | List of chat messages. Recommended: include at least one `role=user` message; optionally include one `role=system` message for system instructions. |
+| `stream` | boolean | No | Enable streaming output. When `true`, returns SSE (`text/event-stream`); when `false` (default), returns JSON. |
+| `reasoning_effort` | string (enum) | No | Reasoning strength: `low` / `medium` / `high`. Higher values typically improve reasoning quality, but may be slower / consume more tokens. |
+| `ability` | array\<string\> (enum) | No | Surf extension: hints/constraints for which capability domains are available for this request. Options: `search` / `evm_onchain` / `solana_onchain` / `market_analysis` / `calculate`. |
+| `citation` | array\<string\> (enum) | No | Surf extension: citation formats to include in the output. Options: `source` / `chart`. |
+| `tools` | array\<object\> | No | Tool definitions compatible with OpenAI tools/function calling. The model may request tool calls during generation. |
+
+### Single message in `messages[]` (`model.Message`)
+
+| Field | Type | Required | Description (Notes) |
+| --- | --- | --- | --- |
+| `role` | string (enum) | Yes | Message role: `system` (system instructions) / `user` (user input) / `assistant` (model output). |
+| `content` | string | Yes | Message text content. `system` is used for rules/boundaries; `user` is used for questions/tasks; you typically do not need to include `assistant` messages in the request. |
+
+### Tool definitions in `tools[]` (`model.Tool` / `model.ToolFunction`)
+
+| Field | Type | Required | Description (Notes) |
+| --- | --- | --- | --- |
+| `type` | string (enum) | Yes | Tool type. Currently `function`. |
+| `function` | object | Yes | Function tool definition. |
+
+Fields of the `function` object:
+
+| Field | Type | Required | Description (Notes) |
+| --- | --- | --- | --- |
+| `name` | string | Yes | Tool name (function name). Prefer `snake_case`. |
+| `description` | string | No | Tool purpose description, to help the model decide whether to call it. |
+| `parameters` | object (JSON Schema) | No | JSON Schema describing tool parameters (structure/types/required fields). |
+
+## Response fields (non-streaming JSON: `model.CompletionsProxyResponse`)
+
+| Field | Type | Description (Notes) |
+| --- | --- | --- |
+| `id` | string | Unique identifier for this completion (e.g., `chatcmpl-...`). |
+| `object` | string | Object type, typically `chat.completion`. |
+| `created` | integer | Creation timestamp (seconds). |
+| `model` | string | Model identifier actually used. |
+| `choices` | array\<object\> | List of generated results (usually only 1). |
+| `usage` | object | Token usage statistics. |
+
+### `choices[]` (`model.CompletionsChoice`)
+
+| Field | Type | Description (Notes) |
+| --- | --- | --- |
+| `index` | integer | Choice index (starting from 0). |
+| `finish_reason` | string \| null | Finish reason. Common values: `stop` (normal completion), `length` (reached token limit), `tool_calls` (triggered tool calls), `content_filter` (blocked by safety policy), `error` (aborted due to error). |
+| `message` | object | Final message (`assistant`). |
+
+### `message` (`model.CompletionsMessage`)
+
+| Field | Type | Description (Notes) |
+| --- | --- | --- |
+| `role` | string | Role, typically `assistant`. |
+| `content` | string | Final model output text. |
+| `reasoning` | string | (If returned) field used to expose model reasoning/rationale. Note: depending on product policy, this may be omitted or simplified. |
+
+### `usage` (`model.CompletionsUsage`)
+
+| Field | Type | Description (Notes) |
+| --- | --- | --- |
+| `prompt_tokens` | integer | Input tokens. |
+| `completion_tokens` | integer | Output tokens. |
+| `total_tokens` | integer | Total tokens (input + output). |
+
+## Streaming response (SSE: `text/event-stream`)
+
+When `stream=true`, the server continuously streams SSE events. Each event block typically looks like:
+
+```text
+data: { ...json... }
+
+```
+
+The termination event is:
+
+```text
+data: [DONE]
+
+```
+
+> Note: The current OpenAPI spec does not define a dedicated schema for streaming chunks. In the examples, each chunk's `object` is typically `chat.completion.chunk`, and incremental output is delivered via `choices[].delta` (e.g., `role` / `content`). `finish_reason` is usually `null` until the stream ends.
+
+## Error response (`model.BaseResponse`)
+
+This endpoint may return: `400`, `401`, `502` (both streaming and non-streaming).
+
+| Field | Type | Description (Notes) |
+| --- | --- | --- |
+| `success` | boolean | Whether the request succeeded. |
+| `message` | string | Error message / hint. |
+| `error_code` | string | Error code (e.g., `FORBIDDEN`). |
+
+

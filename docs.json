@@ -18,9 +18,8 @@
             },
             {
                 "group": "API reference",
-                "openapi": "openapi.json",
                 "pages": [
-                    "POST /v1/chat/completions"
+                    "chat-completions"
                 ],
                 "api": {
                     "playground": {

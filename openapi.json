@@ -36,6 +36,330 @@
                 }
             }
         },
+        "/v1/admin/keys": {
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Create a new API key for an existing tenant and create the association",
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create and associate an API key for a tenant",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/model.CreateAPIKeyRequest"
+                            }
+                        }
+                    },
+                    "description": "Create key request",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_CreateAPIKeyResponseData"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/admin/tenants": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "List all tenants with type, credit and usage",
+                "tags": [
+                    "admin"
+                ],
+                "summary": "List tenants",
+                "parameters": [
+                    {
+                        "description": "Page number (>=1)",
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "description": "Limit (1-200)",
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 200,
+                            "default": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_ListTenantsResponseData"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Create a tenant (optional: also create and return an API key)",
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Create tenant",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/model.CreateTenantRequest"
+                            }
+                        }
+                    },
+                    "description": "Create tenant request",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_CreateTenantResponseData"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/admin/tenants/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Query tenant info by id (UUID) and return the matched tenant (credit & usage included)",
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Get tenant by tenant_id (UUID)",
+                "parameters": [
+                    {
+                        "description": "tenant_id (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_ListTenantsResponseData"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Update tenant name by tenant_id (UUID)",
+                "tags": [
+                    "admin"
+                ],
+                "summary": "Update tenant name",
+                "parameters": [
+                    {
+                        "description": "tenant_id (UUID)",
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/model.UpdateTenantNameRequest"
+                            }
+                        }
+                    },
+                    "description": "Update tenant name request",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_UpdateTenantNameResponseData"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/v1/chat/completions": {
             "post": {
                 "security": [
@@ -160,18 +484,105 @@
                 }
             }
         },
-        "/v1/market/events": {
+        "/v1/internal/chat/completions": {
+            "post": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "OpenAI-compatible Chat Completions. Use Bearer authorization. When stream=true, responds as Server-Sent Events (SSE); otherwise returns JSON.",
+                "tags": [
+                    "completions"
+                ],
+                "summary": "Chat Completions",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/model.InternalCompletionsRequest"
+                            }
+                        }
+                    },
+                    "description": "Request body (OpenAI-compatible)",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "SSE Stream\" example(\"data: {\\\"id\\\":\\\"chatcmpl-abc123\\\",\\\"object\\\":\\\"chat.completion.chunk\\\",\\\"created\\\":1699890366,\\\"model\\\":\\\"gpt-4o-mini\\\",\\\"choices\\\":[{\\\"index\\\":0,\\\"delta\\\":{\\\"role\\\":\\\"assistant\\\",\\\"content\\\":\\\"Hello\\\"},\\\"finish_reason\\\":null}]}\\n\\ndata: {\\\"id\\\":\\\"chatcmpl-abc123\\\",\\\"object\\\":\\\"chat.completion.chunk\\\",\\\"created\\\":1699890366,\\\"model\\\":\\\"gpt-4o-mini\\\",\\\"choices\\\":[{\\\"index\\\":0,\\\"delta\\\":{\\\"content\\\":\\\" world\\\"},\\\"finish_reason\\\":null}]}\\n\\ndata: [DONE]\\n\\n\")",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "502": {
+                        "description": "Bad Gateway",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            },
+                            "text/event-stream": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/ai-recommended-assets": {
             "get": {
                 "security": [
                     {
                         "AccessToken": []
                     }
                 ],
-                "description": "Provides a forward-looking summary of significant scheduled economic or financial events expected to occur during the evening (based on Korean Standard Time) of a selected date.",
+                "description": "The AI Asset Recommendation API provides a data-driven ranking and evaluation of crypto assets listed in the Bithumb KRW market, combining real-time market data with multi-dimensional scoring and AI-generated interpretation.\nThe API consists of two core components:\n1. AI Recommendation List\nDelivers a ranked list of eligible assets based on a composite Total Score (0–10), calculated as the rounded average of five individual category scores.\n2. AI Recommendation Details\nProvides an in-depth evaluation for a selected asset, including real-time price information, overall recommendation summary, detailed score interpretation, category breakdowns, price change visualization, and social sentiment distribution.\nIf certain data is unavailable or not applicable, corresponding fields will return null or be omitted.",
                 "tags": [
                     "Market"
                 ],
-                "summary": "Major Events Tonight",
+                "summary": "AI Recommended Assets (Mock)",
                 "parameters": [
                     {
                         "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
@@ -180,11 +591,112 @@
                         "schema": {
                             "type": "string"
                         }
+                    },
+                    {
+                        "description": "Prompt type (template key)",
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "score_ranking",
+                                "summary",
+                                "comprehensive_evaluation",
+                                "sentiment_trend"
+                            ]
+                        }
+                    },
+                    {
+                        "description": "Tickers (comma separated, required. support BTC,ETH,SOL. e.g BTC,ETH)",
+                        "name": "tickers",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns major events on success",
+                        "description": "Returns AI recommended assets on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_AIRecommendedAssetsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/ai-recommended-prompts": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "The AI Recommended Prompts API generates context-aware analytical questions and structured responses for the Bithumb KRW crypto market, helping users quickly understand current market conditions, asset movements, capital flows, and emerging narratives.\nThe API covers both fixed core questions (e.g. market sentiment, strongest momentum assets, trending issues) and dynamically selected questions from a predefined pool, which may change over time. Each prompt produces a structured output consisting of a concise summary, detailed analysis, and a neutral conclusion.",
+                "tags": [
+                    "Market"
+                ],
+                "summary": "AI Recommended Prompts",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Prompt type (template key)",
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "krw_market_sentiment",
+                                "strongest_momentum",
+                                "trending_issues",
+                                "go_up",
+                                "go_down",
+                                "kols_discuss",
+                                "kols_sectors"
+                            ]
+                        }
+                    },
+                    {
+                        "description": "Ticker (required when type is go_up or go_down)",
+                        "name": "ticker",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "BTC",
+                                "ETH",
+                                "MON"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns AI recommended prompt on success",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -194,7 +706,7 @@
                         }
                     },
                     "400": {
-                        "description": "When date format is invalid",
+                        "description": "When request parameters are invalid",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -226,18 +738,115 @@
                 }
             }
         },
-        "/v1/market/news": {
+        "/v1/market/ai-report": {
             "get": {
                 "security": [
                     {
                         "AccessToken": []
                     }
                 ],
-                "description": "Returns a curated overview of the most important and widely discussed news relevant to the crypto market for a specified date.",
+                "description": "AI Report API generates a structured research report for crypto assets, combining real-time market snapshots, trend summaries, technical analysis, sector-optimized on-chain metrics, and community sentiment insights.\nThe report is generated as a point-in-time snapshot and is designed to be beginner-friendly and neutral, presenting both bullish and bearish factors without providing financial advice.\nOn-chain indicators are dynamically selected based on the asset’s sector classification using a three-layer metric framework (common, shared, and sector-specific).\nIf certain data is unavailable or not applicable, corresponding fields will return null or be omitted.",
                 "tags": [
                     "Market"
                 ],
-                "summary": "Must-Know News Today",
+                "summary": "AI Report",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Report type (template key)",
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "realtime_info",
+                                "summary",
+                                "technical_analysis",
+                                "onchain_analysis",
+                                "social_data",
+                                "conclusion"
+                            ]
+                        }
+                    },
+                    {
+                        "description": "Ticker (required)",
+                        "name": "ticker",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "BTC",
+                                "ETH",
+                                "MON"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns AI report on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/drop-tokens": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Returns drop token news list for a given date (optional).\nData is fetched from `bithumb_reports` by signal_type = drop_token_news and the latest batch_sequence.",
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Drop Tokens News",
                 "parameters": [
                     {
                         "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
@@ -250,17 +859,336 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns news on success",
+                        "description": "Returns news list on success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionResponse"
+                                    "$ref": "#/components/schemas/model.GenericResponse-array_model_TokenNewsItem"
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "When date format is invalid",
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/events": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Returns major events list for a given date (optional).\nData is fetched from `bithumb_reports` by signal_type = major_event_tonight (fallback: major_events_tonight) and the latest batch_sequence.",
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Major Events Tonight",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns major events on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-array_model_MajorEvent"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/must-know-news": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Render as a digest\nDisplay the list as a daily macro/market digest and link out to the original sources when available.\nMust-know macro/market news list for a given date (optional).",
+                "tags": [
+                    "Market"
+                ],
+                "summary": "AI-Highlighted news",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns news list on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-array_model_TokenNewsItem"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/report": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "The Market Report API provides a consolidated daily overview of the crypto market, combining market sentiment indicators, trend analysis, sector insights, news highlights, and asset performance into a single structured response.\nThe API evaluates overall market direction (Up / Flat / Down) using internal logic and sentiment indicators such as the Fear & Greed Index and the number of rising assets compared to the previous day. It also surfaces key market trends, trending sectors, and must-know news, including AI-highlighted headlines and major upcoming events.\nAdditionally, the API delivers asset-level insights such as top gainers and losers versus the previous day, along with optional notification prompts for market alerts. All outputs are generated as a point-in-time snapshot and are intended for informational purposes only, without providing investment advice.\nIf specific data points are unavailable, the corresponding fields will return null or be omitted.",
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Market Report",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Report type (template key)",
+                        "name": "type",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "market_sentiment",
+                                "market_trends",
+                                "must_know_news",
+                                "major_events_tonight"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns market report on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "When message not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/market/rise-tokens": {
+            "get": {
+                "security": [
+                    {
+                        "AccessToken": []
+                    }
+                ],
+                "description": "Returns rise token news list for a given date (optional).",
+                "tags": [
+                    "Market"
+                ],
+                "summary": "Rise Tokens News",
+                "parameters": [
+                    {
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns news list on success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.GenericResponse-array_model_TokenNewsItem"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "When request parameters are invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/model.BaseResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "When unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -299,11 +1227,11 @@
                         "AccessToken": []
                     }
                 ],
-                "description": "analyse the market sentiment of a selected date for tokens listed on Bithumb, including:\n1.The Fear & Greed Index for the crypto market.\n2.The number of tokens that have risen or fallen by more than 3%.\n3.The number of tokens whose change is within ±3% (i.e., neutral).",
+                "description": "Returns market sentiment snapshot.\nData is fetched from `bithumb_reports` by signal_type = market_sentiment and the latest batch_sequence (optionally filtered by date).",
                 "tags": [
                     "Market"
                 ],
-                "summary": "Today's Market Sentiment",
+                "summary": "Market Sentiment",
                 "parameters": [
                     {
                         "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
@@ -316,17 +1244,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns todays market sentiment on success",
+                        "description": "Returns market sentiment on success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_SentimentResponse"
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_MarketSentimentResponse"
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "When date format is invalid",
+                        "description": "When request parameters are invalid",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -335,64 +1263,8 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "When market sentiment not found",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.BaseResponse"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal server error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.BaseResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/v1/market/trends": {
-            "get": {
-                "security": [
-                    {
-                        "AccessToken": []
-                    }
-                ],
-                "description": "Delivers a high-level summary of the key crypto market trends and developments observed on a given date.",
-                "tags": [
-                    "Market"
-                ],
-                "summary": "Major Trends",
-                "parameters": [
-                    {
-                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
-                        "name": "date",
-                        "in": "query",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns major trends on success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_QuestionResponse"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "When date format is invalid",
+                    "401": {
+                        "description": "When unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -424,24 +1296,23 @@
                 }
             }
         },
-        "/v1/token/ask/{ticker}": {
+        "/v1/market/trends": {
             "get": {
                 "security": [
                     {
                         "AccessToken": []
                     }
                 ],
-                "description": "Returns a quick recent price movement analysis of a selected token.\nToken ticker (path parameter) is required.",
+                "description": "provide a comprehensive list and analysis of all major events that may impact the crypto market, with a special focus on macroeconomic and market-specific factors affecting the Korean (KR) crypto market.",
                 "tags": [
-                    "Token"
+                    "Market"
                 ],
-                "summary": "Quick-Select",
+                "summary": "Key Trends",
                 "parameters": [
                     {
-                        "description": "Ticker symbol",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
+                        "description": "Date in YYYY-MM-DD format. If date is not provided, returns the most recent data",
+                        "name": "date",
+                        "in": "query",
                         "schema": {
                             "type": "string"
                         }
@@ -449,17 +1320,17 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns quick ask response on success",
+                        "description": "Returns key trends on success",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_AskResponse"
+                                    "$ref": "#/components/schemas/model.GenericResponse-model_KeyTrendsResponse"
                                 }
                             }
                         }
                     },
                     "400": {
-                        "description": "When ticker or template_id is missing",
+                        "description": "When request parameters are invalid",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -467,46 +1338,9 @@
                                 }
                             }
                         }
-                    }
-                }
-            }
-        },
-        "/v1/token/research/{ticker}": {
-            "get": {
-                "security": [
-                    {
-                        "AccessToken": []
-                    }
-                ],
-                "description": "Returns a detailed analysis on the possible factors that can influence the price of a given token in the future.\nToken ticker (path parameter) is required.",
-                "tags": [
-                    "Token"
-                ],
-                "summary": "Token Research",
-                "parameters": [
-                    {
-                        "description": "Ticker symbol",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns research information on success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_ResearchResponse"
-                                }
-                            }
-                        }
                     },
-                    "400": {
-                        "description": "When ticker or template_id is missing",
+                    "401": {
+                        "description": "When unauthorized",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -514,46 +1348,19 @@
                                 }
                             }
                         }
-                    }
-                }
-            }
-        },
-        "/v1/token/score/{ticker}": {
-            "get": {
-                "security": [
-                    {
-                        "AccessToken": []
-                    }
-                ],
-                "description": "Returns various sentiment scores for a given ticker including weighted score, smart follower count score, mind share score, and cyber score.\nToken ticker (path parameter) is required",
-                "tags": [
-                    "Token"
-                ],
-                "summary": "Token Scoring",
-                "parameters": [
-                    {
-                        "description": "Ticker symbol",
-                        "name": "ticker",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns chat score information on success",
+                    },
+                    "404": {
+                        "description": "When message not found",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/model.GenericResponse-model_GetChatScoreResponse"
+                                    "$ref": "#/components/schemas/model.BaseResponse"
                                 }
                             }
                         }
                     },
-                    "400": {
-                        "description": "When ticker or template_id is missing",
+                    "500": {
+                        "description": "Internal server error",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -580,16 +1387,120 @@
             }
         },
         "schemas": {
-            "model.AskResponse": {
+            "model.AIRecommendedAsset": {
                 "type": "object",
                 "properties": {
-                    "content": {
+                    "bearish": {
+                        "type": "integer"
+                    },
+                    "bullish": {
+                        "type": "integer"
+                    },
+                    "id": {
                         "type": "string"
                     },
-                    "title": {
+                    "image_url": {
+                        "type": "string"
+                    },
+                    "interpretation": {
+                        "$ref": "#/components/schemas/model.AIRecommendedAssetScoreInterpretation"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "neutral": {
+                        "type": "integer"
+                    },
+                    "opinion": {
+                        "type": "string"
+                    },
+                    "overall_rank": {
+                        "type": "integer"
+                    },
+                    "score_by_category": {
+                        "$ref": "#/components/schemas/model.AIRecommendedAssetRankingByCategory"
+                    },
+                    "summary": {
+                        "type": "string"
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "total_score": {
+                        "type": "number"
+                    }
+                }
+            },
+            "model.AIRecommendedAssetRankingByCategory": {
+                "type": "object",
+                "properties": {
+                    "market_sentiment": {
+                        "type": "integer"
+                    },
+                    "price_stability": {
+                        "type": "integer"
+                    },
+                    "search_trend": {
+                        "type": "integer"
+                    },
+                    "trading_activity": {
+                        "type": "integer"
+                    },
+                    "upside_energy": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "model.AIRecommendedAssetScoreInterpretation": {
+                "type": "object",
+                "properties": {
+                    "market_sentiment": {
+                        "type": "string"
+                    },
+                    "price_stability": {
+                        "type": "string"
+                    },
+                    "search_trend": {
+                        "type": "string"
+                    },
+                    "trading_activity": {
+                        "type": "string"
+                    },
+                    "upside_energy": {
                         "type": "string"
                     }
                 }
+            },
+            "model.AIRecommendedAssetsResponse": {
+                "type": "object",
+                "properties": {
+                    "assets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.AIRecommendedAsset"
+                        }
+                    },
+                    "generated_at": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.Ability": {
+                "type": "string",
+                "enum": [
+                    "search",
+                    "evm_onchain",
+                    "solana_onchain",
+                    "market_analysis",
+                    "calculate"
+                ],
+                "x-enum-varnames": [
+                    "AbilitySearch",
+                    "AbilityEVMOnchain",
+                    "AbilitySolanaOnchain",
+                    "AbilityMarketAnalysis",
+                    "AbilityCalculate"
+                ]
             },
             "model.BaseResponse": {
                 "type": "object",
@@ -607,6 +1518,17 @@
                         "example": true
                     }
                 }
+            },
+            "model.Citation": {
+                "type": "string",
+                "enum": [
+                    "source",
+                    "chart"
+                ],
+                "x-enum-varnames": [
+                    "CitationSource",
+                    "CitationChart"
+                ]
             },
             "model.CompletionsChoice": {
                 "type": "object",
@@ -683,6 +1605,27 @@
             "model.CompletionsRequest": {
                 "type": "object",
                 "properties": {
+                    "ability": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Ability"
+                        },
+                        "example": [
+                            "[\"evm_onchain\"",
+                            "\"market_analysis\"",
+                            "\"calculate\"]"
+                        ]
+                    },
+                    "citation": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Citation"
+                        },
+                        "example": [
+                            "[\"source\"",
+                            "\"chart\"]"
+                        ]
+                    },
                     "messages": {
                         "type": "array",
                         "items": {
@@ -697,9 +1640,28 @@
                         ],
                         "example": "surf-ask"
                     },
+                    "reasoning_effort": {
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high"
+                        ],
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.ReasoningEffort"
+                            }
+                        ],
+                        "example": "medium"
+                    },
                     "stream": {
                         "type": "boolean",
                         "example": false
+                    },
+                    "tools": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Tool"
+                        }
                     }
                 }
             },
@@ -720,11 +1682,81 @@
                     }
                 }
             },
-            "model.GenericResponse-model_AskResponse": {
+            "model.CreateAPIKeyRequest": {
+                "type": "object",
+                "properties": {
+                    "tenant_id": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.CreateAPIKeyResponseData": {
+                "type": "object",
+                "properties": {
+                    "api_key_id": {
+                        "type": "string"
+                    },
+                    "plain_key": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.CreateTenantRequest": {
+                "type": "object",
+                "properties": {
+                    "create_api_key": {
+                        "type": "boolean"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "period": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "description": "默认建议使用 API",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.TenantType"
+                            }
+                        ]
+                    }
+                }
+            },
+            "model.CreateTenantResponseData": {
+                "type": "object",
+                "properties": {
+                    "api_key": {
+                        "type": "string"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "period": {
+                        "type": "integer"
+                    },
+                    "tenant_id": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/model.TenantType"
+                    }
+                }
+            },
+            "model.GenericResponse-array_model_MajorEvent": {
                 "type": "object",
                 "properties": {
                     "data": {
-                        "$ref": "#/components/schemas/model.AskResponse"
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.MajorEvent"
+                        }
                     },
                     "error_code": {
                         "type": "string",
@@ -740,11 +1772,134 @@
                     }
                 }
             },
-            "model.GenericResponse-model_GetChatScoreResponse": {
+            "model.GenericResponse-array_model_TokenNewsItem": {
                 "type": "object",
                 "properties": {
                     "data": {
-                        "$ref": "#/components/schemas/model.GetChatScoreResponse"
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.TokenNewsItem"
+                        }
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_AIRecommendedAssetsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.AIRecommendedAssetsResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_CreateAPIKeyResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.CreateAPIKeyResponseData"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_CreateTenantResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.CreateTenantResponseData"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_KeyTrendsResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.KeyTrendsResponse"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_ListTenantsResponseData": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.ListTenantsResponseData"
+                    },
+                    "error_code": {
+                        "type": "string",
+                        "example": "FORBIDDEN"
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "success"
+                    },
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "model.GenericResponse-model_MarketSentimentResponse": {
+                "type": "object",
+                "properties": {
+                    "data": {
+                        "$ref": "#/components/schemas/model.MarketSentimentResponse"
                     },
                     "error_code": {
                         "type": "string",
@@ -780,11 +1935,11 @@
                     }
                 }
             },
-            "model.GenericResponse-model_ResearchResponse": {
+            "model.GenericResponse-model_QuestionsResponse": {
                 "type": "object",
                 "properties": {
                     "data": {
-                        "$ref": "#/components/schemas/model.ResearchResponse"
+                        "$ref": "#/components/schemas/model.QuestionsResponse"
                     },
                     "error_code": {
                         "type": "string",
@@ -800,11 +1955,11 @@
                     }
                 }
             },
-            "model.GenericResponse-model_SentimentResponse": {
+            "model.GenericResponse-model_UpdateTenantNameResponseData": {
                 "type": "object",
                 "properties": {
                     "data": {
-                        "$ref": "#/components/schemas/model.SentimentResponse"
+                        "$ref": "#/components/schemas/model.UpdateTenantNameResponseData"
                     },
                     "error_code": {
                         "type": "string",
@@ -820,20 +1975,87 @@
                     }
                 }
             },
-            "model.GetChatScoreResponse": {
+            "model.InternalCompletionsRequest": {
                 "type": "object",
                 "properties": {
-                    "cyber_score_score": {
-                        "type": "number"
+                    "ability": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Ability"
+                        },
+                        "example": [
+                            "[\"evm_onchain\"",
+                            "\"market_analysis\"",
+                            "\"calculate\"]"
+                        ]
                     },
-                    "mind_share_score": {
-                        "type": "number"
+                    "citation": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Citation"
+                        },
+                        "example": [
+                            "[\"source\"",
+                            "\"chart\"]"
+                        ]
                     },
-                    "smart_followers_count_score": {
-                        "type": "number"
+                    "messages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Message"
+                        }
                     },
-                    "weighted_score": {
-                        "type": "number"
+                    "model": {
+                        "type": "string",
+                        "example": "surf-ask"
+                    },
+                    "reasoning_effort": {
+                        "enum": [
+                            "low",
+                            "medium",
+                            "high"
+                        ],
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.ReasoningEffort"
+                            }
+                        ],
+                        "example": "medium"
+                    },
+                    "stream": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "tools": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.Tool"
+                        }
+                    }
+                }
+            },
+            "model.KeyTrendEvent": {
+                "type": "object",
+                "properties": {
+                    "summary": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.KeyTrendsResponse": {
+                "type": "object",
+                "properties": {
+                    "key_trend_events": {
+                        "type": "array",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/components/schemas/model.KeyTrendEvent"
+                            }
+                        }
                     }
                 }
             },
@@ -841,12 +2063,89 @@
                 "type": "string",
                 "enum": [
                     "surf-ask",
-                    "surf-research"
+                    "surf-research",
+                    "surf-1.5"
                 ],
                 "x-enum-varnames": [
                     "LLMModelSURFASK",
-                    "LLMModelSURFRESEARCH"
+                    "LLMModelSURFRESEARCH",
+                    "LLMModelSURF15"
                 ]
+            },
+            "model.ListTenantsResponseData": {
+                "type": "object",
+                "properties": {
+                    "page": {
+                        "type": "integer"
+                    },
+                    "page_size": {
+                        "type": "integer"
+                    },
+                    "tenants": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.TenantAdminView"
+                        }
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                }
+            },
+            "model.MajorEvent": {
+                "type": "object",
+                "properties": {
+                    "datetime": {
+                        "type": "string"
+                    },
+                    "event_name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.MarketPriceFluctuation": {
+                "type": "object",
+                "properties": {
+                    "num": {
+                        "type": "integer"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/model.MarketPriceFluctuationType"
+                    }
+                }
+            },
+            "model.MarketPriceFluctuationType": {
+                "type": "string",
+                "enum": [
+                    "UP",
+                    "FLAT",
+                    "DOWN"
+                ],
+                "x-enum-varnames": [
+                    "MarketPriceFluctuationTypeUP",
+                    "MarketPriceFluctuationTypeFLAT",
+                    "MarketPriceFluctuationTypeDOWN"
+                ]
+            },
+            "model.MarketSentimentResponse": {
+                "type": "object",
+                "properties": {
+                    "feer_greed_index": {
+                        "type": "integer"
+                    },
+                    "feer_greed_interpretation": {
+                        "type": "string"
+                    },
+                    "market_price_fluctuations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/model.MarketPriceFluctuation"
+                        }
+                    },
+                    "rising_assets_vs_previous_day": {
+                        "type": "integer"
+                    }
+                }
             },
             "model.Message": {
                 "type": "object",
@@ -875,16 +2174,29 @@
                     }
                 }
             },
-            "model.ResearchResponse": {
+            "model.QuestionsResponse": {
                 "type": "object",
                 "properties": {
-                    "content": {
-                        "type": "string"
-                    },
-                    "title": {
-                        "type": "string"
+                    "contents": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
+            },
+            "model.ReasoningEffort": {
+                "type": "string",
+                "enum": [
+                    "low",
+                    "medium",
+                    "high"
+                ],
+                "x-enum-varnames": [
+                    "ReasoningEffortLow",
+                    "ReasoningEffortMedium",
+                    "ReasoningEffortHigh"
+                ]
             },
             "model.Role": {
                 "type": "string",
@@ -899,23 +2211,134 @@
                     "RoleSYSTEM"
                 ]
             },
-            "model.SentimentResponse": {
+            "model.TenantAdminView": {
+                "type": "object",
+                "properties": {
+                    "credit": {
+                        "description": "Credit 当前可用额度（余额）",
+                        "type": "number"
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "period": {
+                        "type": "integer"
+                    },
+                    "tenant_id": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/model.TenantType"
+                    },
+                    "usage": {
+                        "description": "Usage 累计使用额度（累计消费）",
+                        "type": "number"
+                    }
+                }
+            },
+            "model.TenantType": {
+                "type": "string",
+                "enum": [
+                    "API",
+                    "ADMIN",
+                    "FREE",
+                    "STARTER",
+                    "PRO",
+                    "GROWTH"
+                ],
+                "x-enum-varnames": [
+                    "TenantTypeAPI",
+                    "TenantTypeADMIN",
+                    "TenantTypeFREE",
+                    "TenantTypeSTARTER",
+                    "TenantTypePRO",
+                    "TenantTypeGROWTH"
+                ]
+            },
+            "model.TokenNewsItem": {
                 "type": "object",
                 "properties": {
                     "content": {
                         "type": "string"
                     },
-                    "fall_token_count": {
-                        "type": "integer"
+                    "datetime": {
+                        "type": "string"
                     },
-                    "fear_greed_index": {
-                        "type": "number"
+                    "source": {
+                        "type": "string"
                     },
-                    "neutral_token_count": {
-                        "type": "number"
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.Tool": {
+                "type": "object",
+                "properties": {
+                    "function": {
+                        "$ref": "#/components/schemas/model.ToolFunction"
                     },
-                    "rise_token_count": {
-                        "type": "integer"
+                    "type": {
+                        "enum": [
+                            "function"
+                        ],
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/model.ToolType"
+                            }
+                        ],
+                        "example": "function"
+                    }
+                }
+            },
+            "model.ToolFunction": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string",
+                        "example": "Calculate the total value of a crypto portfolio"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "calculate_portfolio_value"
+                    },
+                    "parameters": {
+                        "description": "Parameters is a JSON Schema object.",
+                        "type": "object"
+                    }
+                }
+            },
+            "model.ToolType": {
+                "type": "string",
+                "enum": [
+                    "function"
+                ],
+                "x-enum-varnames": [
+                    "ToolTypeFunction"
+                ]
+            },
+            "model.UpdateTenantNameRequest": {
+                "type": "object",
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "model.UpdateTenantNameResponseData": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "tenant_id": {
+                        "type": "string"
                     }
                 }
             },
