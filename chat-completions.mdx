@@ -175,15 +175,15 @@ console.log(await resp.json());
 
 > Note: This endpoint follows the overall structure of OpenAI `chat.completions`, and additionally provides Surf extension fields such as `ability` and `citation`.
 
-| Field | Type | Required | Description (Notes) |
-| --- | --- | --- | --- |
-| `model` | string (enum) | Yes | Model identifier to use. Current options: `surf-ask` / `surf-research` / `surf-1.5`. |
-| `messages` | array\<object\> | Yes | List of chat messages. Recommended: include at least one `role=user` message; optionally include one `role=system` message for system instructions. |
-| `stream` | boolean | No | Enable streaming output. When `true`, returns SSE (`text/event-stream`); when `false` (default), returns JSON. |
-| `reasoning_effort` | string (enum) | No | Reasoning strength: `low` / `medium` / `high`. Higher values typically improve reasoning quality, but may be slower / consume more tokens. |
-| `ability` | array\<string\> (enum) | No | Surf extension: hints/constraints for which capability domains are available for this request. Options: `search` / `evm_onchain` / `solana_onchain` / `market_analysis` / `calculate`. |
-| `citation` | array\<string\> (enum) | No | Surf extension: citation formats to include in the output. Options: `source` / `chart`. |
-| `tools` | array\<object\> | No | Tool definitions compatible with OpenAI tools/function calling. The model may request tool calls during generation. |
+| Field | Type | Required | Description | Example |
+| --- | --- | --- | --- | --- |
+| `model` | string (enum) | Yes | Model identifier to use. | `"surf-ask"` / `"surf-research"` / `"surf-1.5"` |
+| `messages` | array\<object\> | Yes | List of chat messages. | Minimal: `[{"role":"user","content":"Hello!"}]` · With system: `[{"role":"system","content":"You are a helpful assistant."},{"role":"user","content":"Hello!"}]` |
+| `stream` | boolean | No | Enable streaming output. | `true` → SSE (`text/event-stream`) · `false` (default) → JSON |
+| `reasoning_effort` | string (enum) | No | Reasoning strength. | `"low"` / `"medium"` / `"high"` |
+| `ability` | array\<string\> (enum) | No | Surf extension: hints/constraints for which capability domains are available for this request. | `["search"]` / `["evm_onchain"]` / `["solana_onchain"]` / `["market_analysis"]` / `["calculate"]` |
+| `citation` | array\<string\> (enum) | No | Surf extension: citation formats to include in the output. | `["source"]` / `["chart"]` |
+| `tools` | array\<object\> | No | Tool definitions compatible with OpenAI tools/function calling. The model may request tool calls during generation. | `[{"type":"function","function":{"name":"get_weather","description":"Get current weather","parameters":{"type":"object","properties":{"city":{"type":"string"}},"required":["city"]}}}]` |
 
 ### Single message in `messages[]` (`model.Message`)
 
