@@ -23,6 +23,8 @@ Send a request with `model` and `messages`. Use `stream=true` to receive SSE chu
 >
 > `surf-ask` and `surf-research` are **legacy** models. `surf-1.5` is the **new** model. Legacy models remain available and the request format is unchanged.
 
+> **Note**: When using `surf-research` and `surf-1.5`, it is recommended to set the timeout to 10 minutes.
+
 ### What’s new in `surf-1.5`
 
 `surf-1.5` is the recommended, next-generation model. Compared to legacy models, it’s designed for more advanced workflows:
@@ -119,7 +121,7 @@ payload = {
     "stream": False,
 }
 
-resp = requests.post(url, headers=headers, json=payload, timeout=60)
+resp = requests.post(url, headers=headers, json=payload, timeout=60)  # For surf-research and surf-1.5, use timeout=600 (10 minutes)
 resp.raise_for_status()
 print(resp.json())
 ```
