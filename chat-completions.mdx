@@ -19,9 +19,9 @@ openapi: openapi.json POST /v1/chat/completions
 
 Send a request with `model` and `messages`. Use `stream=true` to receive SSE chunks.
 
-> **Supported models**: `surf-ask`, `surf-research`, `surf-1.5`.
->
-> `surf-ask` and `surf-research` are **legacy** models. `surf-1.5` is the **new** model. Legacy models remain available and the request format is unchanged.
+> **Supported models**: `surf-ask`, `surf-research`, `surf-1.5`, `surf-1.5-instant`, `surf-1.5-thinking`.
+
+> `surf-ask` and `surf-research` are **legacy** models. `surf-1.5`, `surf-1.5-instant`, and `surf-1.5-thinking` are the **new** models. Legacy models remain available and the request format is unchanged.
 
 > **Note**: When using `surf-research` and `surf-1.5`, it is recommended to set the timeout to 10 minutes.
 
@@ -29,9 +29,20 @@ Send a request with `model` and `messages`. Use `stream=true` to receive SSE chu
 
 `surf-1.5` is the recommended, next-generation model. Compared to legacy models, it’s designed for more advanced workflows:
 
+- **Enhanced performance**: Delivers superior response quality with significantly reduced latency in `surf-1.5-instant`, providing faster and more accurate results compared to legacy models.
 - **Custom tool calls (function calling)**: Better support for defining tools via `tools` and orchestrating multi-step tool-augmented tasks.
 - **Configurable reasoning depth**: Use `reasoning_effort` (`low` / `medium` / `high`) to trade off speed vs. deeper analysis.
 - **Built for agent-style workflows**: Works well with Surf extensions like `ability` (capability constraints) and `citation` (citation formats) in the same request shape.
+
+### Model variants: `surf-1.5`, `surf-1.5-instant`, `surf-1.5-thinking`
+
+The `surf-1.5` family includes three model variants with different reasoning capabilities:
+
+- **`surf-1.5-instant`**: A lightweight model optimized for fast responses to simple queries.
+
+- **`surf-1.5-thinking`**: A more powerful model with deeper reasoning capabilities, designed to handle complex problems that require thorough analysis and multi-step reasoning.
+
+- **`surf-1.5`**: An adaptive model that automatically selects between `surf-1.5-instant` and `surf-1.5-thinking` based on the request parameters and problem complexity. This provides an optimal balance between speed and depth without requiring manual model selection.
 
 ### Summary (What you can do)
 
@@ -48,7 +59,7 @@ Send a request with `model` and `messages`. Use `stream=true` to receive SSE chu
 
 ```jsonc
 {
-  "model": "surf-ask", // Required: model identifier. Options: surf-ask / surf-research / surf-1.5
+  "model": "surf-ask", // Required: model identifier. Options: surf-ask / surf-research / surf-1.5 / surf-1.5-instant / surf-1.5-thinking
   "messages": [ // Required: list of chat messages (recommended: at least one role=user message)
     {
       "role": "system", // Required: system / user / assistant
@@ -179,7 +190,7 @@ console.log(await resp.json());
 
 | Field | Type | Required | Description | Example |
 | --- | --- | --- | --- | --- |
-| `model` | string (enum) | Yes | Model identifier to use. | `"surf-ask"` / `"surf-research"` / `"surf-1.5"` |
+| `model` | string (enum) | Yes | Model identifier to use. | `"surf-ask"` / `"surf-research"` / `"surf-1.5"` / `"surf-1.5-instant"` / `"surf-1.5-thinking"` |
 | `messages` | array\<object\> | Yes | List of chat messages. | Minimal: `[{"role":"user","content":"Hello!"}]` · With system: `[{"role":"system","content":"You are a helpful assistant."},{"role":"user","content":"Hello!"}]` |
 | `stream` | boolean | No | Enable streaming output. | `true` → SSE (`text/event-stream`) · `false` (default) → JSON |
 | `reasoning_effort` | string (enum) | No | Reasoning strength. | `"low"` / `"medium"` / `"high"` |
