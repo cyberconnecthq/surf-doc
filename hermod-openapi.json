@@ -2,7 +2,6 @@
   "components": {
     "schemas": {
       "AccessListEntry": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Account address (0x-prefixed)",
@@ -13,10 +12,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -26,7 +23,6 @@
         "type": "object"
       },
       "AirdropSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "coin_symbol": {
             "description": "Token ticker symbol",
@@ -76,10 +72,8 @@
             "items": {
               "$ref": "#/components/schemas/AirdropTaskItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "total_raise": {
             "description": "Total project fundraise in USD (0 if unknown)",
@@ -104,17 +98,14 @@
         "type": "object"
       },
       "AirdropTaskItem": {
-        "additionalProperties": false,
         "properties": {
           "blockchains": {
             "description": "Supported blockchain names",
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "close_date": {
             "description": "Task close date as Unix seconds (0 if unknown)",
@@ -170,7 +161,6 @@
         "type": "object"
       },
       "AirdropTaskSummary": {
-        "additionalProperties": false,
         "properties": {
           "open": {
             "description": "Number of currently open tasks",
@@ -187,10 +177,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -201,7 +189,6 @@
         "type": "object"
       },
       "BridgeRankingItem": {
-        "additionalProperties": false,
         "properties": {
           "project": {
             "description": "Bridge protocol name",
@@ -226,16 +213,13 @@
         "type": "object"
       },
       "CursorDataResponseXTweet": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/XTweet"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/CursorMeta"
@@ -248,16 +232,13 @@
         "type": "object"
       },
       "CursorDataResponseXUser": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/XUser"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/CursorMeta"
@@ -270,7 +251,6 @@
         "type": "object"
       },
       "CursorMeta": {
-        "additionalProperties": false,
         "properties": {
           "cached": {
             "description": "Whether this response was served from cache",
@@ -304,7 +284,6 @@
         "type": "object"
       },
       "DataAPIError": {
-        "additionalProperties": false,
         "properties": {
           "error": {
             "$ref": "#/components/schemas/DataAPIErrorDetail"
@@ -316,7 +295,6 @@
         "type": "object"
       },
       "DataAPIErrorDetail": {
-        "additionalProperties": false,
         "properties": {
           "code": {
             "type": "string"
@@ -332,7 +310,6 @@
         "type": "object"
       },
       "DataObjectResponseExchangePerpResponse": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/ExchangePerpResponse"
@@ -348,7 +325,6 @@
         "type": "object"
       },
       "DataObjectResponseFundDetailItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/FundDetailItem"
@@ -364,7 +340,6 @@
         "type": "object"
       },
       "DataObjectResponseHumaProjectDetailBody": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/HumaProjectDetailBody"
@@ -380,7 +355,6 @@
         "type": "object"
       },
       "DataObjectResponseNewsArticleDetailItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/NewsArticleDetailItem"
@@ -396,7 +370,6 @@
         "type": "object"
       },
       "DataObjectResponseOnchainGasPriceItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/OnchainGasPriceItem"
@@ -412,7 +385,6 @@
         "type": "object"
       },
       "DataObjectResponseSocialDetailBody": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/SocialDetailBody"
@@ -428,7 +400,6 @@
         "type": "object"
       },
       "DataObjectResponseWalletDetailBody": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/WalletDetailBody"
@@ -444,7 +415,6 @@
         "type": "object"
       },
       "DataObjectResponseWebFetchResultItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/WebFetchResultItem"
@@ -460,7 +430,6 @@
         "type": "object"
       },
       "DataObjectResponseXUser": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "$ref": "#/components/schemas/XUser"
@@ -476,16 +445,13 @@
         "type": "object"
       },
       "DataResponseAirdropSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/AirdropSearchItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -498,16 +464,13 @@
         "type": "object"
       },
       "DataResponseBridgeRankingItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/BridgeRankingItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -520,16 +483,13 @@
         "type": "object"
       },
       "DataResponseDexTradeItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/DexTradeItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -542,16 +502,13 @@
         "type": "object"
       },
       "DataResponseFundPortfolioItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/FundPortfolioItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -564,16 +521,13 @@
         "type": "object"
       },
       "DataResponseFundSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/FundSearchItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -586,16 +540,13 @@
         "type": "object"
       },
       "DataResponseKalshiEvent": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiEvent"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -608,16 +559,13 @@
         "type": "object"
       },
       "DataResponseKalshiMarketItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiMarketItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -630,16 +578,13 @@
         "type": "object"
       },
       "DataResponseKalshiOIPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiOIPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -652,16 +597,13 @@
         "type": "object"
       },
       "DataResponseKalshiPricePoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiPricePoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -674,16 +616,13 @@
         "type": "object"
       },
       "DataResponseKalshiTrade": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiTrade"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -696,16 +635,13 @@
         "type": "object"
       },
       "DataResponseKalshiVolumePoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiVolumePoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -718,16 +654,13 @@
         "type": "object"
       },
       "DataResponseMarketTopCoinItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketTopCoinItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -740,16 +673,13 @@
         "type": "object"
       },
       "DataResponseMindshareTopProject": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MindshareTopProject"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -762,16 +692,13 @@
         "type": "object"
       },
       "DataResponseNewsArticleItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/NewsArticleItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -784,17 +711,13 @@
         "type": "object"
       },
       "DataResponseOnchainRow": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
-              "additionalProperties": {},
               "type": "object"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -807,16 +730,13 @@
         "type": "object"
       },
       "DataResponseOnchainSchemaTable": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/OnchainSchemaTable"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -829,16 +749,13 @@
         "type": "object"
       },
       "DataResponseOnchainTxItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/OnchainTxItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -851,16 +768,13 @@
         "type": "object"
       },
       "DataResponsePolymarketActivity": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketActivity"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -873,16 +787,13 @@
         "type": "object"
       },
       "DataResponsePolymarketEvent": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketEvent"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -895,16 +806,13 @@
         "type": "object"
       },
       "DataResponsePolymarketMarketItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketMarketItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -917,16 +825,13 @@
         "type": "object"
       },
       "DataResponsePolymarketOIPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketOIPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -939,16 +844,13 @@
         "type": "object"
       },
       "DataResponsePolymarketPosition": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketPosition"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -961,16 +863,13 @@
         "type": "object"
       },
       "DataResponsePolymarketPricePoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketPricePoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -983,16 +882,13 @@
         "type": "object"
       },
       "DataResponsePolymarketRankingItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketRankingItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1005,16 +901,13 @@
         "type": "object"
       },
       "DataResponsePolymarketTrade": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketTrade"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1027,16 +920,13 @@
         "type": "object"
       },
       "DataResponsePolymarketVolumePoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketVolumePoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1049,16 +939,13 @@
         "type": "object"
       },
       "DataResponsePredictionMarketCategoryMetricsItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/PredictionMarketCategoryMetricsItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1071,16 +958,13 @@
         "type": "object"
       },
       "DataResponseProjectEventItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectEventItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1093,16 +977,13 @@
         "type": "object"
       },
       "DataResponseProjectMetricPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectMetricPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1115,16 +996,13 @@
         "type": "object"
       },
       "DataResponseProjectSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectSearchItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1137,16 +1015,13 @@
         "type": "object"
       },
       "DataResponseProjectTopRankItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectTopRankItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1159,16 +1034,13 @@
         "type": "object"
       },
       "DataResponseSmartFollowerHistoryPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/SmartFollowerHistoryPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1181,16 +1053,13 @@
         "type": "object"
       },
       "DataResponseSocialMindsharePoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/SocialMindsharePoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1203,16 +1072,13 @@
         "type": "object"
       },
       "DataResponseTokenHolderItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/TokenHolderItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1225,16 +1091,13 @@
         "type": "object"
       },
       "DataResponseTokenTransferItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/TokenTransferItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1247,16 +1110,13 @@
         "type": "object"
       },
       "DataResponseTokenUnlockPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/TokenUnlockPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1269,16 +1129,13 @@
         "type": "object"
       },
       "DataResponseWalletHistoryItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletHistoryItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1291,16 +1148,13 @@
         "type": "object"
       },
       "DataResponseWalletLabelItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletLabelItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1313,16 +1167,13 @@
         "type": "object"
       },
       "DataResponseWalletNetWorthPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletNetWorthPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1335,16 +1186,13 @@
         "type": "object"
       },
       "DataResponseWalletProtocolItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletProtocolItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1357,16 +1205,13 @@
         "type": "object"
       },
       "DataResponseWalletSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletSearchItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1379,16 +1224,13 @@
         "type": "object"
       },
       "DataResponseWalletTransferItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletTransferItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1401,16 +1243,13 @@
         "type": "object"
       },
       "DataResponseWebSearchResultItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/WebSearchResultItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1423,16 +1262,13 @@
         "type": "object"
       },
       "DataResponseXTweet": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/XTweet"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1445,16 +1281,13 @@
         "type": "object"
       },
       "DataResponseYieldRankingItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/YieldRankingItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/OffsetMeta"
@@ -1467,7 +1300,6 @@
         "type": "object"
       },
       "DexTradeItem": {
-        "additionalProperties": false,
         "properties": {
           "amount_usd": {
             "description": "Trade value in USD at execution time",
@@ -1542,7 +1374,6 @@
         "type": "object"
       },
       "ETFTickerFlow": {
-        "additionalProperties": false,
         "properties": {
           "flow_usd": {
             "description": "Daily net flow in USD for this ticker",
@@ -1561,7 +1392,6 @@
         "type": "object"
       },
       "EvmBalanceItem": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Wallet address",
@@ -1572,10 +1402,8 @@
             "items": {
               "$ref": "#/components/schemas/WalletChainItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "total_usd": {
             "description": "Total portfolio value in USD (EVM only)",
@@ -1590,7 +1418,6 @@
         "type": "object"
       },
       "EvmTokenItem": {
-        "additionalProperties": false,
         "properties": {
           "balance": {
             "description": "Decimal-adjusted token balance as a string",
@@ -1642,43 +1469,34 @@
         "type": "object"
       },
       "ExchangeDepthItem": {
-        "additionalProperties": false,
         "properties": {
           "ask_depth": {
             "description": "Total ask-side depth in base currency units",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "asks": {
             "description": "Sell orders, price ascending",
             "items": {
               "$ref": "#/components/schemas/ExchangeDepthLevel"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "bid_depth": {
             "description": "Total bid-side depth in base currency units",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "bids": {
             "description": "Buy orders, price descending",
             "items": {
               "$ref": "#/components/schemas/ExchangeDepthLevel"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "exchange": {
             "description": "Exchange identifier",
@@ -1687,10 +1505,8 @@
           "mid_price": {
             "description": "(best_bid + best_ask) / 2",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "pair": {
             "description": "Trading pair like BTC/USDT",
@@ -1699,18 +1515,14 @@
           "spread": {
             "description": "Best ask - best bid",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "spread_pct": {
             "description": "Spread as percent of mid price",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           }
         },
         "required": [
@@ -1727,7 +1539,6 @@
         "type": "object"
       },
       "ExchangeDepthLevel": {
-        "additionalProperties": false,
         "properties": {
           "amount": {
             "description": "Amount at this level",
@@ -1747,7 +1558,6 @@
         "type": "object"
       },
       "ExchangeFundingHistoryItem": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Exchange identifier",
@@ -1756,10 +1566,8 @@
           "funding_rate": {
             "description": "Funding rate at this settlement",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "pair": {
             "description": "Perpetual contract pair like BTC/USDT",
@@ -1768,10 +1576,8 @@
           "timestamp": {
             "description": "Unix timestamp in seconds",
             "format": "int64",
-            "type": [
-              "integer",
-              "null"
-            ]
+            "type": "integer",
+            "nullable": true
           }
         },
         "required": [
@@ -1783,7 +1589,6 @@
         "type": "object"
       },
       "ExchangeFundingItem": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Exchange identifier",
@@ -1792,40 +1597,30 @@
           "funding_rate": {
             "description": "Current funding rate (0.0001 = 0.01%)",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "index_price": {
             "description": "Index price derived from the weighted average of spot prices across multiple exchanges",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "interval": {
             "description": "Funding interval like 8h",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "mark_price": {
             "description": "Mark price calculated by the exchange from the index price and funding rate, used as the reference for liquidations",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "next_funding": {
             "description": "Next settlement time ISO8601",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "pair": {
             "description": "Perpetual contract pair like BTC/USDT",
@@ -1844,7 +1639,6 @@
         "type": "object"
       },
       "ExchangeKlineItem": {
-        "additionalProperties": false,
         "properties": {
           "close": {
             "description": "Closing price",
@@ -1869,10 +1663,8 @@
           "timestamp": {
             "description": "Candle open time in Unix seconds",
             "format": "int64",
-            "type": [
-              "integer",
-              "null"
-            ]
+            "type": "integer",
+            "nullable": true
           },
           "volume": {
             "description": "Trading volume in base currency units",
@@ -1891,17 +1683,14 @@
         "type": "object"
       },
       "ExchangeKlineResponse": {
-        "additionalProperties": false,
         "properties": {
           "candles": {
             "description": "OHLCV candles",
             "items": {
               "$ref": "#/components/schemas/ExchangeKlineItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "count": {
             "description": "Number of candles",
@@ -1922,41 +1711,31 @@
           },
           "period_end": {
             "description": "Last candle datetime",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "period_high": {
             "description": "Highest price in period",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "period_low": {
             "description": "Lowest price in period",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "period_start": {
             "description": "First candle datetime",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "period_volume": {
             "description": "Total volume in period",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           }
         },
         "required": [
@@ -1974,7 +1753,6 @@
         "type": "object"
       },
       "ExchangeLongShortRatioItem": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Exchange identifier",
@@ -1983,10 +1761,8 @@
           "long_short_ratio": {
             "description": "Ratio of longs to shorts (e.g. 1.5 means 60% long / 40% short). To get percentages: long% = ratio/(ratio+1)*100, short% = 100/(ratio+1)",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "pair": {
             "description": "Perpetual contract pair like BTC/USDT",
@@ -1995,10 +1771,8 @@
           "timestamp": {
             "description": "Unix timestamp in seconds",
             "format": "int64",
-            "type": [
-              "integer",
-              "null"
-            ]
+            "type": "integer",
+            "nullable": true
           }
         },
         "required": [
@@ -2010,21 +1784,16 @@
         "type": "object"
       },
       "ExchangeMarketItem": {
-        "additionalProperties": false,
         "properties": {
           "active": {
             "description": "Whether the market is active",
-            "type": [
-              "boolean",
-              "null"
-            ]
+            "type": "boolean",
+            "nullable": true
           },
           "base": {
             "description": "Base currency",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "exchange": {
             "description": "Exchange identifier",
@@ -2033,10 +1802,8 @@
           "maker_fee": {
             "description": "Default maker fee rate",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "pair": {
             "description": "Trading pair like BTC/USDT",
@@ -2044,25 +1811,19 @@
           },
           "quote": {
             "description": "Quote currency",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "taker_fee": {
             "description": "Default taker fee rate",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "type": {
             "description": "Market type: spot, swap, future, option",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -2078,7 +1839,6 @@
         "type": "object"
       },
       "ExchangeOpenInterestItem": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Exchange identifier",
@@ -2087,18 +1847,14 @@
           "open_interest_amount": {
             "description": "Open interest in contracts",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "open_interest_usd": {
             "description": "Open interest in USD",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "pair": {
             "description": "Trading pair like BTC/USDT",
@@ -2107,10 +1863,8 @@
           "timestamp": {
             "description": "Unix timestamp in seconds",
             "format": "int64",
-            "type": [
-              "integer",
-              "null"
-            ]
+            "type": "integer",
+            "nullable": true
           }
         },
         "required": [
@@ -2123,7 +1877,6 @@
         "type": "object"
       },
       "ExchangePerpResponse": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Exchange identifier",
@@ -2151,31 +1904,24 @@
         "type": "object"
       },
       "ExchangePriceItem": {
-        "additionalProperties": false,
         "properties": {
           "ask": {
             "description": "Best ask price",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "bid": {
             "description": "Best bid price",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "change_24h_pct": {
             "description": "Price change percentage in 24h",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "exchange": {
             "description": "Exchange identifier like binance, okx",
@@ -2184,26 +1930,20 @@
           "high_24h": {
             "description": "24h high price",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "last": {
             "description": "Last traded price",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "low_24h": {
             "description": "24h low price",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "pair": {
             "description": "Trading pair like BTC/USDT",
@@ -2212,18 +1952,14 @@
           "timestamp": {
             "description": "Unix timestamp in seconds",
             "format": "int64",
-            "type": [
-              "integer",
-              "null"
-            ]
+            "type": "integer",
+            "nullable": true
           },
           "volume_24h_base": {
             "description": "24h trading volume in base currency units",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           }
         },
         "required": [
@@ -2241,17 +1977,14 @@
         "type": "object"
       },
       "FollowerGeoData": {
-        "additionalProperties": false,
         "properties": {
           "locations": {
             "description": "Follower count breakdown by geographic location",
             "items": {
               "$ref": "#/components/schemas/FollowerGeoItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "total_follower_count": {
             "description": "Total number of followers across all locations",
@@ -2266,7 +1999,6 @@
         "type": "object"
       },
       "FollowerGeoItem": {
-        "additionalProperties": false,
         "properties": {
           "follower_count": {
             "description": "Number of followers in this location",
@@ -2291,7 +2023,6 @@
         "type": "object"
       },
       "FundDetailItem": {
-        "additionalProperties": false,
         "properties": {
           "description": {
             "description": "Fund description",
@@ -2319,20 +2050,16 @@
             "items": {
               "$ref": "#/components/schemas/FundLinkItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "members": {
             "description": "Fund team members",
             "items": {
               "$ref": "#/components/schemas/FundMemberItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "name": {
             "description": "Fund name",
@@ -2343,10 +2070,8 @@
             "items": {
               "$ref": "#/components/schemas/FundResearchItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "tier": {
             "description": "Fund tier ranking (lower is better)",
@@ -2362,10 +2087,8 @@
             "items": {
               "$ref": "#/components/schemas/FundXAccountItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -2381,7 +2104,6 @@
         "type": "object"
       },
       "FundLinkItem": {
-        "additionalProperties": false,
         "properties": {
           "type": {
             "description": "Link type like `web`, `twitter`, or `linkedin`",
@@ -2399,7 +2121,6 @@
         "type": "object"
       },
       "FundMemberItem": {
-        "additionalProperties": false,
         "properties": {
           "avatar": {
             "description": "Avatar URL",
@@ -2414,10 +2135,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -2427,7 +2146,6 @@
         "type": "object"
       },
       "FundPortfolioItem": {
-        "additionalProperties": false,
         "properties": {
           "invested_at": {
             "description": "Investment date (Unix seconds)",
@@ -2473,7 +2191,6 @@
         "type": "object"
       },
       "FundResearchItem": {
-        "additionalProperties": false,
         "properties": {
           "id": {
             "description": "Research ID",
@@ -2502,7 +2219,6 @@
         "type": "object"
       },
       "FundSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "id": {
             "description": "Surf fund UUID \u2014 pass as 'id' parameter to /fund/detail or /fund/portfolio for exact lookup",
@@ -2531,10 +2247,8 @@
             "items": {
               "$ref": "#/components/schemas/FundPortfolioItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "type": {
             "description": "Fund type",
@@ -2551,7 +2265,6 @@
         "type": "object"
       },
       "FundXAccountItem": {
-        "additionalProperties": false,
         "properties": {
           "display_name": {
             "description": "Display name",
@@ -2583,7 +2296,6 @@
         "type": "object"
       },
       "HumaOnchainSQLInputBody": {
-        "additionalProperties": false,
         "properties": {
           "max_rows": {
             "default": 1000,
@@ -2610,7 +2322,6 @@
         "type": "object"
       },
       "HumaProjectDetailBody": {
-        "additionalProperties": false,
         "properties": {
           "contracts": {
             "$ref": "#/components/schemas/ProjectContractsItem",
@@ -2648,7 +2359,6 @@
         "type": "object"
       },
       "IndicatorValues": {
-        "additionalProperties": false,
         "properties": {
           "bbands_lower": {
             "description": "Bollinger lower band",
@@ -2758,7 +2468,6 @@
         "type": "object"
       },
       "KalshiEvent": {
-        "additionalProperties": false,
         "properties": {
           "event_subtitle": {
             "description": "Event subtitle",
@@ -2782,10 +2491,8 @@
             "items": {
               "$ref": "#/components/schemas/KalshiMarketItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -2797,7 +2504,6 @@
         "type": "object"
       },
       "KalshiMarketItem": {
-        "additionalProperties": false,
         "properties": {
           "category": {
             "description": "Surf curated market category",
@@ -2885,7 +2591,6 @@
         "type": "object"
       },
       "KalshiOIPoint": {
-        "additionalProperties": false,
         "properties": {
           "open_interest": {
             "description": "Open interest on this date (contracts)",
@@ -2905,7 +2610,6 @@
         "type": "object"
       },
       "KalshiPricePoint": {
-        "additionalProperties": false,
         "properties": {
           "high": {
             "description": "Highest price as probability (0-1)",
@@ -2946,7 +2650,6 @@
         "type": "object"
       },
       "KalshiPriceSide": {
-        "additionalProperties": false,
         "properties": {
           "label": {
             "description": "Outcome label: `Yes` or `No`",
@@ -2965,7 +2668,6 @@
         "type": "object"
       },
       "KalshiTrade": {
-        "additionalProperties": false,
         "properties": {
           "market_ticker": {
             "description": "Unique market ticker identifier",
@@ -3012,7 +2714,6 @@
         "type": "object"
       },
       "KalshiVolumePoint": {
-        "additionalProperties": false,
         "properties": {
           "notional_volume_usd": {
             "description": "Notional volume in USD (each contract counted as $1)",
@@ -3032,7 +2733,6 @@
         "type": "object"
       },
       "LiquidationChartItem": {
-        "additionalProperties": false,
         "properties": {
           "long_liquidation_usd": {
             "description": "Long-side aggregated liquidation volume (USD)",
@@ -3058,7 +2758,6 @@
         "type": "object"
       },
       "LiquidationExchangeItem": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Exchange name like `Binance` or `OKX`. `All` = aggregate across all exchanges",
@@ -3089,7 +2788,6 @@
         "type": "object"
       },
       "LiquidationOrderItem": {
-        "additionalProperties": false,
         "properties": {
           "base_asset": {
             "description": "Base token symbol like `BTC`",
@@ -3135,17 +2833,14 @@
         "type": "object"
       },
       "MarketETFFlowItem": {
-        "additionalProperties": false,
         "properties": {
           "etfs": {
             "description": "Flow breakdown by individual ETF ticker",
             "items": {
               "$ref": "#/components/schemas/ETFTickerFlow"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "flow_usd": {
             "description": "Daily net flow in USD (positive=inflow, negative=outflow)",
@@ -3171,7 +2866,6 @@
         "type": "object"
       },
       "MarketFearGreedHistoryItem": {
-        "additionalProperties": false,
         "properties": {
           "classification": {
             "description": "Human-readable classification (Extreme Fear, Fear, Neutral, Greed, Extreme Greed)",
@@ -3202,7 +2896,6 @@
         "type": "object"
       },
       "MarketFuturesItem": {
-        "additionalProperties": false,
         "properties": {
           "funding_rate": {
             "description": "Current funding rate as a decimal (`0.0001` = 0.01%)",
@@ -3251,7 +2944,6 @@
         "type": "object"
       },
       "MarketIndicatorItem": {
-        "additionalProperties": false,
         "properties": {
           "interval": {
             "description": "Time interval used to compute the indicator like `1h`, `4h`, or `1d`",
@@ -3294,7 +2986,6 @@
         "type": "object"
       },
       "MarketMetricPoint": {
-        "additionalProperties": false,
         "properties": {
           "metric": {
             "description": "Metric name like `nupl`, `sopr`, or `price`",
@@ -3322,7 +3013,6 @@
         "type": "object"
       },
       "MarketOptionsItem": {
-        "additionalProperties": false,
         "properties": {
           "exchange": {
             "description": "Options exchange name",
@@ -3368,7 +3058,6 @@
         "type": "object"
       },
       "MarketTopCoinItem": {
-        "additionalProperties": false,
         "properties": {
           "ath": {
             "description": "All-time high price in USD",
@@ -3462,7 +3151,6 @@
         "type": "object"
       },
       "MindshareTopProject": {
-        "additionalProperties": false,
         "properties": {
           "project": {
             "$ref": "#/components/schemas/MindshareTopProjectInfo",
@@ -3487,10 +3175,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "token": {
             "$ref": "#/components/schemas/MindshareTopTokenInfo",
@@ -3515,7 +3201,6 @@
         "type": "object"
       },
       "MindshareTopProjectInfo": {
-        "additionalProperties": false,
         "properties": {
           "id": {
             "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup",
@@ -3537,7 +3222,6 @@
         "type": "object"
       },
       "MindshareTopTokenInfo": {
-        "additionalProperties": false,
         "properties": {
           "id": {
             "description": "Surf token UUID",
@@ -3562,7 +3246,6 @@
         "type": "object"
       },
       "MindshareTopTwitterInfo": {
-        "additionalProperties": false,
         "properties": {
           "avatar_url": {
             "description": "Profile image URL",
@@ -3589,7 +3272,6 @@
         "type": "object"
       },
       "NewsArticleDetailItem": {
-        "additionalProperties": false,
         "properties": {
           "content": {
             "description": "Full article body text",
@@ -3638,18 +3320,8 @@
         "type": "object"
       },
       "NewsArticleItem": {
-        "additionalProperties": false,
         "properties": {
           "highlights": {
-            "additionalProperties": {
-              "items": {
-                "type": "string"
-              },
-              "type": [
-                "array",
-                "null"
-              ]
-            },
             "description": "Search highlight fragments with <em> tags around matching terms. Only present in search results.",
             "type": "object"
           },
@@ -3695,7 +3367,6 @@
         "type": "object"
       },
       "ObjectResponseMeta": {
-        "additionalProperties": false,
         "properties": {
           "cached": {
             "description": "Whether this response was served from cache",
@@ -3714,7 +3385,6 @@
         "type": "object"
       },
       "OffsetMeta": {
-        "additionalProperties": false,
         "properties": {
           "cached": {
             "description": "Whether this response was served from cache",
@@ -3750,7 +3420,6 @@
         "type": "object"
       },
       "OnchainGasPriceItem": {
-        "additionalProperties": false,
         "properties": {
           "chain": {
             "description": "Canonical chain name",
@@ -3774,7 +3443,6 @@
         "type": "object"
       },
       "OnchainSchemaCol": {
-        "additionalProperties": false,
         "properties": {
           "comment": {
             "description": "Column comment or description",
@@ -3796,17 +3464,14 @@
         "type": "object"
       },
       "OnchainSchemaTable": {
-        "additionalProperties": false,
         "properties": {
           "columns": {
             "description": "List of columns in this table",
             "items": {
               "$ref": "#/components/schemas/OnchainSchemaCol"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "database": {
             "description": "Database name (always `agent`)",
@@ -3825,41 +3490,32 @@
         "type": "object"
       },
       "OnchainTxItem": {
-        "additionalProperties": false,
         "properties": {
           "accessList": {
             "description": "List of addresses and storage keys. Empty array for legacy; populated for EIP-2930+",
             "items": {
               "$ref": "#/components/schemas/AccessListEntry"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "blobVersionedHashes": {
             "description": "Versioned hashes of blob commitments. EIP-4844 only",
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "blockHash": {
             "description": "Block hash, null if pending",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "blockNumber": {
             "description": "Block number (hex), null if pending",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "chainId": {
             "description": "Chain ID (hex)",
@@ -3911,17 +3567,13 @@
           },
           "to": {
             "description": "Recipient address, null for contract creation",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "transactionIndex": {
             "description": "Index in block (hex), null if pending",
-            "type": [
-              "string",
-              "null"
-            ]
+            "type": "string",
+            "nullable": true
           },
           "type": {
             "description": "Transaction type: 0x0=legacy, 0x1=EIP-2930, 0x2=EIP-1559, 0x3=EIP-4844",
@@ -3960,7 +3612,6 @@
         "type": "object"
       },
       "PolymarketActivity": {
-        "additionalProperties": false,
         "properties": {
           "condition_id": {
             "description": "Market condition identifier",
@@ -4022,7 +3673,6 @@
         "type": "object"
       },
       "PolymarketEvent": {
-        "additionalProperties": false,
         "properties": {
           "category": {
             "description": "Surf curated event category",
@@ -4055,10 +3705,8 @@
             "items": {
               "$ref": "#/components/schemas/PolymarketMarketItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "settlement_sources": {
             "description": "Resolution source URL",
@@ -4082,10 +3730,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "title": {
             "description": "Event title",
@@ -4108,7 +3754,6 @@
         "type": "object"
       },
       "PolymarketMarketItem": {
-        "additionalProperties": false,
         "properties": {
           "category": {
             "description": "Surf curated market category",
@@ -4192,10 +3837,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "title": {
             "description": "Market title",
@@ -4239,7 +3882,6 @@
         "type": "object"
       },
       "PolymarketMarketSide": {
-        "additionalProperties": false,
         "properties": {
           "id": {
             "description": "Token identifier for this outcome",
@@ -4257,7 +3899,6 @@
         "type": "object"
       },
       "PolymarketOIPoint": {
-        "additionalProperties": false,
         "properties": {
           "daily_net_change_usd": {
             "description": "Daily net change in USD",
@@ -4283,7 +3924,6 @@
         "type": "object"
       },
       "PolymarketPosition": {
-        "additionalProperties": false,
         "properties": {
           "avg_price": {
             "description": "Average entry price (0-1)",
@@ -4347,7 +3987,6 @@
         "type": "object"
       },
       "PolymarketPricePoint": {
-        "additionalProperties": false,
         "properties": {
           "side_a": {
             "$ref": "#/components/schemas/PolymarketPriceSide",
@@ -4369,7 +4008,6 @@
         "type": "object"
       },
       "PolymarketPriceSide": {
-        "additionalProperties": false,
         "properties": {
           "label": {
             "description": "Outcome label such as `Yes` or `No`",
@@ -4393,7 +4031,6 @@
         "type": "object"
       },
       "PolymarketRankingItem": {
-        "additionalProperties": false,
         "properties": {
           "category": {
             "description": "Surf curated market category",
@@ -4439,10 +4076,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -4455,7 +4090,6 @@
         "type": "object"
       },
       "PolymarketTrade": {
-        "additionalProperties": false,
         "properties": {
           "amount_usd": {
             "description": "Trade amount in USD",
@@ -4550,7 +4184,6 @@
         "type": "object"
       },
       "PolymarketVolumePoint": {
-        "additionalProperties": false,
         "properties": {
           "notional_volume_usd": {
             "description": "Notional trading volume in USD",
@@ -4576,7 +4209,6 @@
         "type": "object"
       },
       "PredictionMarketCategoryMetricsItem": {
-        "additionalProperties": false,
         "properties": {
           "category": {
             "description": "Top-level category",
@@ -4617,7 +4249,6 @@
         "type": "object"
       },
       "ProjectContractAddress": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Contract address on the specified chain",
@@ -4639,23 +4270,19 @@
         "type": "object"
       },
       "ProjectContractsItem": {
-        "additionalProperties": false,
         "properties": {
           "contracts": {
             "description": "List of deployed smart contract addresses across chains",
             "items": {
               "$ref": "#/components/schemas/ProjectContractAddress"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "type": "object"
       },
       "ProjectEventItem": {
-        "additionalProperties": false,
         "properties": {
           "date": {
             "description": "Event date in ISO 8601 format",
@@ -4685,7 +4312,6 @@
         "type": "object"
       },
       "ProjectFundingInvestor": {
-        "additionalProperties": false,
         "properties": {
           "is_lead": {
             "description": "Whether this investor led the round",
@@ -4711,17 +4337,14 @@
         "type": "object"
       },
       "ProjectFundingItem": {
-        "additionalProperties": false,
         "properties": {
           "rounds": {
             "description": "List of individual funding rounds",
             "items": {
               "$ref": "#/components/schemas/ProjectFundingRound"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "total_raise": {
             "description": "Total capital raised across all rounds in USD",
@@ -4732,7 +4355,6 @@
         "type": "object"
       },
       "ProjectFundingRound": {
-        "additionalProperties": false,
         "properties": {
           "amount": {
             "description": "Amount raised in USD",
@@ -4748,10 +4370,8 @@
             "items": {
               "$ref": "#/components/schemas/ProjectFundingInvestor"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "round_name": {
             "description": "Funding round name like `Seed`, `Series A`, or `Private`",
@@ -4769,7 +4389,6 @@
         "type": "object"
       },
       "ProjectMetricPoint": {
-        "additionalProperties": false,
         "properties": {
           "timestamp": {
             "description": "Unix timestamp in seconds for this data point",
@@ -4789,17 +4408,14 @@
         "type": "object"
       },
       "ProjectOverviewItem": {
-        "additionalProperties": false,
         "properties": {
           "chains": {
             "description": "Chains the project is deployed on",
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "description": {
             "description": "Short description of the project",
@@ -4810,10 +4426,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "id": {
             "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
@@ -4836,10 +4450,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "tge_status": {
             "description": "TGE status: pre, upcoming, or post",
@@ -4871,17 +4483,14 @@
         "type": "object"
       },
       "ProjectSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "chains": {
             "description": "Chains the project operates on",
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "description": {
             "description": "Short description of the project",
@@ -4912,20 +4521,16 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "tokens": {
             "description": "Associated tokens",
             "items": {
               "$ref": "#/components/schemas/TokenSearchItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -4935,7 +4540,6 @@
         "type": "object"
       },
       "ProjectSocialAccount": {
-        "additionalProperties": false,
         "properties": {
           "followers_count": {
             "description": "Number of followers on this platform",
@@ -4954,7 +4558,6 @@
         "type": "object"
       },
       "ProjectSocialItem": {
-        "additionalProperties": false,
         "properties": {
           "discord": {
             "$ref": "#/components/schemas/ProjectSocialAccount",
@@ -4976,23 +4579,19 @@
         "type": "object"
       },
       "ProjectTeamItem": {
-        "additionalProperties": false,
         "properties": {
           "members": {
             "description": "List of team members with their roles and social links",
             "items": {
               "$ref": "#/components/schemas/ProjectTeamMember"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "type": "object"
       },
       "ProjectTeamMember": {
-        "additionalProperties": false,
         "properties": {
           "image": {
             "description": "Team member profile image URL",
@@ -5007,9 +4606,6 @@
             "type": "string"
           },
           "social_links": {
-            "additionalProperties": {
-              "type": "string"
-            },
             "description": "Social profile links keyed by platform name like `twitter` or `linkedin`",
             "type": "object"
           }
@@ -5020,7 +4616,6 @@
         "type": "object"
       },
       "ProjectTgeStatusItem": {
-        "additionalProperties": false,
         "properties": {
           "current_status": {
             "description": "TGE status: `pre`, `upcoming`, or `post`. Omitted when unknown.",
@@ -5031,10 +4626,8 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "last_event_time": {
             "description": "Unix timestamp of the last TGE event",
@@ -5045,7 +4638,6 @@
         "type": "object"
       },
       "ProjectTokenInfoItem": {
-        "additionalProperties": false,
         "properties": {
           "all_time_high": {
             "description": "All-time high price in USD",
@@ -5132,7 +4724,6 @@
         "type": "object"
       },
       "ProjectTokenomicsItem": {
-        "additionalProperties": false,
         "properties": {
           "circulating_supply": {
             "description": "Number of tokens currently in public circulation",
@@ -5158,7 +4749,6 @@
         "type": "object"
       },
       "ProjectTopRankItem": {
-        "additionalProperties": false,
         "properties": {
           "fees": {
             "format": "double",
@@ -5197,15 +4787,12 @@
         "type": "object"
       },
       "SentimentData": {
-        "additionalProperties": false,
         "properties": {
           "score": {
             "description": "Sentiment score from -1 (very negative) to 1 (very positive)",
             "format": "double",
-            "type": [
-              "number",
-              "null"
-            ]
+            "type": "number",
+            "nullable": true
           },
           "time_range": {
             "description": "Time range for the sentiment analysis like 7d or 30d",
@@ -5219,16 +4806,13 @@
         "type": "object"
       },
       "SimpleListResponseExchangeDepthItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeDepthItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5241,16 +4825,13 @@
         "type": "object"
       },
       "SimpleListResponseExchangeFundingHistoryItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeFundingHistoryItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5263,16 +4844,13 @@
         "type": "object"
       },
       "SimpleListResponseExchangeKlineResponse": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeKlineResponse"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5285,16 +4863,13 @@
         "type": "object"
       },
       "SimpleListResponseExchangeLongShortRatioItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeLongShortRatioItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5307,16 +4882,13 @@
         "type": "object"
       },
       "SimpleListResponseExchangeMarketItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeMarketItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5329,16 +4901,13 @@
         "type": "object"
       },
       "SimpleListResponseExchangePriceItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangePriceItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5351,16 +4920,13 @@
         "type": "object"
       },
       "SimpleListResponseLiquidationChartItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/LiquidationChartItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5373,16 +4939,13 @@
         "type": "object"
       },
       "SimpleListResponseLiquidationExchangeItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/LiquidationExchangeItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5395,16 +4958,13 @@
         "type": "object"
       },
       "SimpleListResponseLiquidationOrderItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/LiquidationOrderItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5417,16 +4977,13 @@
         "type": "object"
       },
       "SimpleListResponseMarketETFFlowItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketETFFlowItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5439,16 +4996,13 @@
         "type": "object"
       },
       "SimpleListResponseMarketFearGreedHistoryItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketFearGreedHistoryItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5461,16 +5015,13 @@
         "type": "object"
       },
       "SimpleListResponseMarketFuturesItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketFuturesItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5483,16 +5034,13 @@
         "type": "object"
       },
       "SimpleListResponseMarketIndicatorItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketIndicatorItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5505,16 +5053,13 @@
         "type": "object"
       },
       "SimpleListResponseMarketMetricPoint": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketMetricPoint"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5527,16 +5072,13 @@
         "type": "object"
       },
       "SimpleListResponseMarketOptionsItem": {
-        "additionalProperties": false,
         "properties": {
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketOptionsItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "meta": {
             "$ref": "#/components/schemas/ObjectResponseMeta"
@@ -5549,7 +5091,6 @@
         "type": "object"
       },
       "SmartFollowerHistoryPoint": {
-        "additionalProperties": false,
         "properties": {
           "count": {
             "description": "Number of smart followers on this date",
@@ -5568,7 +5109,6 @@
         "type": "object"
       },
       "SmartFollowerItem": {
-        "additionalProperties": false,
         "properties": {
           "avatar": {
             "description": "Profile image URL",
@@ -5623,7 +5163,6 @@
         "type": "object"
       },
       "SmartFollowersData": {
-        "additionalProperties": false,
         "properties": {
           "count": {
             "description": "Total number of smart followers",
@@ -5635,10 +5174,8 @@
             "items": {
               "$ref": "#/components/schemas/SmartFollowerItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -5648,7 +5185,6 @@
         "type": "object"
       },
       "SocialDetailBody": {
-        "additionalProperties": false,
         "properties": {
           "follower_geo": {
             "$ref": "#/components/schemas/FollowerGeoData",
@@ -5681,7 +5217,6 @@
         "type": "object"
       },
       "SocialMindsharePoint": {
-        "additionalProperties": false,
         "properties": {
           "timestamp": {
             "description": "Unix timestamp in seconds",
@@ -5701,7 +5236,6 @@
         "type": "object"
       },
       "SolBalanceItem": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Wallet address",
@@ -5719,7 +5253,6 @@
         "type": "object"
       },
       "SolTokenItem": {
-        "additionalProperties": false,
         "properties": {
           "balance": {
             "description": "Decimal-adjusted token balance as a string",
@@ -5752,7 +5285,6 @@
         "type": "object"
       },
       "StructuredFilter": {
-        "additionalProperties": false,
         "properties": {
           "field": {
             "description": "Column name to filter on like `block_number` or `from_address`",
@@ -5780,7 +5312,6 @@
         "type": "object"
       },
       "StructuredQuery": {
-        "additionalProperties": false,
         "properties": {
           "fields": {
             "description": "Columns to return. Omit to return all columns. Example for agent.ethereum_transactions: [`transaction_hash`, `from_address`, `value`]",
@@ -5794,20 +5325,16 @@
             "items": {
               "type": "string"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "filters": {
             "description": "WHERE conditions (ANDed together)",
             "items": {
               "$ref": "#/components/schemas/StructuredFilter"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "limit": {
             "description": "Max rows to return. Default 20, max 10000",
@@ -5830,10 +5357,8 @@
             "items": {
               "$ref": "#/components/schemas/StructuredSort"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "source": {
             "description": "Fully-qualified table name like `agent.my_table`",
@@ -5849,7 +5374,6 @@
         "type": "object"
       },
       "StructuredSort": {
-        "additionalProperties": false,
         "properties": {
           "field": {
             "description": "Column name to sort by like `gas`, `block_number`, or `amount_usd`",
@@ -5872,7 +5396,6 @@
         "type": "object"
       },
       "TokenHolderItem": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Wallet address of the token holder",
@@ -5903,7 +5426,6 @@
         "type": "object"
       },
       "TokenSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "id": {
             "description": "Token identifier",
@@ -5930,7 +5452,6 @@
         "type": "object"
       },
       "TokenTransferItem": {
-        "additionalProperties": false,
         "properties": {
           "amount": {
             "description": "Transfer amount (decimal-adjusted, human-readable)",
@@ -5979,7 +5500,6 @@
         "type": "object"
       },
       "TokenUnlockAllocationItem": {
-        "additionalProperties": false,
         "properties": {
           "amount": {
             "description": "Decimal-adjusted allocation amount",
@@ -5998,17 +5518,14 @@
         "type": "object"
       },
       "TokenUnlockPoint": {
-        "additionalProperties": false,
         "properties": {
           "allocations": {
             "description": "Breakdown by allocation",
             "items": {
               "$ref": "#/components/schemas/TokenUnlockAllocationItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "timestamp": {
             "description": "Unix timestamp in seconds",
@@ -6028,7 +5545,6 @@
         "type": "object"
       },
       "WalletApprovalItem": {
-        "additionalProperties": false,
         "properties": {
           "balance": {
             "description": "Current token balance",
@@ -6048,10 +5564,8 @@
             "items": {
               "$ref": "#/components/schemas/WalletApprovalSpender"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "symbol": {
             "description": "Token ticker symbol",
@@ -6072,7 +5586,6 @@
         "type": "object"
       },
       "WalletApprovalSpender": {
-        "additionalProperties": false,
         "properties": {
           "allowance": {
             "description": "Approved token amount (use -1 for unlimited)",
@@ -6095,7 +5608,6 @@
         "type": "object"
       },
       "WalletChainItem": {
-        "additionalProperties": false,
         "properties": {
           "chain": {
             "description": "Canonical chain name like `ethereum` or `polygon`",
@@ -6119,37 +5631,30 @@
         "type": "object"
       },
       "WalletDetailBody": {
-        "additionalProperties": false,
         "properties": {
           "active_chains": {
             "description": "Chains the wallet has non-zero balances on. Always present (not controlled by fields param). For Solana addresses, returns a single entry.",
             "items": {
               "$ref": "#/components/schemas/WalletChainItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "approvals": {
             "description": "Token approvals (EVM-only, up to 50). Only present when `approvals` is included in the `fields` param.",
             "items": {
               "$ref": "#/components/schemas/WalletApprovalItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "errors": {
             "description": "Per-field errors for any fields that failed to load",
             "items": {
               "$ref": "#/components/schemas/WalletDetailError"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "evm_balance": {
             "$ref": "#/components/schemas/EvmBalanceItem",
@@ -6160,10 +5665,8 @@
             "items": {
               "$ref": "#/components/schemas/EvmTokenItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "labels": {
             "$ref": "#/components/schemas/WalletLabelItem",
@@ -6174,10 +5677,8 @@
             "items": {
               "$ref": "#/components/schemas/WalletNFTItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "sol_balance": {
             "$ref": "#/components/schemas/SolBalanceItem",
@@ -6188,16 +5689,13 @@
             "items": {
               "$ref": "#/components/schemas/SolTokenItem"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "type": "object"
       },
       "WalletDetailError": {
-        "additionalProperties": false,
         "properties": {
           "field": {
             "description": "Field name that failed to load like `evm_balance`, `sol_balance`, `evm_tokens`, `sol_tokens`, `labels`, `nft`, `active_chains`, or `approvals`",
@@ -6215,7 +5713,6 @@
         "type": "object"
       },
       "WalletHistoryItem": {
-        "additionalProperties": false,
         "properties": {
           "from_address": {
             "description": "Sender wallet address",
@@ -6253,7 +5750,6 @@
         "type": "object"
       },
       "WalletLabelInfo": {
-        "additionalProperties": false,
         "properties": {
           "confidence": {
             "description": "Confidence score 0.0-1.0",
@@ -6271,7 +5767,6 @@
         "type": "object"
       },
       "WalletLabelItem": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Wallet address",
@@ -6290,10 +5785,8 @@
             "items": {
               "$ref": "#/components/schemas/WalletLabelInfo"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -6303,7 +5796,6 @@
         "type": "object"
       },
       "WalletNFTItem": {
-        "additionalProperties": false,
         "properties": {
           "chain": {
             "description": "Canonical chain name like `ethereum` or `polygon`",
@@ -6342,7 +5834,6 @@
         "type": "object"
       },
       "WalletNetWorthPoint": {
-        "additionalProperties": false,
         "properties": {
           "timestamp": {
             "description": "Unix timestamp in seconds",
@@ -6362,7 +5853,6 @@
         "type": "object"
       },
       "WalletProtocolItem": {
-        "additionalProperties": false,
         "properties": {
           "chain": {
             "description": "Canonical chain name where the protocol operates",
@@ -6377,10 +5867,8 @@
             "items": {
               "$ref": "#/components/schemas/WalletProtocolPosition"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "protocol_name": {
             "description": "Human-readable protocol name",
@@ -6405,7 +5893,6 @@
         "type": "object"
       },
       "WalletProtocolPosition": {
-        "additionalProperties": false,
         "properties": {
           "balance_usd": {
             "description": "Total USD value of this position",
@@ -6417,20 +5904,16 @@
             "items": {
               "$ref": "#/components/schemas/WalletProtocolToken"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "lp_tokens": {
             "description": "LP tokens in this position",
             "items": {
               "$ref": "#/components/schemas/WalletProtocolToken"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "name": {
             "description": "Position name or type like `Lending` or `Staking`",
@@ -6441,20 +5924,16 @@
             "items": {
               "$ref": "#/components/schemas/WalletProtocolToken"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "supply_tokens": {
             "description": "Tokens supplied/deposited in this position",
             "items": {
               "$ref": "#/components/schemas/WalletProtocolToken"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           }
         },
         "required": [
@@ -6464,7 +5943,6 @@
         "type": "object"
       },
       "WalletProtocolToken": {
-        "additionalProperties": false,
         "properties": {
           "amount": {
             "description": "Token amount held in this position",
@@ -6502,7 +5980,6 @@
         "type": "object"
       },
       "WalletSearchAddress": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Wallet address",
@@ -6520,7 +5997,6 @@
         "type": "object"
       },
       "WalletSearchItem": {
-        "additionalProperties": false,
         "properties": {
           "address": {
             "description": "Primary wallet address for this entity",
@@ -6531,10 +6007,8 @@
             "items": {
               "$ref": "#/components/schemas/WalletSearchAddress"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "chain": {
             "description": "Chain of the primary address",
@@ -6565,7 +6039,6 @@
         "type": "object"
       },
       "WalletTransferItem": {
-        "additionalProperties": false,
         "properties": {
           "activity_type": {
             "description": "Transfer activity type (Solana only, e.g. ACTIVITY_SPL_TRANSFER)",
@@ -6620,7 +6093,6 @@
         "type": "object"
       },
       "WebFetchResultItem": {
-        "additionalProperties": false,
         "properties": {
           "content": {
             "description": "Full page content converted to clean markdown text",
@@ -6642,7 +6114,6 @@
         "type": "object"
       },
       "WebSearchResultItem": {
-        "additionalProperties": false,
         "properties": {
           "content": {
             "description": "Relevant content snippet from the page",
@@ -6670,7 +6141,6 @@
         "type": "object"
       },
       "XAuthor": {
-        "additionalProperties": false,
         "properties": {
           "avatar": {
             "description": "Profile picture URL",
@@ -6697,7 +6167,6 @@
         "type": "object"
       },
       "XMedia": {
-        "additionalProperties": false,
         "properties": {
           "type": {
             "description": "Media type: photo, video, or animated_gif",
@@ -6715,7 +6184,6 @@
         "type": "object"
       },
       "XStats": {
-        "additionalProperties": false,
         "properties": {
           "likes": {
             "description": "Number of likes (hearts)",
@@ -6747,7 +6215,6 @@
         "type": "object"
       },
       "XTweet": {
-        "additionalProperties": false,
         "properties": {
           "author": {
             "$ref": "#/components/schemas/XAuthor",
@@ -6763,10 +6230,8 @@
             "items": {
               "$ref": "#/components/schemas/XMedia"
             },
-            "type": [
-              "array",
-              "null"
-            ]
+            "type": "array",
+            "nullable": true
           },
           "stats": {
             "$ref": "#/components/schemas/XStats",
@@ -6796,7 +6261,6 @@
         "type": "object"
       },
       "XUser": {
-        "additionalProperties": false,
         "properties": {
           "avatar": {
             "description": "Profile picture URL",
@@ -6839,7 +6303,6 @@
         "type": "object"
       },
       "YieldRankingItem": {
-        "additionalProperties": false,
         "properties": {
           "apy": {
             "description": "Total APY (base + reward)",
@@ -6907,7 +6370,7 @@
   "info": {
     "title": "Hermod"
   },
-  "openapi": "3.1.0",
+  "openapi": "3.0.0",
   "paths": {
     "/gateway/v1/exchange/depth": {
       "get": {
@@ -7003,26 +6466,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange Order Book Depth",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange Order Book Depth",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7111,26 +6564,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange Funding Rate History",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange Funding Rate History",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7275,26 +6718,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange OHLCV Candlesticks",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange OHLCV Candlesticks",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7397,26 +6830,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange Long/Short Ratio History",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange Long/Short Ratio History",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7542,26 +6965,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange Trading Pairs",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange Trading Pairs",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7632,26 +7045,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange Perpetual Contract Snapshot",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange Perpetual Contract Snapshot",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7735,26 +7138,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Exchange Ticker Price",
+        "tags": [
+          "Exchange"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Exchange Ticker Price",
-        "tags": [
-          "Exchange"
         ]
       }
     },
@@ -7801,26 +7194,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Fund Profile Detail",
+        "tags": [
+          "Fund"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Fund Profile Detail",
-        "tags": [
-          "Fund"
         ]
       }
     },
@@ -7983,26 +7366,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Fund Portfolio",
+        "tags": [
+          "Fund"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Fund Portfolio",
-        "tags": [
-          "Fund"
         ]
       }
     },
@@ -8073,26 +7446,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Fund Ranking",
+        "tags": [
+          "Fund"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Fund Ranking",
-        "tags": [
-          "Fund"
         ]
       }
     },
@@ -8192,26 +7555,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "ETF Flow History",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "ETF Flow History",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -8257,26 +7610,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Fear & Greed Index History",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Fear & Greed Index History",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -8334,26 +7677,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Futures Market Overview",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Futures Market Overview",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -8486,26 +7819,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Liquidation Chart",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Liquidation Chart",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -8596,26 +7919,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Liquidation by Exchange",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Liquidation by Exchange",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -8765,26 +8078,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Large Liquidation Orders",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Large Liquidation Orders",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -8915,26 +8218,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "On-Chain Indicator",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "On-Chain Indicator",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -9014,26 +8307,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Options Market Data",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Options Market Data",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -9131,26 +8414,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Token Price History",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Token Price History",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -9299,26 +8572,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Technical Indicator",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Technical Indicator",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -9436,26 +8699,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Token Rankings",
+        "tags": [
+          "Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Token Rankings",
-        "tags": [
-          "Market"
         ]
       }
     },
@@ -9489,26 +8742,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "News Article Detail",
+        "tags": [
+          "News"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "News Article Detail",
-        "tags": [
-          "News"
         ]
       }
     },
@@ -9650,26 +8893,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Crypto News Feed",
+        "tags": [
+          "News"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Crypto News Feed",
-        "tags": [
-          "News"
         ]
       }
     },
@@ -9744,26 +8977,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Bridge Protocol Ranking",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Bridge Protocol Ranking",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -9809,26 +9032,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Current Gas Price",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Current Gas Price",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -9856,26 +9069,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Blockchain Structured Query",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Blockchain Structured Query",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -9893,26 +9096,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "On-Chain Table Schema",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "On-Chain Table Schema",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -9940,26 +9133,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Blockchain SQL Query",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Blockchain SQL Query",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -10019,26 +9202,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Transaction Details by Hash",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Transaction Details by Hash",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -10140,26 +9313,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Yield Pool Ranking",
+        "tags": [
+          "Onchain"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Yield Pool Ranking",
-        "tags": [
-          "Onchain"
         ]
       }
     },
@@ -10273,26 +9436,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Prediction Market Category Metrics",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Prediction Market Category Metrics",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -10359,26 +9512,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Events",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Events",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -10445,26 +9588,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Markets",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Markets",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -10519,26 +9652,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Open Interest History",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Open Interest History",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -10612,26 +9735,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Price History",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Price History",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -10766,26 +9879,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Market Ranking",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Market Ranking",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -10946,26 +10049,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Trades",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Trades",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11020,26 +10113,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Volume History",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Volume History",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11106,26 +10189,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Wallet Activity",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Wallet Activity",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11192,26 +10265,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Events",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Events",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11278,26 +10341,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Markets",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Markets",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11352,26 +10405,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Open Interest History",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Open Interest History",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11438,26 +10481,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Positions",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Positions",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11531,26 +10564,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Price History",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Price History",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11704,26 +10727,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Market Ranking",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Market Ranking",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11878,26 +10891,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Trades",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Trades",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -11970,26 +10973,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Volume History",
+        "tags": [
+          "Prediction Market"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Volume History",
-        "tags": [
-          "Prediction Market"
         ]
       }
     },
@@ -12140,26 +11133,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Project DeFi Metrics",
+        "tags": [
+          "Project"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Project DeFi Metrics",
-        "tags": [
-          "Project"
         ]
       }
     },
@@ -12233,26 +11216,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "DeFi Protocol Ranking",
+        "tags": [
+          "Project"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "DeFi Protocol Ranking",
-        "tags": [
-          "Project"
         ]
       }
     },
@@ -12312,26 +11285,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Aggregated Project Detail",
+        "tags": [
+          "Project"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Aggregated Project Detail",
-        "tags": [
-          "Project"
         ]
       }
     },
@@ -12532,26 +11495,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Airdrop Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Airdrop Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -12652,26 +11605,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Project Event Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Project Event Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -12739,26 +11682,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Fund Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Fund Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -12870,26 +11803,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Kalshi Event Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Kalshi Event Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -12923,26 +11846,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "News Article Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "News Article Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13068,26 +11981,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Polymarket Event Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Polymarket Event Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13155,26 +12058,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Project Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Project Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13235,26 +12128,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Social User Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Social User Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13315,26 +12198,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Social Post Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Social Post Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13401,26 +12274,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Wallet Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Wallet Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13500,26 +12363,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Web Search",
+        "tags": [
+          "Search"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Web Search",
-        "tags": [
-          "Search"
         ]
       }
     },
@@ -13619,26 +12472,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Aggregated Social Analytics",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Aggregated Social Analytics",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -13718,26 +12561,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Project Mindshare Time Series",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Project Mindshare Time Series",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -13859,26 +12692,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Social Mindshare Ranking",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Social Mindshare Ranking",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -13941,26 +12764,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Smart Follower Count History",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Smart Follower Count History",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14021,26 +12834,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Tweet Replies",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Tweet Replies",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14074,26 +12877,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Social Posts by IDs",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Social Posts by IDs",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14127,26 +12920,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Social User Profile",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Social User Profile",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14207,26 +12990,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "User Followers List",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "User Followers List",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14287,26 +13060,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "User Following List",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "User Following List",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14385,26 +13148,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "User Social Posts",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "User Social Posts",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14465,26 +13218,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "User Replies",
+        "tags": [
+          "Social"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "User Replies",
-        "tags": [
-          "Social"
         ]
       }
     },
@@ -14569,26 +13312,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Token DEX Trade History",
+        "tags": [
+          "Token"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Token DEX Trade History",
-        "tags": [
-          "Token"
         ]
       }
     },
@@ -14679,26 +13412,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Token Holders",
+        "tags": [
+          "Token"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Token Holders",
-        "tags": [
-          "Token"
         ]
       }
     },
@@ -14770,26 +13493,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Token Unlock Schedule",
+        "tags": [
+          "Token"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Token Unlock Schedule",
-        "tags": [
-          "Token"
         ]
       }
     },
@@ -14902,26 +13615,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Token Transfer History",
+        "tags": [
+          "Token"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Token Transfer History",
-        "tags": [
-          "Token"
         ]
       }
     },
@@ -14993,26 +13696,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Aggregated Wallet Detail",
+        "tags": [
+          "Wallet"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Aggregated Wallet Detail",
-        "tags": [
-          "Wallet"
         ]
       }
     },
@@ -15139,26 +13832,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Wallet Transaction History",
+        "tags": [
+          "Wallet"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Wallet Transaction History",
-        "tags": [
-          "Wallet"
         ]
       }
     },
@@ -15192,26 +13875,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Wallet Labels (Batch)",
+        "tags": [
+          "Wallet"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Wallet Labels (Batch)",
-        "tags": [
-          "Wallet"
         ]
       }
     },
@@ -15245,26 +13918,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Wallet Net Worth History",
+        "tags": [
+          "Wallet"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Wallet Net Worth History",
-        "tags": [
-          "Wallet"
         ]
       }
     },
@@ -15331,26 +13994,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Wallet DeFi Protocol Positions",
+        "tags": [
+          "Wallet"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Wallet DeFi Protocol Positions",
-        "tags": [
-          "Wallet"
         ]
       }
     },
@@ -15466,26 +14119,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Wallet Transfer History",
+        "tags": [
+          "Wallet"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Wallet Transfer History",
-        "tags": [
-          "Wallet"
         ]
       }
     },
@@ -15575,26 +14218,16 @@
               }
             },
             "description": "OK"
-          },
-          "default": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DataAPIError"
-                }
-              }
-            },
-            "description": "Error"
           }
         },
+        "summary": "Web Page Fetch",
+        "tags": [
+          "Web"
+        ],
         "security": [
           {
             "AccessToken": []
           }
-        ],
-        "summary": "Web Page Fetch",
-        "tags": [
-          "Web"
         ]
       }
     }
