@@ -1,13 +1,22 @@
 {
     "theme": "mint",
     "name": "Surf API Documentation",
-
     "favicon": "/favicon.png",
     "colors": {
         "primary": "#000000",
         "light": "#4D9CFF",
         "dark": "#0050B4"
     },
+    "tabs": [
+        {
+            "name": "Chat API",
+            "url": "chat-api"
+        },
+        {
+            "name": "Data API",
+            "url": "data-api"
+        }
+    ],
     "navigation": {
         "groups": [
             {
@@ -18,12 +27,14 @@
             },
             {
                 "group": "Chat API",
+                "tab": "chat-api",
                 "pages": [
                     "chat-completions"
                 ]
             },
             {
                 "group": "Exchange",
+                "tab": "data-api",
                 "pages": [
                     "data-api/exchange/markets",
                     "data-api/exchange/price",
@@ -48,7 +59,8 @@
                     "data-api/market/liquidation-chart",
                     "data-api/market/liquidation-exchange-list",
                     "data-api/market/liquidation-order"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Token",
@@ -57,7 +69,8 @@
                     "data-api/token/transfers",
                     "data-api/token/dex-trades",
                     "data-api/token/tokenomics"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Project",
@@ -65,7 +78,8 @@
                     "data-api/project/detail",
                     "data-api/project/defi-metrics",
                     "data-api/project/defi-ranking"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Social",
@@ -81,14 +95,16 @@
                     "data-api/social/user-followers",
                     "data-api/social/user-replies",
                     "data-api/social/tweet-replies"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "News",
                 "pages": [
                     "data-api/news/feed",
                     "data-api/news/detail"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Wallet",
@@ -99,7 +115,8 @@
                     "data-api/wallet/history",
                     "data-api/wallet/protocols",
                     "data-api/wallet/net-worth"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Onchain",
@@ -111,13 +128,15 @@
                     "data-api/onchain/schema",
                     "data-api/onchain/bridge-ranking",
                     "data-api/onchain/yield-ranking"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Web",
                 "pages": [
                     "data-api/web/fetch"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Search",
@@ -133,7 +152,8 @@
                     "data-api/search/kalshi",
                     "data-api/search/events",
                     "data-api/search/airdrop"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Fund",
@@ -141,7 +161,8 @@
                     "data-api/fund/detail",
                     "data-api/fund/portfolio",
                     "data-api/fund/ranking"
-                ]
+                ],
+                "tab": "data-api"
             },
             {
                 "group": "Prediction Market",
@@ -163,7 +184,8 @@
                     "data-api/prediction-market/kalshi-volumes",
                     "data-api/prediction-market/kalshi-open-interest",
                     "data-api/prediction-market/kalshi-ranking"
-                ]
+                ],
+                "tab": "data-api"
             }
         ]
     },
@@ -175,7 +197,11 @@
             }
         },
         "examples": {
-            "languages": ["curl", "python", "javascript"]
+            "languages": [
+                "curl",
+                "python",
+                "javascript"
+            ]
         }
     }
 }
