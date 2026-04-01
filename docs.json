@@ -33,6 +33,13 @@
                 ]
             },
             {
+                "group": "Getting Started",
+                "tab": "data-api",
+                "pages": [
+                    "data-api/overview"
+                ]
+            },
+            {
                 "group": "Exchange",
                 "tab": "data-api",
                 "pages": [
