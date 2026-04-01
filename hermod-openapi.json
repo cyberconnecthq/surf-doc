@@ -2811,7 +2811,7 @@
             "type": "string"
           },
           "id": {
-            "description": "Surf fund UUID — pass as 'id' parameter to /fund/detail or /fund/portfolio for exact lookup",
+            "description": "Surf fund UUID \u2014 pass as 'id' parameter to /fund/detail or /fund/portfolio for exact lookup",
             "type": "string"
           },
           "image": {
@@ -2952,7 +2952,7 @@
             "type": "boolean"
           },
           "project_id": {
-            "description": "Surf project UUID — pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
+            "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
             "type": "string"
           },
           "project_logo": {
@@ -3018,7 +3018,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "description": "Surf fund UUID — pass as 'id' parameter to /fund/detail or /fund/portfolio for exact lookup",
+            "description": "Surf fund UUID \u2014 pass as 'id' parameter to /fund/detail or /fund/portfolio for exact lookup",
             "type": "string"
           },
           "image": {
@@ -4040,7 +4040,7 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "description": "Surf project UUID — pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup",
+            "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup",
             "type": "string"
           },
           "name": {
@@ -4172,7 +4172,7 @@
                 "null"
               ]
             },
-            "description": "Search highlight fragments with \u003cem\u003e tags around matching terms. Only present in search results.",
+            "description": "Search highlight fragments with <em> tags around matching terms. Only present in search results.",
             "type": "object"
           },
           "id": {
@@ -4180,7 +4180,7 @@
             "type": "string"
           },
           "project_id": {
-            "description": "Surf project UUID — pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup",
+            "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup",
             "type": "string"
           },
           "project_name": {
@@ -5196,7 +5196,7 @@
             "type": "string"
           },
           "type": {
-            "description": "Event type — one of: launch, upgrade, partnership, news, airdrop, listing, twitter",
+            "description": "Event type \u2014 one of: launch, upgrade, partnership, news, airdrop, listing, twitter",
             "type": "string"
           }
         },
@@ -5338,7 +5338,7 @@
             ]
           },
           "id": {
-            "description": "Surf project UUID — pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
+            "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
             "type": "string"
           },
           "logo_url": {
@@ -5410,7 +5410,7 @@
             "type": "string"
           },
           "id": {
-            "description": "Surf project UUID — pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
+            "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics for exact lookup. Prefer over 'q' (fuzzy name search).",
             "type": "string"
           },
           "logo_url": {
@@ -6312,7 +6312,7 @@
             "description": "Geographic breakdown of followers"
           },
           "project_id": {
-            "description": "Surf project UUID — pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics. Omitted for direct x_id lookups.",
+            "description": "Surf project UUID \u2014 pass as 'id' parameter to /project/detail, /project/events, or /project/defi/metrics. Omitted for direct x_id lookups.",
             "type": "string"
           },
           "project_name": {
@@ -7570,7 +7570,7 @@
   "paths": {
     "/gateway/v1/exchange/depth": {
       "get": {
-        "description": "Returns order book bid/ask levels with computed stats.\n\n**Included fields:** spread, spread percentage, mid-price, and total bid/ask depth.\n\nUse `limit` to control the number of price levels (1–100, default 20). Set `type=swap` to query perpetual contract order books instead of spot.",
+        "description": "Returns order book bid/ask levels with computed stats.\n\n**Included fields:** spread, spread percentage, mid-price, and total bid/ask depth.\n\nUse `limit` to control the number of price levels (1\u2013100, default 20). Set `type=swap` to query perpetual contract order books instead of spot.",
         "operationId": "exchange-depth",
         "parameters": [
           {
@@ -7795,7 +7795,7 @@
     },
     "/gateway/v1/exchange/klines": {
       "get": {
-        "description": "Returns OHLCV candlestick data with period summary stats (high, low, total volume).\n\n**Intervals:** 15 options from `1m` to `1M`.\n\n**Pagination:** use `from` to set the start time and `limit` to control candle count. For longer ranges, pass the last returned candle's timestamp as the next `from` value. Exchange-side limits vary (200–1000 per request).\n\nSet `type=swap` to query perpetual contract candles instead of spot.",
+        "description": "Returns OHLCV candlestick data with period summary stats (high, low, total volume).\n\n**Intervals:** 15 options from `1m` to `1M`.\n\n**Pagination:** use `from` to set the start time and `limit` to control candle count. For longer ranges, pass the last returned candle's timestamp as the next `from` value. Exchange-side limits vary (200\u20131000 per request).\n\nSet `type=swap` to query perpetual contract candles instead of spot.",
         "operationId": "exchange-klines",
         "parameters": [
           {
@@ -8226,7 +8226,7 @@
     },
     "/gateway/v1/exchange/perp": {
       "get": {
-        "description": "Returns a combined snapshot of perpetual contract data for a pair.\n\n**Available fields** (via `fields`):\n- `funding` — current funding rate, next settlement, mark/index price\n- `oi` — open interest in contracts and USD\n\nJust pass the base pair (e.g. `pair=BTC/USDT`). The `:USDT` swap suffix is added automatically.",
+        "description": "Returns a combined snapshot of perpetual contract data for a pair.\n\n**Available fields** (via `fields`):\n- `funding` \u2014 current funding rate, next settlement, mark/index price\n- `oi` \u2014 open interest in contracts and USD\n\nJust pass the base pair (e.g. `pair=BTC/USDT`). The `:USDT` swap suffix is added automatically.",
         "operationId": "exchange-perp",
         "parameters": [
           {
@@ -8419,16 +8419,16 @@
     },
     "/gateway/v1/fund/detail": {
       "get": {
-        "description": "Returns a fund's **profile metadata**.\n\n**Included fields:** X accounts, team members, recent research, invested project count.\n\nThis does NOT return the list of investments — use `/fund/portfolio` for that.\n\n**Lookup:** by UUID (`id`) or name (`q`). Returns 404 if not found.",
+        "description": "Returns a fund's **profile metadata**.\n\n**Included fields:** X accounts, team members, recent research, invested project count.\n\nThis does NOT return the list of investments \u2014 use `/fund/portfolio` for that.\n\n**Lookup:** by UUID (`id`) or name (`q`). Returns 404 if not found.",
         "operationId": "fund-detail",
         "parameters": [
           {
-            "description": "Surf fund UUID. PREFERRED — always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
+            "description": "Surf fund UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
             "explode": false,
             "in": "query",
             "name": "id",
             "schema": {
-              "description": "Surf fund UUID. PREFERRED — always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
+              "description": "Surf fund UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
               "examples": [
                 "ef3b6da9-283d-4080-b3c7-87b1b45924dc"
               ],
@@ -8489,12 +8489,12 @@
         "operationId": "fund-portfolio",
         "parameters": [
           {
-            "description": "Surf fund UUID. PREFERRED — always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
+            "description": "Surf fund UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
             "explode": false,
             "in": "query",
             "name": "id",
             "schema": {
-              "description": "Surf fund UUID. PREFERRED — always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
+              "description": "Surf fund UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. id from /search/fund). Takes priority over q.",
               "examples": [
                 "ef3b6da9-283d-4080-b3c7-87b1b45924dc"
               ],
@@ -8876,7 +8876,7 @@
     },
     "/gateway/v1/market/fear-greed": {
       "get": {
-        "description": "Returns Bitcoin Fear \u0026 Greed Index history.\n\n**Included fields:** index value (0-100), classification label, BTC price at each data point.\n\nSorted newest-first. Use `from`/`to` to filter by date range.",
+        "description": "Returns Bitcoin Fear & Greed Index history.\n\n**Included fields:** index value (0-100), classification label, BTC price at each data point.\n\nSorted newest-first. Use `from`/`to` to filter by date range.",
         "operationId": "market-fear-greed",
         "parameters": [
           {
@@ -8933,7 +8933,7 @@
             "AccessToken": []
           }
         ],
-        "summary": "Fear \u0026 Greed Index History",
+        "summary": "Fear & Greed Index History",
         "tags": [
           "Market"
         ]
@@ -8941,7 +8941,7 @@
     },
     "/gateway/v1/market/futures": {
       "get": {
-        "description": "Returns futures market data across all tracked tokens.\n\n**Included fields:** open interest, funding rate, long/short ratio, 24h volume.\n\nSorted by `volume_24h` by default — use `sort_by` to change.",
+        "description": "Returns futures market data across all tracked tokens.\n\n**Included fields:** open interest, funding rate, long/short ratio, 24h volume.\n\nSorted by `volume_24h` by default \u2014 use `sort_by` to change.",
         "operationId": "market-futures",
         "parameters": [
           {
@@ -9698,7 +9698,7 @@
     },
     "/gateway/v1/market/price": {
       "get": {
-        "description": "Returns historical price data points for a token over a specified time range.\n\n**Time range options:**\n- Predefined: `1d`, `7d`, `14d`, `30d`, `90d`, `180d`, `365d`, `max`\n- Custom: use `from` / `to` (Unix seconds or `YYYY-MM-DD`)\n\n**Granularity** is automatic based on range:\n- `1d` → 5-minute intervals\n- `7d`–`90d` → hourly\n- `180d`+ → daily",
+        "description": "Returns historical price data points for a token over a specified time range.\n\n**Time range options:**\n- Predefined: `1d`, `7d`, `14d`, `30d`, `90d`, `180d`, `365d`, `max`\n- Custom: use `from` / `to` (Unix seconds or `YYYY-MM-DD`)\n\n**Granularity** is automatic based on range:\n- `1d` \u2192 5-minute intervals\n- `7d`\u2013`90d` \u2192 hourly\n- `180d`+ \u2192 daily",
         "operationId": "market-price",
         "parameters": [
           {
@@ -9935,12 +9935,12 @@
             }
           },
           {
-            "description": "Indicator-specific options as comma-separated key:value pairs. Available options by indicator: `period` — lookback period for rsi (default 14), sma (default 20), ema (default 20), bbands (default 20), adx (default 14), atr (default 14), cci (default 20), dmi (default 14), stoch (default 14), supertrend (default 10). `stddev` — standard deviation for bbands (default 2). `multiplier` — multiplier for supertrend (default 3). `fast_period` — MACD fast EMA (default 12). `slow_period` — MACD slow EMA (default 26). `signal_period` — MACD signal smoothing (default 9). Examples: `period:7`, `period:200`, `fast_period:8,slow_period:21,signal_period:5`, `period:10,stddev:1.5`.",
+            "description": "Indicator-specific options as comma-separated key:value pairs. Available options by indicator: `period` \u2014 lookback period for rsi (default 14), sma (default 20), ema (default 20), bbands (default 20), adx (default 14), atr (default 14), cci (default 20), dmi (default 14), stoch (default 14), supertrend (default 10). `stddev` \u2014 standard deviation for bbands (default 2). `multiplier` \u2014 multiplier for supertrend (default 3). `fast_period` \u2014 MACD fast EMA (default 12). `slow_period` \u2014 MACD slow EMA (default 26). `signal_period` \u2014 MACD signal smoothing (default 9). Examples: `period:7`, `period:200`, `fast_period:8,slow_period:21,signal_period:5`, `period:10,stddev:1.5`.",
             "explode": false,
             "in": "query",
             "name": "options",
             "schema": {
-              "description": "Indicator-specific options as comma-separated key:value pairs. Available options by indicator: `period` — lookback period for rsi (default 14), sma (default 20), ema (default 20), bbands (default 20), adx (default 14), atr (default 14), cci (default 20), dmi (default 14), stoch (default 14), supertrend (default 10). `stddev` — standard deviation for bbands (default 2). `multiplier` — multiplier for supertrend (default 3). `fast_period` — MACD fast EMA (default 12). `slow_period` — MACD slow EMA (default 26). `signal_period` — MACD signal smoothing (default 9). Examples: `period:7`, `period:200`, `fast_period:8,slow_period:21,signal_period:5`, `period:10,stddev:1.5`.",
+              "description": "Indicator-specific options as comma-separated key:value pairs. Available options by indicator: `period` \u2014 lookback period for rsi (default 14), sma (default 20), ema (default 20), bbands (default 20), adx (default 14), atr (default 14), cci (default 20), dmi (default 14), stoch (default 14), supertrend (default 10). `stddev` \u2014 standard deviation for bbands (default 2). `multiplier` \u2014 multiplier for supertrend (default 3). `fast_period` \u2014 MACD fast EMA (default 12). `slow_period` \u2014 MACD slow EMA (default 26). `signal_period` \u2014 MACD signal smoothing (default 9). Examples: `period:7`, `period:200`, `fast_period:8,slow_period:21,signal_period:5`, `period:10,stddev:1.5`.",
               "examples": [
                 "period:7"
               ],
@@ -10493,7 +10493,7 @@
     },
     "/gateway/v1/onchain/query": {
       "post": {
-        "description": "Executes a structured JSON query on blockchain data. No raw SQL needed — specify source, fields, filters, sort, and pagination.\n\nAll tables live in the **agent** database. Use `GET /v1/onchain/schema` to discover available tables and their columns.\n\n**Key rules:**\n- **Source format:** `agent.\u003ctable_name\u003e` (e.g. `agent.ethereum_transactions`, `agent.ethereum_dex_trades`)\n- Max 10,000 rows (default 20), 30s timeout\n- **Always filter on block_date** — it is the partition key. Without it, queries scan billions of rows and will timeout\n\n**Data refresh:** ~24 hours.\n\n## Example\n\n```json\n{\n  \"source\": \"agent.ethereum_dex_trades\",\n  \"fields\": [\"block_time\", \"project\", \"token_pair\", \"amount_usd\", \"taker\"],\n  \"filters\": [\n    {\"field\": \"block_date\", \"op\": \"gte\", \"value\": \"2025-03-01\"},\n    {\"field\": \"project\", \"op\": \"eq\", \"value\": \"uniswap\"},\n    {\"field\": \"amount_usd\", \"op\": \"gte\", \"value\": 100000}\n  ],\n  \"sort\": [{\"field\": \"amount_usd\", \"order\": \"desc\"}],\n  \"limit\": 20\n}\n```",
+        "description": "Executes a structured JSON query on blockchain data. No raw SQL needed \u2014 specify source, fields, filters, sort, and pagination.\n\nAll tables live in the **agent** database. Use `GET /v1/onchain/schema` to discover available tables and their columns.\n\n**Key rules:**\n- **Source format:** `agent.<table_name>` (e.g. `agent.ethereum_transactions`, `agent.ethereum_dex_trades`)\n- Max 10,000 rows (default 20), 30s timeout\n- **Always filter on block_date** \u2014 it is the partition key. Without it, queries scan billions of rows and will timeout\n\n**Data refresh:** ~24 hours.\n\n## Example\n\n```json\n{\n  \"source\": \"agent.ethereum_dex_trades\",\n  \"fields\": [\"block_time\", \"project\", \"token_pair\", \"amount_usd\", \"taker\"],\n  \"filters\": [\n    {\"field\": \"block_date\", \"op\": \"gte\", \"value\": \"2025-03-01\"},\n    {\"field\": \"project\", \"op\": \"eq\", \"value\": \"uniswap\"},\n    {\"field\": \"amount_usd\", \"op\": \"gte\", \"value\": 100000}\n  ],\n  \"sort\": [{\"field\": \"amount_usd\", \"order\": \"desc\"}],\n  \"limit\": 20\n}\n```",
         "operationId": "onchain-structured-query",
         "requestBody": {
           "content": {
@@ -10577,7 +10577,7 @@
     },
     "/gateway/v1/onchain/sql": {
       "post": {
-        "description": "Executes a raw SQL SELECT query against blockchain data.\n\nAll tables live in the **agent** database. Use `GET /v1/onchain/schema` to discover available tables and their columns before writing queries.\n\n## Rules\n- Only SELECT/WITH statements allowed (read-only)\n- All table references must be database-qualified: `agent.\u003ctable_name\u003e`\n- Max 10,000 rows (default 1,000), 30s timeout\n- **Always filter on block_date or block_number** — partition key, without it queries will timeout\n- Avoid `SELECT *` on large tables — specify only the columns you need\n\n**Data refresh:** ~24 hours.\n\n## Example\n\n```sql\nSELECT block_time, token_pair, amount_usd, taker, tx_hash\nFROM agent.ethereum_dex_trades\nWHERE block_date \u003e= today() - 7\n  AND project = 'uniswap' AND amount_usd \u003e 100000\nORDER BY amount_usd DESC LIMIT 20\n```",
+        "description": "Executes a raw SQL SELECT query against blockchain data.\n\nAll tables live in the **agent** database. Use `GET /v1/onchain/schema` to discover available tables and their columns before writing queries.\n\n## Rules\n- Only SELECT/WITH statements allowed (read-only)\n- All table references must be database-qualified: `agent.<table_name>`\n- Max 10,000 rows (default 1,000), 30s timeout\n- **Always filter on block_date or block_number** \u2014 partition key, without it queries will timeout\n- Avoid `SELECT *` on large tables \u2014 specify only the columns you need\n\n**Data refresh:** ~24 hours.\n\n## Example\n\n```sql\nSELECT block_time, token_pair, amount_usd, taker, tx_hash\nFROM agent.ethereum_dex_trades\nWHERE block_date >= today() - 7\n  AND project = 'uniswap' AND amount_usd > 100000\nORDER BY amount_usd DESC LIMIT 20\n```",
         "operationId": "onchain-sql",
         "requestBody": {
           "content": {
@@ -10624,7 +10624,7 @@
     },
     "/gateway/v1/onchain/tx": {
       "get": {
-        "description": "Returns transaction details by hash. All numeric fields are hex-encoded — use parseInt(hex, 16) to convert.\n\n**Supported chains:** `ethereum`, `polygon`, `bsc`, `arbitrum`, `optimism`, `base`, `avalanche`, `fantom`, `linea`, `cyber`.\n\nReturns 404 if the transaction is not found.",
+        "description": "Returns transaction details by hash. All numeric fields are hex-encoded \u2014 use parseInt(hex, 16) to convert.\n\n**Supported chains:** `ethereum`, `polygon`, `bsc`, `arbitrum`, `optimism`, `base`, `avalanche`, `fantom`, `linea`, `cyber`.\n\nReturns 404 if the transaction is not found.",
         "operationId": "onchain-tx",
         "parameters": [
           {
@@ -10720,13 +10720,13 @@
             }
           },
           {
-            "description": "Ranking metric: `apy` or `tvl_usd`. When sorted by `apy`, only pools with TVL \u003e= $100k are included",
+            "description": "Ranking metric: `apy` or `tvl_usd`. When sorted by `apy`, only pools with TVL >= $100k are included",
             "explode": false,
             "in": "query",
             "name": "sort_by",
             "schema": {
               "default": "apy",
-              "description": "Ranking metric: `apy` or `tvl_usd`. When sorted by `apy`, only pools with TVL \u003e= $100k are included",
+              "description": "Ranking metric: `apy` or `tvl_usd`. When sorted by `apy`, only pools with TVL >= $100k are included",
               "enum": [
                 "apy",
                 "tvl_usd"
@@ -11203,7 +11203,7 @@
     },
     "/gateway/v1/prediction-market/kalshi/prices": {
       "get": {
-        "description": "Returns price history for a Kalshi market.\n\n**Interval options:**\n- `interval=1d` — daily OHLC from market reports (~30 min delay)\n- `interval=latest` — real-time price from trades\n\n**Data refresh:** ~30 minutes (daily), real-time (latest)",
+        "description": "Returns price history for a Kalshi market.\n\n**Interval options:**\n- `interval=1d` \u2014 daily OHLC from market reports (~30 min delay)\n- `interval=latest` \u2014 real-time price from trades\n\n**Data refresh:** ~30 minutes (daily), real-time (latest)",
         "operationId": "kalshi-prices",
         "parameters": [
           {
@@ -12405,12 +12405,12 @@
             }
           },
           {
-            "description": "Wallet address — returns trades where the address is maker or taker",
+            "description": "Wallet address \u2014 returns trades where the address is maker or taker",
             "explode": false,
             "in": "query",
             "name": "address",
             "schema": {
-              "description": "Wallet address — returns trades where the address is maker or taker",
+              "description": "Wallet address \u2014 returns trades where the address is maker or taker",
               "examples": [
                 "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
               ],
@@ -12658,12 +12658,12 @@
         "operationId": "project-defi-metrics",
         "parameters": [
           {
-            "description": "Surf project UUID. PREFERRED — always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
+            "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
             "explode": false,
             "in": "query",
             "name": "id",
             "schema": {
-              "description": "Surf project UUID. PREFERRED — always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
+              "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
               "examples": [
                 "25c6612a-395c-4974-94eb-3b5f9f4b2ed7"
               ],
@@ -12917,16 +12917,16 @@
     },
     "/gateway/v1/project/detail": {
       "get": {
-        "description": "Returns multiple project sub-resources in a single request.\n\n**Available fields** (via `fields`): `overview`, `token_info`, `tokenomics`, `funding`, `team`, `contracts`, `social`, `tge_status`.\n\n**Lookup:** accepts project names directly via `q` (e.g. `?q=aave`) — no need to call `/search/project` first. Also accepts UUID via `id`. Returns 404 if not found.\n\nFor DeFi metrics (TVL, fees, revenue, volume, users) and per-chain breakdown, use `/project/defi/metrics`.",
+        "description": "Returns multiple project sub-resources in a single request.\n\n**Available fields** (via `fields`): `overview`, `token_info`, `tokenomics`, `funding`, `team`, `contracts`, `social`, `tge_status`.\n\n**Lookup:** accepts project names directly via `q` (e.g. `?q=aave`) \u2014 no need to call `/search/project` first. Also accepts UUID via `id`. Returns 404 if not found.\n\nFor DeFi metrics (TVL, fees, revenue, volume, users) and per-chain breakdown, use `/project/defi/metrics`.",
         "operationId": "project-detail",
         "parameters": [
           {
-            "description": "Surf project UUID. PREFERRED — always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
+            "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
             "explode": false,
             "in": "query",
             "name": "id",
             "schema": {
-              "description": "Surf project UUID. PREFERRED — always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
+              "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
               "examples": [
                 "25c6612a-395c-4974-94eb-3b5f9f4b2ed7"
               ],
@@ -13220,12 +13220,12 @@
         "operationId": "search-events",
         "parameters": [
           {
-            "description": "Surf project UUID. PREFERRED — always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
+            "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
             "explode": false,
             "in": "query",
             "name": "id",
             "schema": {
-              "description": "Surf project UUID. PREFERRED — always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
+              "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response (e.g. project_id from /fund/portfolio or id from /search/project). Takes priority over q.",
               "examples": [
                 "25c6612a-395c-4974-94eb-3b5f9f4b2ed7"
               ],
@@ -13340,13 +13340,13 @@
         "operationId": "search-fund",
         "parameters": [
           {
-            "description": "Search keyword — fund name like `a16z`, `paradigm`, or `coinbase ventures`",
+            "description": "Search keyword \u2014 fund name like `a16z`, `paradigm`, or `coinbase ventures`",
             "explode": false,
             "in": "query",
             "name": "q",
             "required": true,
             "schema": {
-              "description": "Search keyword — fund name like `a16z`, `paradigm`, or `coinbase ventures`",
+              "description": "Search keyword \u2014 fund name like `a16z`, `paradigm`, or `coinbase ventures`",
               "examples": [
                 "a16z"
               ],
@@ -13756,13 +13756,13 @@
         "operationId": "search-project",
         "parameters": [
           {
-            "description": "Search keyword — project name or ticker like `uniswap`, `bitcoin`, or `ETH`",
+            "description": "Search keyword \u2014 project name or ticker like `uniswap`, `bitcoin`, or `ETH`",
             "explode": false,
             "in": "query",
             "name": "q",
             "required": true,
             "schema": {
-              "description": "Search keyword — project name or ticker like `uniswap`, `bitcoin`, or `ETH`",
+              "description": "Search keyword \u2014 project name or ticker like `uniswap`, `bitcoin`, or `ETH`",
               "examples": [
                 "bitcoin"
               ],
@@ -14402,7 +14402,7 @@
     },
     "/gateway/v1/social/ranking": {
       "get": {
-        "description": "Returns top crypto projects ranked by mindshare (social view count), refreshed every 5 minutes.\n\n**Filters:**\n- `tag` — scope to a category (e.g. `dex`, `l1`, `meme`)\n- `time_range` — ranking window (`24h`, `48h`, `7d`, `30d`)\n\nSupports `limit`/`offset` pagination.",
+        "description": "Returns top crypto projects ranked by mindshare (social view count), refreshed every 5 minutes.\n\n**Filters:**\n- `tag` \u2014 scope to a category (e.g. `dex`, `l1`, `meme`)\n- `time_range` \u2014 ranking window (`24h`, `48h`, `7d`, `30d`)\n\nSupports `limit`/`offset` pagination.",
         "operationId": "social-ranking",
         "parameters": [
           {
@@ -14543,7 +14543,7 @@
     },
     "/gateway/v1/social/smart-followers/history": {
       "get": {
-        "description": "Returns smart follower count time-series for a project, sorted by date descending.\n\n**Lookup:** by X account ID (`x_id`) or project name (`q`). The `q` parameter must be a project name (e.g. `uniswap`, `ethereum`), not a personal X handle — use `x_id` for individual accounts. Returns 404 if the project has no linked X account.",
+        "description": "Returns smart follower count time-series for a project, sorted by date descending.\n\n**Lookup:** by X account ID (`x_id`) or project name (`q`). The `q` parameter must be a project name (e.g. `uniswap`, `ethereum`), not a personal X handle \u2014 use `x_id` for individual accounts. Returns 404 if the project has no linked X account.",
         "operationId": "social-smart-followers-history",
         "parameters": [
           {
@@ -14560,12 +14560,12 @@
             }
           },
           {
-            "description": "Project name to resolve (e.g. `uniswap`, `ethereum`). Must be a project with a linked X account — personal handles like `VitalikButerin` return 404. Use `x_id` for individual accounts.",
+            "description": "Project name to resolve (e.g. `uniswap`, `ethereum`). Must be a project with a linked X account \u2014 personal handles like `VitalikButerin` return 404. Use `x_id` for individual accounts.",
             "explode": false,
             "in": "query",
             "name": "q",
             "schema": {
-              "description": "Project name to resolve (e.g. `uniswap`, `ethereum`). Must be a project with a linked X account — personal handles like `VitalikButerin` return 404. Use `x_id` for individual accounts.",
+              "description": "Project name to resolve (e.g. `uniswap`, `ethereum`). Must be a project with a linked X account \u2014 personal handles like `VitalikButerin` return 404. Use `x_id` for individual accounts.",
               "examples": [
                 "uniswap"
               ],
@@ -15149,7 +15149,7 @@
     },
     "/gateway/v1/token/dex-trades": {
       "get": {
-        "description": "Returns recent DEX swap events for a token contract address.\n\n**Covered DEXes:** `uniswap`, `sushiswap`, `curve`, `balancer`.\n\n**Included fields:** trading pair, amounts, USD value, taker address.\n\n**Data refresh:** ~24 hours · **Chains:** Ethereum, Base",
+        "description": "Returns recent DEX swap events for a token contract address.\n\n**Covered DEXes:** `uniswap`, `sushiswap`, `curve`, `balancer`.\n\n**Included fields:** trading pair, amounts, USD value, taker address.\n\n**Data refresh:** ~24 hours \u00b7 **Chains:** Ethereum, Base",
         "operationId": "token-dex-trades",
         "parameters": [
           {
@@ -15363,16 +15363,16 @@
     },
     "/gateway/v1/token/tokenomics": {
       "get": {
-        "description": "Returns token unlock time-series with amounts and allocation breakdowns.\n\n**Lookup:** by project UUID (`id`) or token `symbol`. Filter by date range with `from`/`to` — defaults to the current calendar month when omitted.\n\nReturns 404 if no token found.",
+        "description": "Returns token unlock time-series with amounts and allocation breakdowns.\n\n**Lookup:** by project UUID (`id`) or token `symbol`. Filter by date range with `from`/`to` \u2014 defaults to the current calendar month when omitted.\n\nReturns 404 if no token found.",
         "operationId": "token-tokenomics",
         "parameters": [
           {
-            "description": "Surf project UUID. PREFERRED — always use this when available from a previous response. Takes priority over symbol.",
+            "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response. Takes priority over symbol.",
             "explode": false,
             "in": "query",
             "name": "id",
             "schema": {
-              "description": "Surf project UUID. PREFERRED — always use this when available from a previous response. Takes priority over symbol.",
+              "description": "Surf project UUID. PREFERRED \u2014 always use this when available from a previous response. Takes priority over symbol.",
               "examples": [
                 "25c6612a-395c-4974-94eb-3b5f9f4b2ed7"
               ],
@@ -15454,7 +15454,7 @@
     },
     "/gateway/v1/token/transfers": {
       "get": {
-        "description": "Returns recent transfer events **for a specific token** (ERC-20/TRC-20 contract).\n\nPass the **token contract address** in `address` — returns every on-chain transfer of that token regardless of sender/receiver.\n\n**Included fields:** sender, receiver, raw amount, block timestamp.\n\nUse this to analyze a token's on-chain activity (e.g. large movements, distribution patterns).\n\n**Lookup:** `address` (token contract) + `chain`. Sort by `asc` or `desc`.\n\n**Data refresh:** ~24 hours · **Chains:** Ethereum, Base, TRON (Solana uses a different source with no delay)",
+        "description": "Returns recent transfer events **for a specific token** (ERC-20/TRC-20 contract).\n\nPass the **token contract address** in `address` \u2014 returns every on-chain transfer of that token regardless of sender/receiver.\n\n**Included fields:** sender, receiver, raw amount, block timestamp.\n\nUse this to analyze a token's on-chain activity (e.g. large movements, distribution patterns).\n\n**Lookup:** `address` (token contract) + `chain`. Sort by `asc` or `desc`.\n\n**Data refresh:** ~24 hours \u00b7 **Chains:** Ethereum, Base, TRON (Solana uses a different source with no delay)",
         "operationId": "token-transfers",
         "parameters": [
           {
@@ -15677,17 +15677,17 @@
     },
     "/gateway/v1/wallet/history": {
       "get": {
-        "description": "Returns full transaction history for a wallet — swaps, transfers, and contract interactions.\n\n**Lookup:** by `address`. Filter by `chain` — supports `ethereum`, `polygon`, `bsc`, `arbitrum`, `optimism`, `avalanche`, `fantom`, `base`.",
+        "description": "Returns full transaction history for a wallet \u2014 swaps, transfers, and contract interactions.\n\n**Lookup:** by `address`. Filter by `chain` \u2014 supports `ethereum`, `polygon`, `bsc`, `arbitrum`, `optimism`, `avalanche`, `fantom`, `base`.",
         "operationId": "wallet-history",
         "parameters": [
           {
-            "description": "Wallet address — must be a raw 0x-prefixed hex address, not an ENS name",
+            "description": "Wallet address \u2014 must be a raw 0x-prefixed hex address, not an ENS name",
             "explode": false,
             "in": "query",
             "name": "address",
             "required": true,
             "schema": {
-              "description": "Wallet address — must be a raw 0x-prefixed hex address, not an ENS name",
+              "description": "Wallet address \u2014 must be a raw 0x-prefixed hex address, not an ENS name",
               "examples": [
                 "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
               ],
@@ -15876,7 +15876,7 @@
     },
     "/gateway/v1/wallet/net-worth": {
       "get": {
-        "description": "Returns a time-series of the wallet's total net worth in USD.\n\nReturns ~288 data points at 5-minute intervals covering the last 24 hours. Fixed window — no custom time range supported.",
+        "description": "Returns a time-series of the wallet's total net worth in USD.\n\nReturns ~288 data points at 5-minute intervals covering the last 24 hours. Fixed window \u2014 no custom time range supported.",
         "operationId": "wallet-net-worth",
         "parameters": [
           {
@@ -15929,17 +15929,17 @@
     },
     "/gateway/v1/wallet/protocols": {
       "get": {
-        "description": "Returns all DeFi protocol positions for a wallet — lending, staking, LP, and farming with token breakdowns and USD values.\n\n**Lookup:** by `address`.",
+        "description": "Returns all DeFi protocol positions for a wallet \u2014 lending, staking, LP, and farming with token breakdowns and USD values.\n\n**Lookup:** by `address`.",
         "operationId": "wallet-protocols",
         "parameters": [
           {
-            "description": "Wallet address — must be a raw 0x-prefixed hex address, not an ENS name",
+            "description": "Wallet address \u2014 must be a raw 0x-prefixed hex address, not an ENS name",
             "explode": false,
             "in": "query",
             "name": "address",
             "required": true,
             "schema": {
-              "description": "Wallet address — must be a raw 0x-prefixed hex address, not an ENS name",
+              "description": "Wallet address \u2014 must be a raw 0x-prefixed hex address, not an ENS name",
               "examples": [
                 "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
               ],
@@ -16015,17 +16015,17 @@
     },
     "/gateway/v1/wallet/transfers": {
       "get": {
-        "description": "Returns recent token transfers **sent or received by a wallet**.\n\nPass the **wallet address** in `address` — returns all ERC-20/SPL token transfers where this wallet is the sender or receiver.\n\n**Included fields:** token contract, counterparty, raw amount, block timestamp.\n\nUse this to audit a wallet's token flow (e.g. inflows, outflows, airdrop receipts).\n\n**Lookup:** `address` (wallet, raw 0x hex or base58 — ENS not supported). Filter by `chain` — supports `ethereum`, `base`, `solana`.\n\n**Data refresh:** ~24 hours · **Chains:** Ethereum, Base (Solana uses a different source with no delay)",
+        "description": "Returns recent token transfers **sent or received by a wallet**.\n\nPass the **wallet address** in `address` \u2014 returns all ERC-20/SPL token transfers where this wallet is the sender or receiver.\n\n**Included fields:** token contract, counterparty, raw amount, block timestamp.\n\nUse this to audit a wallet's token flow (e.g. inflows, outflows, airdrop receipts).\n\n**Lookup:** `address` (wallet, raw 0x hex or base58 \u2014 ENS not supported). Filter by `chain` \u2014 supports `ethereum`, `base`, `solana`.\n\n**Data refresh:** ~24 hours \u00b7 **Chains:** Ethereum, Base (Solana uses a different source with no delay)",
         "operationId": "wallet-transfers",
         "parameters": [
           {
-            "description": "Wallet address — must be a raw address (0x-prefixed hex for EVM, base58 for Solana). ENS names like `vitalik.eth` are not supported; resolve to a 0x address first.",
+            "description": "Wallet address \u2014 must be a raw address (0x-prefixed hex for EVM, base58 for Solana). ENS names like `vitalik.eth` are not supported; resolve to a 0x address first.",
             "explode": false,
             "in": "query",
             "name": "address",
             "required": true,
             "schema": {
-              "description": "Wallet address — must be a raw address (0x-prefixed hex for EVM, base58 for Solana). ENS names like `vitalik.eth` are not supported; resolve to a 0x address first.",
+              "description": "Wallet address \u2014 must be a raw address (0x-prefixed hex for EVM, base58 for Solana). ENS names like `vitalik.eth` are not supported; resolve to a 0x address first.",
               "examples": [
                 "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
               ],
@@ -16150,7 +16150,7 @@
     },
     "/gateway/v1/web/fetch": {
       "get": {
-        "description": "Fetches a web page and converts it to clean, LLM-friendly markdown.\n\n**Options:**\n- `target_selector` — extract specific page sections\n- `remove_selector` — strip unwanted elements\n\nReturns 400 if the URL is invalid or unreachable.",
+        "description": "Fetches a web page and converts it to clean, LLM-friendly markdown.\n\n**Options:**\n- `target_selector` \u2014 extract specific page sections\n- `remove_selector` \u2014 strip unwanted elements\n\nReturns 400 if the URL is invalid or unreachable.",
         "operationId": "web-fetch",
         "parameters": [
           {
@@ -16260,7 +16260,7 @@
   },
   "servers": [
     {
-      "url": "/"
+      "url": "https://api.ask.surf"
     }
   ]
 }
