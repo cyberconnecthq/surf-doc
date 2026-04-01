@@ -228,15 +228,6 @@
       "CursorDataResponseXTweet": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/CursorDataResponseXTweet.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/XTweet"
@@ -259,15 +250,6 @@
       "CursorDataResponseXUser": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/CursorDataResponseXUser.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/XUser"
@@ -324,15 +306,6 @@
       "DataAPIError": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataAPIError.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "error": {
             "$ref": "#/components/schemas/DataAPIErrorDetail"
           }
@@ -361,15 +334,6 @@
       "DataObjectResponseExchangePerpResponse": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseExchangePerpResponse.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/ExchangePerpResponse"
           },
@@ -386,15 +350,6 @@
       "DataObjectResponseFundDetailItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseFundDetailItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/FundDetailItem"
           },
@@ -411,15 +366,6 @@
       "DataObjectResponseHumaProjectDetailBody": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseHumaProjectDetailBody.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/HumaProjectDetailBody"
           },
@@ -436,15 +382,6 @@
       "DataObjectResponseNewsArticleDetailItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseNewsArticleDetailItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/NewsArticleDetailItem"
           },
@@ -461,15 +398,6 @@
       "DataObjectResponseOnchainGasPriceItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseOnchainGasPriceItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/OnchainGasPriceItem"
           },
@@ -486,15 +414,6 @@
       "DataObjectResponseSocialDetailBody": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseSocialDetailBody.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/SocialDetailBody"
           },
@@ -511,15 +430,6 @@
       "DataObjectResponseWalletDetailBody": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseWalletDetailBody.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/WalletDetailBody"
           },
@@ -536,15 +446,6 @@
       "DataObjectResponseWebFetchResultItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseWebFetchResultItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/WebFetchResultItem"
           },
@@ -561,15 +462,6 @@
       "DataObjectResponseXUser": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataObjectResponseXUser.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "$ref": "#/components/schemas/XUser"
           },
@@ -586,15 +478,6 @@
       "DataResponseAirdropSearchItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseAirdropSearchItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/AirdropSearchItem"
@@ -617,15 +500,6 @@
       "DataResponseBridgeRankingItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseBridgeRankingItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/BridgeRankingItem"
@@ -648,15 +522,6 @@
       "DataResponseDexTradeItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseDexTradeItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/DexTradeItem"
@@ -679,15 +544,6 @@
       "DataResponseFundPortfolioItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseFundPortfolioItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/FundPortfolioItem"
@@ -710,15 +566,6 @@
       "DataResponseFundSearchItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseFundSearchItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/FundSearchItem"
@@ -741,15 +588,6 @@
       "DataResponseKalshiEvent": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseKalshiEvent.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiEvent"
@@ -772,15 +610,6 @@
       "DataResponseKalshiMarketItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseKalshiMarketItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiMarketItem"
@@ -803,15 +632,6 @@
       "DataResponseKalshiOIPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseKalshiOIPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiOIPoint"
@@ -834,15 +654,6 @@
       "DataResponseKalshiPricePoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseKalshiPricePoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiPricePoint"
@@ -865,15 +676,6 @@
       "DataResponseKalshiTrade": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseKalshiTrade.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiTrade"
@@ -896,15 +698,6 @@
       "DataResponseKalshiVolumePoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseKalshiVolumePoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/KalshiVolumePoint"
@@ -927,15 +720,6 @@
       "DataResponseMarketTopCoinItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseMarketTopCoinItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketTopCoinItem"
@@ -958,15 +742,6 @@
       "DataResponseMindshareTopProject": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseMindshareTopProject.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MindshareTopProject"
@@ -989,15 +764,6 @@
       "DataResponseNewsArticleItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseNewsArticleItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/NewsArticleItem"
@@ -1020,15 +786,6 @@
       "DataResponseOnchainRow": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseOnchainRow.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "additionalProperties": {},
@@ -1052,15 +809,6 @@
       "DataResponseOnchainSchemaTable": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseOnchainSchemaTable.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/OnchainSchemaTable"
@@ -1083,15 +831,6 @@
       "DataResponseOnchainTxItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseOnchainTxItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/OnchainTxItem"
@@ -1114,15 +853,6 @@
       "DataResponsePolymarketActivity": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketActivity.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketActivity"
@@ -1145,15 +875,6 @@
       "DataResponsePolymarketEvent": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketEvent.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketEvent"
@@ -1176,15 +897,6 @@
       "DataResponsePolymarketMarketItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketMarketItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketMarketItem"
@@ -1207,15 +919,6 @@
       "DataResponsePolymarketOIPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketOIPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketOIPoint"
@@ -1238,15 +941,6 @@
       "DataResponsePolymarketPosition": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketPosition.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketPosition"
@@ -1269,15 +963,6 @@
       "DataResponsePolymarketPricePoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketPricePoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketPricePoint"
@@ -1300,15 +985,6 @@
       "DataResponsePolymarketRankingItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketRankingItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketRankingItem"
@@ -1331,15 +1007,6 @@
       "DataResponsePolymarketTrade": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketTrade.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketTrade"
@@ -1362,15 +1029,6 @@
       "DataResponsePolymarketVolumePoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePolymarketVolumePoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PolymarketVolumePoint"
@@ -1393,15 +1051,6 @@
       "DataResponsePredictionMarketCategoryMetricsItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponsePredictionMarketCategoryMetricsItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/PredictionMarketCategoryMetricsItem"
@@ -1424,15 +1073,6 @@
       "DataResponseProjectEventItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseProjectEventItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectEventItem"
@@ -1455,15 +1095,6 @@
       "DataResponseProjectMetricPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseProjectMetricPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectMetricPoint"
@@ -1486,15 +1117,6 @@
       "DataResponseProjectSearchItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseProjectSearchItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectSearchItem"
@@ -1517,15 +1139,6 @@
       "DataResponseProjectTopRankItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseProjectTopRankItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ProjectTopRankItem"
@@ -1548,15 +1161,6 @@
       "DataResponseSmartFollowerHistoryPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseSmartFollowerHistoryPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/SmartFollowerHistoryPoint"
@@ -1579,15 +1183,6 @@
       "DataResponseSocialMindsharePoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseSocialMindsharePoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/SocialMindsharePoint"
@@ -1610,15 +1205,6 @@
       "DataResponseTokenHolderItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseTokenHolderItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/TokenHolderItem"
@@ -1641,15 +1227,6 @@
       "DataResponseTokenTransferItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseTokenTransferItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/TokenTransferItem"
@@ -1672,15 +1249,6 @@
       "DataResponseTokenUnlockPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseTokenUnlockPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/TokenUnlockPoint"
@@ -1703,15 +1271,6 @@
       "DataResponseWalletHistoryItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWalletHistoryItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletHistoryItem"
@@ -1734,15 +1293,6 @@
       "DataResponseWalletLabelItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWalletLabelItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletLabelItem"
@@ -1765,15 +1315,6 @@
       "DataResponseWalletNetWorthPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWalletNetWorthPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletNetWorthPoint"
@@ -1796,15 +1337,6 @@
       "DataResponseWalletProtocolItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWalletProtocolItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletProtocolItem"
@@ -1827,15 +1359,6 @@
       "DataResponseWalletSearchItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWalletSearchItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletSearchItem"
@@ -1858,15 +1381,6 @@
       "DataResponseWalletTransferItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWalletTransferItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WalletTransferItem"
@@ -1889,15 +1403,6 @@
       "DataResponseWebSearchResultItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseWebSearchResultItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/WebSearchResultItem"
@@ -1920,15 +1425,6 @@
       "DataResponseXTweet": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseXTweet.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/XTweet"
@@ -1951,15 +1447,6 @@
       "DataResponseYieldRankingItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/DataResponseYieldRankingItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/YieldRankingItem"
@@ -3098,15 +2585,6 @@
       "HumaOnchainSQLInputBody": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/HumaOnchainSQLInputBody.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "max_rows": {
             "default": 1000,
             "description": "Maximum number of rows to return",
@@ -5743,15 +5221,6 @@
       "SimpleListResponseExchangeDepthItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseExchangeDepthItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeDepthItem"
@@ -5774,15 +5243,6 @@
       "SimpleListResponseExchangeFundingHistoryItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseExchangeFundingHistoryItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeFundingHistoryItem"
@@ -5805,15 +5265,6 @@
       "SimpleListResponseExchangeKlineResponse": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseExchangeKlineResponse.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeKlineResponse"
@@ -5836,15 +5287,6 @@
       "SimpleListResponseExchangeLongShortRatioItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseExchangeLongShortRatioItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeLongShortRatioItem"
@@ -5867,15 +5309,6 @@
       "SimpleListResponseExchangeMarketItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseExchangeMarketItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangeMarketItem"
@@ -5898,15 +5331,6 @@
       "SimpleListResponseExchangePriceItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseExchangePriceItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/ExchangePriceItem"
@@ -5929,15 +5353,6 @@
       "SimpleListResponseLiquidationChartItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseLiquidationChartItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/LiquidationChartItem"
@@ -5960,15 +5375,6 @@
       "SimpleListResponseLiquidationExchangeItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseLiquidationExchangeItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/LiquidationExchangeItem"
@@ -5991,15 +5397,6 @@
       "SimpleListResponseLiquidationOrderItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseLiquidationOrderItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/LiquidationOrderItem"
@@ -6022,15 +5419,6 @@
       "SimpleListResponseMarketETFFlowItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseMarketETFFlowItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketETFFlowItem"
@@ -6053,15 +5441,6 @@
       "SimpleListResponseMarketFearGreedHistoryItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseMarketFearGreedHistoryItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketFearGreedHistoryItem"
@@ -6084,15 +5463,6 @@
       "SimpleListResponseMarketFuturesItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseMarketFuturesItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketFuturesItem"
@@ -6115,15 +5485,6 @@
       "SimpleListResponseMarketIndicatorItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseMarketIndicatorItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketIndicatorItem"
@@ -6146,15 +5507,6 @@
       "SimpleListResponseMarketMetricPoint": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseMarketMetricPoint.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketMetricPoint"
@@ -6177,15 +5529,6 @@
       "SimpleListResponseMarketOptionsItem": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/SimpleListResponseMarketOptionsItem.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "data": {
             "items": {
               "$ref": "#/components/schemas/MarketOptionsItem"
@@ -6439,15 +5782,6 @@
       "StructuredQuery": {
         "additionalProperties": false,
         "properties": {
-          "$schema": {
-            "description": "A URL to the JSON Schema for this object.",
-            "examples": [
-              "https://example.com/schemas/StructuredQuery.json"
-            ],
-            "format": "uri",
-            "readOnly": true,
-            "type": "string"
-          },
           "fields": {
             "description": "Columns to return. Omit to return all columns. Example for agent.ethereum_transactions: [`transaction_hash`, `from_address`, `value`]",
             "examples": [
@@ -7564,9 +6898,9 @@
     },
     "securitySchemes": {
       "AccessToken": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
     }
   },

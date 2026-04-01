@@ -202,7 +202,7 @@
     },
     "api": {
         "auth": {
-            "method": "bearer",
+            "method": "key",
             "name": "Authorization",
             "inputPrefix": "Bearer "
         },
