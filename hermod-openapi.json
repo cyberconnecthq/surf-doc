@@ -7561,6 +7561,13 @@
         ],
         "type": "object"
       }
+    },
+    "securitySchemes": {
+      "AccessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
   },
   "info": {
