@@ -1,7 +1,7 @@
 {
+    "$schema": "https://mintlify.com/docs.json",
     "theme": "mint",
     "name": "Surf API Documentation",
-
     "favicon": "/favicon.png",
     "colors": {
         "primary": "#000000",
@@ -9,160 +9,193 @@
         "dark": "#0050B4"
     },
     "navigation": {
-        "groups": [
+        "tabs": [
             {
-                "group": "Getting Started",
-                "pages": [
-                    "overview"
+                "tab": "Overview",
+                "groups": [
+                    {
+                        "group": "Getting Started",
+                        "pages": [
+                            "overview"
+                        ]
+                    }
                 ]
             },
             {
-                "group": "Chat API",
-                "pages": [
-                    "chat-completions"
+                "tab": "Chat API",
+                "groups": [
+                    {
+                        "group": "Reference",
+                        "pages": [
+                            "chat-completions"
+                        ]
+                    }
                 ]
             },
             {
-                "group": "Exchange",
-                "pages": [
-                    "data-api/exchange/markets",
-                    "data-api/exchange/price",
-                    "data-api/exchange/depth",
-                    "data-api/exchange/klines",
-                    "data-api/exchange/perp",
-                    "data-api/exchange/funding-history",
-                    "data-api/exchange/long-short-ratio"
-                ]
-            },
-            {
-                "group": "Market",
-                "pages": [
-                    "data-api/market/price",
-                    "data-api/market/ranking",
-                    "data-api/market/futures",
-                    "data-api/market/options",
-                    "data-api/market/etf",
-                    "data-api/market/price-indicator",
-                    "data-api/market/onchain-indicator",
-                    "data-api/market/fear-greed",
-                    "data-api/market/liquidation-chart",
-                    "data-api/market/liquidation-exchange-list",
-                    "data-api/market/liquidation-order"
-                ]
-            },
-            {
-                "group": "Token",
-                "pages": [
-                    "data-api/token/holders",
-                    "data-api/token/transfers",
-                    "data-api/token/dex-trades",
-                    "data-api/token/tokenomics"
-                ]
-            },
-            {
-                "group": "Project",
-                "pages": [
-                    "data-api/project/detail",
-                    "data-api/project/defi-metrics",
-                    "data-api/project/defi-ranking"
-                ]
-            },
-            {
-                "group": "Social",
-                "pages": [
-                    "data-api/social/detail",
-                    "data-api/social/mindshare",
-                    "data-api/social/ranking",
-                    "data-api/social/smart-followers-history",
-                    "data-api/social/tweets",
-                    "data-api/social/user",
-                    "data-api/social/user-posts",
-                    "data-api/social/user-following",
-                    "data-api/social/user-followers",
-                    "data-api/social/user-replies",
-                    "data-api/social/tweet-replies"
-                ]
-            },
-            {
-                "group": "News",
-                "pages": [
-                    "data-api/news/feed",
-                    "data-api/news/detail"
-                ]
-            },
-            {
-                "group": "Wallet",
-                "pages": [
-                    "data-api/wallet/detail",
-                    "data-api/wallet/labels-batch",
-                    "data-api/wallet/transfers",
-                    "data-api/wallet/history",
-                    "data-api/wallet/protocols",
-                    "data-api/wallet/net-worth"
-                ]
-            },
-            {
-                "group": "Onchain",
-                "pages": [
-                    "data-api/onchain/tx",
-                    "data-api/onchain/gas-price",
-                    "data-api/onchain/query",
-                    "data-api/onchain/sql",
-                    "data-api/onchain/schema",
-                    "data-api/onchain/bridge-ranking",
-                    "data-api/onchain/yield-ranking"
-                ]
-            },
-            {
-                "group": "Web",
-                "pages": [
-                    "data-api/web/fetch"
-                ]
-            },
-            {
-                "group": "Search",
-                "pages": [
-                    "data-api/search/project",
-                    "data-api/search/social-posts",
-                    "data-api/search/social-people",
-                    "data-api/search/news",
-                    "data-api/search/wallet",
-                    "data-api/search/web",
-                    "data-api/search/fund",
-                    "data-api/search/polymarket",
-                    "data-api/search/kalshi",
-                    "data-api/search/events",
-                    "data-api/search/airdrop"
-                ]
-            },
-            {
-                "group": "Fund",
-                "pages": [
-                    "data-api/fund/detail",
-                    "data-api/fund/portfolio",
-                    "data-api/fund/ranking"
-                ]
-            },
-            {
-                "group": "Prediction Market",
-                "pages": [
-                    "data-api/prediction-market/category-metrics",
-                    "data-api/prediction-market/polymarket-markets",
-                    "data-api/prediction-market/polymarket-events",
-                    "data-api/prediction-market/polymarket-trades",
-                    "data-api/prediction-market/polymarket-positions",
-                    "data-api/prediction-market/polymarket-prices",
-                    "data-api/prediction-market/polymarket-volumes",
-                    "data-api/prediction-market/polymarket-open-interest",
-                    "data-api/prediction-market/polymarket-ranking",
-                    "data-api/prediction-market/polymarket-activity",
-                    "data-api/prediction-market/kalshi-markets",
-                    "data-api/prediction-market/kalshi-events",
-                    "data-api/prediction-market/kalshi-trades",
-                    "data-api/prediction-market/kalshi-prices",
-                    "data-api/prediction-market/kalshi-volumes",
-                    "data-api/prediction-market/kalshi-open-interest",
-                    "data-api/prediction-market/kalshi-ranking"
+                "tab": "Data API",
+                "groups": [
+                    {
+                        "group": "API Reference",
+                        "pages": [
+                            "data-api/overview",
+                            {
+                                "group": "Exchange",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/exchange/markets",
+                                    "data-api/exchange/price",
+                                    "data-api/exchange/depth",
+                                    "data-api/exchange/klines",
+                                    "data-api/exchange/perp",
+                                    "data-api/exchange/funding-history",
+                                    "data-api/exchange/long-short-ratio"
+                                ]
+                            },
+                            {
+                                "group": "Market",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/market/price",
+                                    "data-api/market/ranking",
+                                    "data-api/market/futures",
+                                    "data-api/market/options",
+                                    "data-api/market/etf",
+                                    "data-api/market/price-indicator",
+                                    "data-api/market/onchain-indicator",
+                                    "data-api/market/fear-greed",
+                                    "data-api/market/liquidation-chart",
+                                    "data-api/market/liquidation-exchange-list",
+                                    "data-api/market/liquidation-order"
+                                ]
+                            },
+                            {
+                                "group": "Token",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/token/holders",
+                                    "data-api/token/transfers",
+                                    "data-api/token/dex-trades",
+                                    "data-api/token/tokenomics"
+                                ]
+                            },
+                            {
+                                "group": "Project",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/project/detail",
+                                    "data-api/project/defi-metrics",
+                                    "data-api/project/defi-ranking"
+                                ]
+                            },
+                            {
+                                "group": "Social",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/social/detail",
+                                    "data-api/social/mindshare",
+                                    "data-api/social/ranking",
+                                    "data-api/social/smart-followers-history",
+                                    "data-api/social/tweets",
+                                    "data-api/social/user",
+                                    "data-api/social/user-posts",
+                                    "data-api/social/user-following",
+                                    "data-api/social/user-followers",
+                                    "data-api/social/user-replies",
+                                    "data-api/social/tweet-replies"
+                                ]
+                            },
+                            {
+                                "group": "News",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/news/feed",
+                                    "data-api/news/detail"
+                                ]
+                            },
+                            {
+                                "group": "Wallet",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/wallet/detail",
+                                    "data-api/wallet/labels-batch",
+                                    "data-api/wallet/transfers",
+                                    "data-api/wallet/history",
+                                    "data-api/wallet/protocols",
+                                    "data-api/wallet/net-worth"
+                                ]
+                            },
+                            {
+                                "group": "Onchain",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/onchain/tx",
+                                    "data-api/onchain/gas-price",
+                                    "data-api/onchain/query",
+                                    "data-api/onchain/sql",
+                                    "data-api/onchain/schema",
+                                    "data-api/onchain/bridge-ranking",
+                                    "data-api/onchain/yield-ranking"
+                                ]
+                            },
+                            {
+                                "group": "Web",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/web/fetch"
+                                ]
+                            },
+                            {
+                                "group": "Search",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/search/project",
+                                    "data-api/search/social-posts",
+                                    "data-api/search/social-people",
+                                    "data-api/search/news",
+                                    "data-api/search/wallet",
+                                    "data-api/search/web",
+                                    "data-api/search/fund",
+                                    "data-api/search/polymarket",
+                                    "data-api/search/kalshi",
+                                    "data-api/search/events",
+                                    "data-api/search/airdrop"
+                                ]
+                            },
+                            {
+                                "group": "Fund",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/fund/detail",
+                                    "data-api/fund/portfolio",
+                                    "data-api/fund/ranking"
+                                ]
+                            },
+                            {
+                                "group": "Prediction Market",
+                                "expanded": false,
+                                "pages": [
+                                    "data-api/prediction-market/category-metrics",
+                                    "data-api/prediction-market/polymarket-markets",
+                                    "data-api/prediction-market/polymarket-events",
+                                    "data-api/prediction-market/polymarket-trades",
+                                    "data-api/prediction-market/polymarket-positions",
+                                    "data-api/prediction-market/polymarket-prices",
+                                    "data-api/prediction-market/polymarket-volumes",
+                                    "data-api/prediction-market/polymarket-open-interest",
+                                    "data-api/prediction-market/polymarket-ranking",
+                                    "data-api/prediction-market/polymarket-activity",
+                                    "data-api/prediction-market/kalshi-markets",
+                                    "data-api/prediction-market/kalshi-events",
+                                    "data-api/prediction-market/kalshi-trades",
+                                    "data-api/prediction-market/kalshi-prices",
+                                    "data-api/prediction-market/kalshi-volumes",
+                                    "data-api/prediction-market/kalshi-open-interest",
+                                    "data-api/prediction-market/kalshi-ranking"
+                                ]
+                            }
+                        ]
+                    }
                 ]
             }
         ]

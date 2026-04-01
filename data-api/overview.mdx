@@ -1,0 +1,102 @@
+---
+title: "Data API Overview"
+description: "Surf Data API — crypto market data, on-chain analytics, social signals, and more"
+---
+
+## About
+
+The Surf Data API provides typed REST endpoints for crypto market data, project analytics, social signals, on-chain queries, and more. All endpoints use credit-based billing with per-request rate limiting.
+
+**Base URL:** `https://api.ask.surf/gateway`
+
+## Parameter Conventions
+
+All endpoints follow a standardized naming scheme.
+
+### Asset Identification
+
+| Param | Type | Description | Example |
+|-------|------|-------------|---------|
+| `symbol` | string | Uppercase ticker symbol(s), comma-separated | `BTC`, `ETH,SOL` |
+| `q` | string | Free-text search keyword | `bitcoin` |
+| `id` | string | Surf entity UUID for direct lookup | `550e8400-...` |
+| `address` | string | On-chain contract or wallet address. Also accepts ENS names (e.g. `vitalik.eth`) | `0xdead...` |
+
+### Time & Aggregation
+
+| Param | Type | Description | Example |
+|-------|------|-------------|---------|
+| `time_range` | string or int | Lookback window | `7d`, `30d`, `365d`, `max` |
+| `interval` | string | Candlestick / indicator interval | `1h`, `1d`, `1w` |
+| `granularity` | string | Data aggregation granularity | `day`, `block`, `hour` |
+
+### Filtering & Sorting
+
+| Param | Type | Description | Example |
+|-------|------|-------------|---------|
+| `chain` | string | Blockchain name (canonical long-form only) | `ethereum`, `solana`, `base` |
+| `currency` | string | Quote currency | `usd`, `eur`, `btc` |
+| `metric` | string | Metric name (endpoint-specific enum) | `nupl`, `tvl` |
+| `type` | string | Category selector (endpoint-specific enum) | `us-btc-spot` |
+| `sort_by` | string | Sort field | `volume_24h`, `market_cap` |
+| `order` | string | Sort direction | `asc`, `desc` |
+
+### Pagination
+
+All list endpoints support:
+- `limit` (int, default: 20, max: 100) — results per page
+- `offset` (int, default: 0) — pagination offset
+
+### Supported Chains
+
+Use canonical long-form names only. Short aliases (eth, sol, matic, etc.) are **not accepted**.
+
+| Chain | Value |
+|-------|-------|
+| Ethereum | `ethereum` |
+| Polygon | `polygon` |
+| BNB Chain | `bsc` |
+| Solana | `solana` |
+| Avalanche | `avalanche` |
+| Arbitrum | `arbitrum` |
+| Optimism | `optimism` |
+| Fantom | `fantom` |
+| Base | `base` |
+| Linea | `linea` |
+| Cyber | `cyber` |
+
+Not all chains are available on every endpoint. Check each endpoint's `chain` enum for supported values.
+
+## Authentication
+
+All data endpoints require a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer <API_KEY>
+```
+
+## Error Responses
+
+All endpoints return errors in a consistent format:
+
+```json
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "insufficient credits"
+  }
+}
+```
+
+| HTTP Status | Meaning |
+|-------------|---------|
+| `400` | Bad request — invalid or missing parameters |
+| `401` | Unauthorized — missing or invalid API key |
+| `404` | Not found — the requested entity does not exist |
+| `422` | Validation error — parameter value is out of range or invalid |
+| `429` | Rate limited — too many requests, retry after the indicated interval |
+| `502` | Upstream error — a data source is temporarily unavailable |
+
+## Credits
+
+Each API call costs a certain number of credits. The cost is returned in every response under `meta.credits_used`. Check your remaining balance via `GET /v1/me/credit-balance`.
