@@ -9,40 +9,6 @@ The Surf Data API provides typed REST endpoints for crypto market data, project 
 
 **Base URL:** `https://api.ask.surf/gateway`
 
-## Authentication
-
-All data endpoints require a Bearer token in the `Authorization` header:
-
-```
-Authorization: Bearer <API_KEY>
-```
-
-## Error Responses
-
-All endpoints return errors in a consistent format:
-
-```json
-{
-  "error": {
-    "code": "FORBIDDEN",
-    "message": "insufficient credits"
-  }
-}
-```
-
-| HTTP Status | Meaning |
-|-------------|---------|
-| `400` | Bad request — invalid or missing parameters |
-| `401` | Unauthorized — missing or invalid API key |
-| `404` | Not found — the requested entity does not exist |
-| `422` | Validation error — parameter value is out of range or invalid |
-| `429` | Rate limited — too many requests, retry after the indicated interval |
-| `502` | Upstream error — a data source is temporarily unavailable |
-
-## Credits
-
-Each API call costs a certain number of credits. The cost is returned in every response under `meta.credits_used`. Check your remaining balance via `GET /v1/me/credit-balance`.
-
 ## Parameter Conventions
 
 All endpoints follow a standardized naming scheme.
@@ -100,3 +66,37 @@ Use canonical long-form names only. Short aliases (eth, sol, matic, etc.) are **
 | Cyber | `cyber` |
 
 Not all chains are available on every endpoint. Check each endpoint's `chain` enum for supported values.
+
+## Authentication
+
+All data endpoints require a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer <API_KEY>
+```
+
+## Error Responses
+
+All endpoints return errors in a consistent format:
+
+```json
+{
+  "error": {
+    "code": "FORBIDDEN",
+    "message": "insufficient credits"
+  }
+}
+```
+
+| HTTP Status | Meaning |
+|-------------|---------|
+| `400` | Bad request — invalid or missing parameters |
+| `401` | Unauthorized — missing or invalid API key |
+| `404` | Not found — the requested entity does not exist |
+| `422` | Validation error — parameter value is out of range or invalid |
+| `429` | Rate limited — too many requests, retry after the indicated interval |
+| `502` | Upstream error — a data source is temporarily unavailable |
+
+## Credits
+
+Each API call costs a certain number of credits. The cost is returned in every response under `meta.credits_used`. Check your remaining balance via `GET /v1/me/credit-balance`.
