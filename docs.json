@@ -201,6 +201,11 @@
         ]
     },
     "api": {
+        "auth": {
+            "method": "bearer",
+            "name": "Authorization",
+            "inputPrefix": "Bearer "
+        },
         "playground": {
             "display": "interactive",
             "validation": {
