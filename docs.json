@@ -30,6 +30,7 @@
                             "cli/introduction",
                             "cli/skills",
                             "cli/cli",
+                            "cli/ai-prompts",
                             "cli/use-cases-and-positioning"
                         ]
                     }
