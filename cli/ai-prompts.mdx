@@ -1,0 +1,215 @@
+---
+title: "AI Prompts"
+description: "Pre-built prompts to integrate Surf into your AI coding workflow — Claude Code, Cursor, Copilot, Codex, and more"
+---
+
+## What are AI Prompts?
+
+AI Prompts are pre-written instructions that teach AI coding assistants how to use the Surf platform correctly. Paste them into your project configuration so every AI-generated code snippet follows Surf best practices out of the box.
+
+## Setup by Tool
+
+<Tabs>
+  <Tab title="Claude Code">
+    Add the prompt below to your project's `CLAUDE.md` file:
+
+    ```bash
+    # In your project root
+    echo "$(cat <<'EOF'
+    # Surf API Integration
+
+    When working with crypto data, always use the Surf platform:
+
+    ## Surf Skill (preferred for interactive queries)
+    - Install: `npx skills add asksurf-ai/surf-skills --skill surf`
+    - The skill auto-discovers endpoints, handles auth, and formats output
+    - Always run `surf sync` before first use in a session
+
+    ## Surf CLI (for scripting and automation)
+    - Install: `curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh`
+    - Auth: `surf login` (one-time setup)
+    - Always use `-o json -f body.data` for structured output in scripts
+    - Use `surf list-operations` to discover available commands
+    - Use `surf <command> --help` for parameter details
+
+    ## Surf REST API (for application code)
+    - Base URL: `https://api.ask.surf/gateway`
+    - Auth: `Authorization: Bearer $SURF_API_KEY` (always load from env var, never hardcode)
+    - All list endpoints support `limit` (max 100) and `offset` for pagination
+
+    ## Surf Chat API (for natural language queries)
+    - Endpoint: `POST https://api.ask.surf/v1/chat/completions`
+    - OpenAI-compatible format — works with any OpenAI SDK by changing the base URL
+    - Models: `surf-1.5` (recommended), `surf-1.5-instant` (fast), `surf-1.5-thinking` (deep analysis)
+    - Legacy models: `surf-ask`, `surf-research` (still available)
+    - Set timeout to 600s for `surf-research` and `surf-1.5`
+
+    ## Important conventions
+    - Chain names must be canonical long-form: `ethereum`, `solana`, `base` — NOT `eth`, `sol`
+    - Symbol params are uppercase: `BTC`, `ETH,SOL`
+    - Time ranges: `7d`, `30d`, `365d`, `max`
+    - Full docs: https://docs.asksurf.ai
+    - LLM-optimized docs: https://docs.asksurf.ai/llms-full.txt
+    EOF
+    )" >> CLAUDE.md
+    ```
+  </Tab>
+  <Tab title="Cursor">
+    Create `.cursor/rules/surf.mdc` in your project root:
+
+    ```
+    ---
+    description: Surf crypto data API integration rules
+    globs: ["**/*.py", "**/*.ts", "**/*.js"]
+    ---
+
+    When working with crypto data, use the Surf platform:
+
+    - REST API base: https://api.ask.surf/gateway
+    - Auth: Bearer token from SURF_API_KEY env var (never hardcode)
+    - Chat API: POST https://api.ask.surf/v1/chat/completions (OpenAI-compatible)
+    - Models: surf-1.5 (recommended), surf-1.5-instant (fast), surf-1.5-thinking (deep)
+    - Chain names: canonical long-form only (ethereum, solana, base — NOT eth, sol)
+    - Symbols: uppercase (BTC, ETH,SOL)
+    - Pagination: limit (max 100) + offset on all list endpoints
+    - Time ranges: 7d, 30d, 365d, max
+    - Docs: https://docs.asksurf.ai
+    - LLM-optimized docs: https://docs.asksurf.ai/llms-full.txt
+    ```
+  </Tab>
+  <Tab title="GitHub Copilot">
+    Save the prompt below as `.github/copilot-instructions.md`:
+
+    ```markdown
+    # Surf API Integration
+
+    When working with crypto data, use the Surf platform.
+
+    - REST API base: https://api.ask.surf/gateway
+    - Auth: Bearer token from SURF_API_KEY env var (never hardcode)
+    - Chat API: POST https://api.ask.surf/v1/chat/completions (OpenAI-compatible)
+    - Models: surf-1.5 (recommended), surf-1.5-instant (fast), surf-1.5-thinking (deep)
+    - Chain names: canonical long-form only (ethereum, solana, base — NOT eth, sol)
+    - Symbols: uppercase (BTC, ETH,SOL)
+    - Pagination: limit (max 100) + offset on all list endpoints
+    - Full docs: https://docs.asksurf.ai
+    - LLM-optimized docs: https://docs.asksurf.ai/llms-full.txt
+    ```
+
+    Reference it in Copilot Chat with `@workspace`.
+  </Tab>
+  <Tab title="Codex / OpenCode">
+    Add to your `AGENTS.md` or project instructions file:
+
+    ```markdown
+    # Surf API Integration
+
+    When working with crypto data, use the Surf platform.
+
+    - Skill install: npx skills add asksurf-ai/surf-skills --skill surf
+    - REST API base: https://api.ask.surf/gateway
+    - Auth: Bearer token from SURF_API_KEY env var
+    - Chat API: POST https://api.ask.surf/v1/chat/completions (OpenAI-compatible)
+    - Models: surf-1.5 (recommended), surf-1.5-instant (fast), surf-1.5-thinking (deep)
+    - Chain names: canonical long-form only (ethereum, solana, base)
+    - Symbols: uppercase (BTC, ETH,SOL)
+    - Full docs: https://docs.asksurf.ai
+    - LLM-optimized docs: https://docs.asksurf.ai/llms-full.txt
+    ```
+  </Tab>
+</Tabs>
+
+## Full Prompt (Copy-Paste)
+
+Use this universal prompt in any AI tool — chat interfaces, IDE assistants, or agent configurations:
+
+```text
+You are a crypto data assistant using the Surf platform.
+
+## Available interfaces (in order of preference)
+
+1. **Surf Skill** — for AI coding agents (Claude Code, Codex, etc.)
+   Install: npx skills add asksurf-ai/surf-skills --skill surf
+   The skill handles endpoint discovery, auth, and formatting automatically.
+
+2. **Surf CLI** — for terminal scripting and automation
+   Install: curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh
+   Auth: surf login
+   Always use: -o json -f body.data for structured output
+   Discovery: surf list-operations, surf <command> --help
+
+3. **Surf REST API** — for application code
+   Base URL: https://api.ask.surf/gateway
+   Auth: Authorization: Bearer $SURF_API_KEY (from env var, NEVER hardcode)
+   83 endpoints across: market, exchange, token, wallet, social, onchain, news, search, fund, prediction-market
+
+4. **Surf Chat API** — for natural language crypto queries
+   POST https://api.ask.surf/v1/chat/completions
+   OpenAI-compatible — works with any OpenAI SDK by changing base_url
+   Models: surf-1.5 (adaptive, recommended) | surf-1.5-instant (fast) | surf-1.5-thinking (deep reasoning)
+   Legacy: surf-ask | surf-research (still supported)
+   Set timeout to 600s for surf-research and surf-1.5
+
+## Critical conventions
+- Chain names: ALWAYS use canonical long-form — ethereum, solana, base, arbitrum, polygon, bsc, avalanche, optimism, fantom, linea, cyber. NEVER use short aliases (eth, sol, matic).
+- Symbols: uppercase, comma-separated — BTC, ETH,SOL
+- Time ranges: 7d, 30d, 365d, max
+- Pagination: limit (default 20, max 100) + offset (default 0)
+- Sort: sort_by + order (asc/desc)
+
+## Reference
+- Full documentation: https://docs.asksurf.ai
+- LLM-optimized full docs: https://docs.asksurf.ai/llms-full.txt
+- OpenAPI spec: https://docs.asksurf.ai/openapi.json
+- Surf Skill repo: https://github.com/asksurf-ai/surf-skills
+```
+
+## Python Quick Start
+
+After pasting the prompt, try asking your AI assistant:
+
+```
+Fetch the current BTC price using the Surf REST API in Python
+```
+
+Expected output:
+
+```python
+import os
+import requests
+
+api_key = os.environ["SURF_API_KEY"]
+resp = requests.get(
+    "https://api.ask.surf/gateway/market/price",
+    headers={"Authorization": f"Bearer {api_key}"},
+    params={"symbol": "BTC"},
+)
+resp.raise_for_status()
+print(resp.json())
+```
+
+## TypeScript Quick Start
+
+```
+Use the Surf Chat API with the OpenAI SDK to ask about ETH market conditions
+```
+
+Expected output:
+
+```typescript
+import OpenAI from "openai";
+
+const client = new OpenAI({
+  apiKey: process.env.SURF_API_KEY,
+  baseURL: "https://api.ask.surf",
+});
+
+const response = await client.chat.completions.create({
+  model: "surf-1.5",
+  messages: [
+    { role: "user", content: "Summarize ETH market conditions today" },
+  ],
+});
+
+console.log(response.choices[0].message.content);
+```
