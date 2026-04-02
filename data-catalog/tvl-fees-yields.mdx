@@ -1,0 +1,280 @@
+---
+title: "TVL / Fees / Yields"
+description: "Protocol-level daily aggregates for total value locked, fee revenue, and yield rates."
+---
+
+**6 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_tvl_daily` | `agent` | `tvl_ethereum.daily` | `project, version, block_date` |
+| `agent.base_tvl_daily` | `agent` | `tvl_base.daily` | `project, version, block_date` |
+| `agent.arbitrum_tvl_daily` | `agent` | `tvl_arbitrum.daily` | `project, version, block_date` |
+| `agent.tron_tvl_daily` | `agent` | `tvl_tron.daily` | `project, version, block_date` |
+| `agent.ethereum_fees_daily` | `agent` | `fees_ethereum.daily` | `project, version, block_date` |
+| `agent.ethereum_yields_daily` | `agent` | `yields_ethereum.daily` | `project, version, block_date` |
+
+## Related Tables
+
+- `agent.ethereum_lending_daily`
+- `agent.ethereum_prices_day`
+
+## Sample Queries
+
+### 1. Top protocols by TVL
+
+```sql
+SELECT project, version, tvl_usd
+FROM agent.ethereum_tvl_daily
+WHERE block_date = (
+  SELECT max(block_date) FROM agent.ethereum_tvl_daily
+)
+ORDER BY tvl_usd DESC
+LIMIT 20
+```
+
+### 2. Top protocols by daily fees
+
+```sql
+SELECT project, version,
+       daily_fees_usd, daily_revenue_usd,
+       daily_supply_side_revenue_usd
+FROM agent.ethereum_fees_daily
+WHERE block_date = (
+  SELECT max(block_date) FROM agent.ethereum_fees_daily
+)
+ORDER BY daily_fees_usd DESC
+LIMIT 20
+```
+
+### 3. Top yielding pools today
+
+```sql
+SELECT project, symbol, pool_meta, apy, tvl_usd
+FROM agent.ethereum_yields_daily
+WHERE block_date = (
+  SELECT max(block_date) FROM agent.ethereum_yields_daily
+)
+  AND tvl_usd > 1000000
+ORDER BY apy DESC
+LIMIT 20
+```
+
+## Table Schemas
+
+### `agent.ethereum_tvl_daily`
+
+Protocol-level daily Total Value Locked aggregated across all pools and strategies. One row per (project, version, block_date). Priced using CoinGecko daily prices.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, aave, lido, eigenlayer, curve, etc. |
+| `version` | `String` | Protocol version string. Empty for single-version protocols. |
+| `block_date` | `Date` | Partition key. Carry-forward gap-fill ensures every day has a value. |
+| `tvl_usd` | `Nullable(Float64)` | Total deposited value in USD. CoinGecko pricing only — may undercount for unpriced tokens. |
+
+<Tip>
+
+- tvl_usd is the protocol-level total — individual pool/token breakdowns are in upstream models
+- TVL uses CoinGecko-only pricing. Unpriced tokens create gaps (see known_gaps below)
+- For total chain TVL: SELECT block_date, sum(tvl_usd) FROM ethereum_tvl_daily GROUP BY block_date
+- Cross-reference with fees_daily and yields_daily for protocol profitability analysis
+
+</Tip>
+
+<Warning>
+
+- CoinGecko-only pricing — tokens not listed on CoinGecko are valued at $0
+- Known gaps: Maverick V1 (~14% undercount), KyberSwap Elastic (~111% overcount, dead protocol)
+- Borrow-side balances excluded — this is supply-side TVL only
+- New protocols require manual model creation before appearing
+
+</Warning>
+
+### `agent.base_tvl_daily`
+
+Protocol-level daily Total Value Locked aggregated across all pools and strategies. One row per (project, version, block_date). Priced using CoinGecko daily prices.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, aave, lido, eigenlayer, curve, etc. |
+| `version` | `String` | Protocol version string. Empty for single-version protocols. |
+| `block_date` | `Date` | Partition key. Carry-forward gap-fill ensures every day has a value. |
+| `tvl_usd` | `Nullable(Float64)` | Total deposited value in USD. CoinGecko pricing only — may undercount for unpriced tokens. |
+
+<Tip>
+
+- tvl_usd is the protocol-level total — individual pool/token breakdowns are in upstream models
+- TVL uses CoinGecko-only pricing. Unpriced tokens create gaps (see known_gaps below)
+- For total chain TVL: SELECT block_date, sum(tvl_usd) FROM ethereum_tvl_daily GROUP BY block_date
+- Cross-reference with fees_daily and yields_daily for protocol profitability analysis
+
+</Tip>
+
+<Warning>
+
+- CoinGecko-only pricing — tokens not listed on CoinGecko are valued at $0
+- Known gaps: Maverick V1 (~14% undercount), KyberSwap Elastic (~111% overcount, dead protocol)
+- Borrow-side balances excluded — this is supply-side TVL only
+- New protocols require manual model creation before appearing
+
+</Warning>
+
+### `agent.arbitrum_tvl_daily`
+
+Protocol-level daily Total Value Locked aggregated across all pools and strategies. One row per (project, version, block_date). Priced using CoinGecko daily prices.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, aave, lido, eigenlayer, curve, etc. |
+| `version` | `String` | Protocol version string. Empty for single-version protocols. |
+| `block_date` | `Date` | Partition key. Carry-forward gap-fill ensures every day has a value. |
+| `tvl_usd` | `Nullable(Float64)` | Total deposited value in USD. CoinGecko pricing only — may undercount for unpriced tokens. |
+
+<Tip>
+
+- This table was recently added and may have zero or very few rows initially
+- Check SELECT count() and max(block_date) before building queries against it
+
+</Tip>
+
+<Warning>
+
+- Newly added — may have incomplete protocol coverage or zero rows
+- Same CoinGecko-only pricing limitations as Ethereum TVL
+
+</Warning>
+
+### `agent.tron_tvl_daily`
+
+Protocol-level daily Total Value Locked aggregated across all pools and strategies. One row per (project, version, block_date). Priced using CoinGecko daily prices.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, aave, lido, eigenlayer, curve, etc. |
+| `version` | `String` | Protocol version string. Empty for single-version protocols. |
+| `block_date` | `Date` | Partition key. Carry-forward gap-fill ensures every day has a value. |
+| `tvl_usd` | `Nullable(Float64)` | Total deposited value in USD. CoinGecko pricing only — may undercount for unpriced tokens. |
+
+<Tip>
+
+- Smaller coverage than Ethereum — fewer protocols indexed on Tron
+- JustLend is the dominant lending protocol on Tron
+
+</Tip>
+
+<Warning>
+
+- CoinGecko-only pricing — tokens not listed on CoinGecko are valued at $0
+- Known gaps: Maverick V1 (~14% undercount), KyberSwap Elastic (~111% overcount, dead protocol)
+- Borrow-side balances excluded — this is supply-side TVL only
+- New protocols require manual model creation before appearing
+
+</Warning>
+
+### `agent.ethereum_fees_daily`
+
+Protocol-level daily fee and revenue metrics following the DefiLlama 6-field standard. Aggregated from 35+ individual protocol fee models. One row per (project, version, block_date). Covers DEX trading fees, lending interest, staking commissions, and yield protocol fees.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase). Same naming as tvl_daily and yields_daily. |
+| `version` | `String` | Protocol version. Same naming as tvl_daily. |
+| `block_date` | `Date` | UTC block date |
+| `daily_fees_usd` | `Nullable(Float64)` | Total fees generated by the protocol on this day (all sources). |
+| `daily_user_fees_usd` | `Nullable(Float64)` | Fees directly paid by end users (trading fees, borrow interest, etc.). |
+| `daily_revenue_usd` | `Nullable(Float64)` | Revenue accruing to the protocol and its token holders. |
+| `daily_protocol_revenue_usd` | `Nullable(Float64)` | Revenue accruing to the protocol treasury. |
+| `daily_holders_revenue_usd` | `Nullable(Float64)` | Revenue accruing to governance token holders (buybacks, dividends). |
+| `daily_supply_side_revenue_usd` | `Nullable(Float64)` | Revenue accruing to liquidity providers, lenders, or stakers. |
+
+<Tip>
+
+- daily_fees_usd = total fees generated (user_fees + protocol_revenue + supply_side)
+- daily_revenue_usd = protocol_revenue + holders_revenue (excludes supply-side)
+- daily_supply_side_revenue_usd = fees earned by LPs/lenders/stakers
+- Filter by project for protocol-specific analysis (e.g., project='uniswap')
+- Cross-reference with tvl_daily for fee/TVL ratio (protocol efficiency)
+
+</Tip>
+
+<Warning>
+
+- Coverage depends on individual protocol models — not every DeFi protocol is included
+- Fee calculations use on-chain events + CoinGecko pricing — same price gaps as TVL
+- Some protocol fees (off-chain, governance-voted distributions) may not be captured
+
+</Warning>
+
+### `agent.ethereum_yields_daily`
+
+Pool-level daily yield and APY data across 37 Ethereum DeFi protocols. One row per (project, version, pool_address, token_address, block_date). Includes base APY, reward APY, borrow rates, TVL, impermanent loss metrics, and 7d/30d rolling statistics.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name |
+| `version` | `String` | Protocol version |
+| `block_date` | `Date` | UTC block date |
+| `pool_address` | `String` | Smart contract address of the pool/vault/market. |
+| `token_address` | `Nullable(String)` | Token contract address |
+| `symbol` | `Nullable(String)` | Token symbol for the asset in this yield position. |
+| `pool_meta` | `String` | Human-readable pool description (e.g., 'WETH-USDC 0.3%'). |
+| `apy` | `Nullable(Float64)` | Total annualized yield (base + reward). Can be negative for borrow-heavy pools. |
+| `apy_base` | `Nullable(Float64)` | Organic yield from protocol fees/interest (excludes token incentives). |
+| `apy_reward` | `Float64` | Yield from liquidity mining / token incentive programs. |
+| `tvl_usd` | `Nullable(Float64)` | Pool-level TVL for this specific pool and token. CoinGecko-priced. |
+| `il_7d` | `Float64` | 7-day impermanent loss estimate (as a fraction, e.g., -0.005 = -0.5%). |
+| `apy_base_7d` | `Nullable(Float64)` | 7-day rolling average base APY |
+| `apy_base_borrow` | `Float64` | Borrow APY (lending protocols) |
+| `apy_reward_borrow` | `Float64` | Borrow reward APY |
+| `total_supply_usd` | `Nullable(Float64)` | Total supply-side value (lending markets). |
+| `total_borrow_usd` | `Float64` | Total borrow-side value (lending markets). |
+| `apy_pct_1d` | `Nullable(Float64)` | 1-day APY percentage change. |
+| `apy_pct_7d` | `Nullable(Float64)` | 7-day APY percentage change. |
+| `apy_pct_30d` | `Nullable(Float64)` | 30-day APY percentage change. |
+| `apy_mean_30d` | `Nullable(Float64)` | 30-day rolling mean APY — smoothed metric for trend analysis. |
+| `stablecoin` | `Nullable(UInt8)` | 1 if the pool is stablecoin-denominated, 0 otherwise. |
+| `il_risk` | `String` | Impermanent loss risk flag. Relevant for AMM LP positions. |
+| `exposure` | `String` | Exposure type descriptor for the yield position. |
+| `volume_usd_1d` | `Float64` | 1-day trading volume for this pool (AMM pools only). |
+| `volume_usd_7d` | `Float64` | 7-day trading volume for this pool (AMM pools only). |
+
+<Tip>
+
+- Filter by stablecoin=1 for stablecoin-only yield analysis
+- apy is the headline rate (base + reward). apy_base is organic, apy_reward is incentivized
+- Use apy_mean_30d for smoothed comparison — daily apy can be volatile
+- tvl_usd gives pool-level TVL context for the yield — low TVL + high APY = risky
+- il_risk column flags pools with impermanent loss exposure
+- apy_base_borrow and apy_reward_borrow are lending market borrow-side rates
+
+</Tip>
+
+<Warning>
+
+- APY calculations vary by protocol — some use trailing 7d fees, others use instantaneous rates
+- Reward APY depends on token prices — can swing wildly with governance token volatility
+- Not all pools are covered — new or very small pools may be missing
+- Historical backfill depth varies by protocol
+
+</Warning>

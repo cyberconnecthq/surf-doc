@@ -1,0 +1,575 @@
+---
+title: "Prediction Markets"
+description: "Polymarket, Kalshi, and cross-platform prediction market data — trades, market details, prices, volume, and open interest."
+---
+
+**17 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.polymarket_trades` | `agent` | `polymarket_polygon.market_trades` | `block_time, tx_hash, evt_index` |
+| `agent.polymarket_market_details` | `agent` | `polymarket_polygon.market_details` | `condition_id, token_id` |
+| `agent.polymarket_events` | `agent` | `polymarket_polygon.events` | `—` |
+| `agent.polymarket_prices_daily` | `agent` | `polymarket_polygon.market_prices_daily` | `—` |
+| `agent.polymarket_prices_hourly` | `agent` | `polymarket_polygon.market_prices_hourly` | `—` |
+| `agent.polymarket_prices_latest` | `agent` | `polymarket_polygon.market_prices_latest` | `token_id` |
+| `agent.polymarket_volume_daily` | `agent` | `polymarket_polygon.market_volume_daily` | `condition_id, block_date` |
+| `agent.polymarket_volume_hourly` | `agent` | `polymarket_polygon.market_volume_hourly` | `condition_id, block_hour` |
+| `agent.polymarket_rolling_metrics` | `agent` | `polymarket_polygon.market_rolling_metrics` | `—` |
+| `agent.polymarket_open_interest_daily` | `agent` | `polymarket_polygon.market_open_interest_daily` | `condition_id, block_date` |
+| `agent.polymarket_user_activity` | `agent` | `polymarket_polygon.user_activity_v2` | `account, token_id, block_time` |
+| `agent.kalshi_market_details` | `agent` | `kalshi.market_details` | `market_ticker` |
+| `agent.kalshi_trades` | `agent` | `kalshi.trades` | `ticker, created_time, trade_id` |
+| `agent.prediction_markets_daily` | `agent` | `prediction_markets.daily` | `—` |
+| `agent.prediction_markets_matched_markets` | `agent` | `prediction_markets.matched_markets` | `—` |
+| `agent.prediction_markets_matched_daily` | `agent` | `prediction_markets.matched_daily` | `—` |
+| `agent.polymarket_positions` | `agent` | `None` | `—` |
+
+## Related Tables
+
+- `agent.kalshi_daily_categorized`
+- `agent.kalshi_market_report`
+- `agent.prediction_category_daily`
+
+## Sample Queries
+
+### 1. Daily volume by platform
+
+```sql
+SELECT date, source,
+       sum(notional_volume_usd) AS volume,
+       sum(open_interest_usd) AS oi
+FROM agent.prediction_markets_daily
+WHERE date >= today() - 30
+GROUP BY date, source
+ORDER BY date DESC, source
+```
+
+## Table Schemas
+
+### `agent.polymarket_trades`
+
+Individual Polymarket trade events (OrderFilled) with USD amounts, maker/taker addresses, condition IDs, and outcome context. One row per trade event. The primary source for Polymarket volume and trading activity analysis.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | Partition key. Always filter on this. |
+| `block_time` | `DateTime64(3)` | Trade timestamp. |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `exchange_address` | `String` |  |
+| `protocol` | `String` |  |
+| `project` | `String` | Protocol name |
+| `order_hash` | `String` |  |
+| `maker_address` | `String` | Maker (liquidity provider) address. |
+| `taker_address` | `String` | Taker (liquidity consumer) address. |
+| `maker_asset_id` | `String` |  |
+| `taker_asset_id` | `String` |  |
+| `maker_amount_filled` | `UInt256` |  |
+| `taker_amount_filled` | `UInt256` |  |
+| `fee_raw` | `UInt256` |  |
+| `outcome_token_id` | `String` |  |
+| `shares` | `Float64` |  |
+| `amount_usd` | `Float64` | Trade notional value in USD (one-sided). |
+| `price` | `Float64` | Token price in USD |
+| `fee_usd` | `Float64` |  |
+| `condition_id` | `String` | Unique market condition identifier. Links to market_details. |
+| `question` | `String` |  |
+| `outcome_index` | `UInt8` |  |
+| `outcome_label` | `String` |  |
+| `category` | `String` | Market category |
+| `market_slug` | `String` |  |
+| `market_end_date` | `DateTime` |  |
+| `neg_risk` | `UInt8` |  |
+| `question_id` | `String` |  |
+| `event_slug` | `String` |  |
+| `event_title` | `String` | Event title |
+
+<Tip>
+
+- account = maker captures both sides of a trade — do NOT fan out to both maker and taker
+- This follows Paradigm methodology: each OrderFilled with account=maker is one-sided volume
+- 934M rows — always filter on block_date or block_time ranges
+- condition_id links to market_details for market question and metadata
+- JOIN with polymarket_market_details ON condition_id for market enrichment
+
+</Tip>
+
+<Warning>
+
+- On-chain trades only — off-chain order book and cancellations not included
+- Pipeline lag: Polygon BQ export runs every 1h, typical lag ~1 hour
+- No aggregator/frontend attribution — all trades appear as CTF Exchange events
+
+</Warning>
+
+### `agent.polymarket_market_details`
+
+Polymarket market metadata dimension table. Contains market questions, descriptions, event groupings, resolution status, end dates, tags, and Polymarket links. One row per (condition_id, outcome_index) — use outcome_index=0 for one row per condition.
+
+**Engine**: MergeTree | **ORDER BY**: `condition_id, token_id`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `condition_id` | `String` | Primary market identifier. Links to all other Polymarket tables. |
+| `question_id` | `String` | Groups related conditions into a single question (e.g., 'Will X win?' has Yes/No conditions). |
+| `question` | `String` | Market question text (e.g., 'Will Bitcoin reach $100K by December 2026?'). |
+| `market_description` | `String` | Longer market description with resolution criteria. |
+| `token_id` | `String` |  |
+| `outcome_index` | `UInt8` | 0 or 1. Use 0 for deduplication (one row per condition). |
+| `outcome_label` | `String` |  |
+| `token_outcome_name` | `String` |  |
+| `category` | `String` | Market category |
+| `market_slug` | `String` |  |
+| `event_slug` | `String` | URL-safe event identifier for Polymarket links. |
+| `event_title` | `String` | Parent event title grouping multiple markets. |
+| `market_end_date` | `DateTime` | Scheduled market end date. |
+| `neg_risk` | `UInt8` | Boolean. True = this is a neg-risk (multi-outcome) market. |
+| `active` | `UInt8` | Boolean. True = market is currently open for trading. |
+| `closed` | `UInt8` | Boolean. True = market has been closed (trading halted). |
+| `archived` | `UInt8` |  |
+| `volume_total` | `Float64` |  |
+| `liquidity` | `Float64` |  |
+| `resolved_at` | `DateTime64(3)` | Resolution timestamp. Null if unresolved. |
+| `created_at` | `DateTime` |  |
+| `updated_at` | `DateTime` |  |
+| `market_id` | `UInt64` |  |
+| `start_time` | `DateTime` |  |
+| `close_time` | `DateTime` |  |
+| `game_start_time` | `DateTime` |  |
+| `tags` | `String` | Array of category tags. |
+| `volume_1wk` | `Float64` |  |
+| `volume_1mo` | `Float64` |  |
+| `volume_1yr` | `Float64` |  |
+| `resolution_source` | `String` |  |
+| `image` | `String` |  |
+| `icon` | `String` |  |
+| `neg_risk_market_id` | `String` |  |
+| `event_description` | `String` |  |
+| `event_start_time` | `DateTime` |  |
+| `event_image` | `String` |  |
+| `event_resolution_source` | `String` |  |
+| `status` | `String` | Market status (active, closed, resolved) |
+| `winning_outcome_index` | `Int8` |  |
+| `polymarket_link` | `String` | Direct URL to this market on polymarket.com. |
+
+<Tip>
+
+- Filter outcome_index = 0 for one row per condition (avoids duplicates)
+- question is the market title/question text
+- active=true means the market is currently tradeable
+- closed=true means the market has stopped trading (may or may not be resolved)
+- Tags is an array — use hasAny(tags, ['politics']) for tag filtering
+- condition_id is the primary join key to trades, positions, volume, and OI tables
+
+</Tip>
+
+<Warning>
+
+- Metadata reflects current state — does not track historical changes to descriptions or end dates
+- category/subcategory not directly in this table — join with curated ranking or category tables
+
+</Warning>
+
+### `agent.polymarket_events`
+
+Polymarket event-level metadata. Events group related markets (conditions) under a single theme (e.g., "2026 US Presidential Election" groups multiple candidate-specific markets). Useful for navigating the market hierarchy.
+
+<Tip>
+
+- Events contain multiple conditions — join with market_details on event_slug for full expansion
+- Useful for building hierarchical market browsers (event -> conditions -> trades)
+
+</Tip>
+
+<Warning>
+
+- Not all markets belong to events — some standalone markets have no parent event
+
+</Warning>
+
+### `agent.polymarket_prices_daily`
+
+Daily outcome token prices for Polymarket markets. Tracks the probability (price) of each outcome over time. Useful for building price charts and tracking market sentiment evolution.
+
+<Tip>
+
+- Price represents implied probability (0-1 range, where 1.0 = 100% chance)
+- Combine with market_details for market question context
+- For binary markets, only one outcome price is needed (the other is 1 - price)
+
+</Tip>
+
+<Warning>
+
+- Daily granularity only — no intraday price snapshots available in this table
+- Prices reflect last trade of day, not volume-weighted average
+
+</Warning>
+
+### `agent.polymarket_prices_hourly`
+
+Hourly CLOB mid-prices per Polymarket outcome token. Provides intraday price (implied probability) resolution for building higher-frequency charts and detecting rapid sentiment shifts.
+
+<Tip>
+
+- Prices represent implied probability (0-1 range). Multiply by 100 for percentage.
+- Filter on block_date first for partition pruning, then narrow by hour if needed
+- For binary markets, one outcome price is sufficient — the other is 1 - price
+- JOIN with polymarket_market_details ON condition_id for market question context
+
+</Tip>
+
+<Warning>
+
+- Mid-prices from CLOB — may be stale for illiquid markets with wide spreads
+- Not volume-weighted — reflects order book mid, not trade-weighted average
+
+</Warning>
+
+### `agent.polymarket_prices_latest`
+
+Latest snapshot price per Polymarket outcome token. A convenience view that returns the most recent price for each condition, eliminating the need for argMax() queries against the full prices table.
+
+**Engine**: MergeTree | **ORDER BY**: `token_id`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `token_id` | `String` |  |
+| `condition_id` | `String` | Polymarket condition ID |
+| `question` | `String` |  |
+| `outcome_index` | `UInt8` |  |
+| `outcome_label` | `String` |  |
+| `last_updated` | `Date` |  |
+| `latest_price` | `Float64` |  |
+
+<Tip>
+
+- One row per condition — no time filter needed
+- Equivalent to argMax(price, timestamp) from the full prices table but pre-computed
+- JOIN with polymarket_market_details ON condition_id for enrichment
+
+</Tip>
+
+<Warning>
+
+- Point-in-time snapshot — reflects the most recent pipeline run, not tick-level
+- Stale for markets with no recent trading activity
+
+</Warning>
+
+### `agent.polymarket_volume_daily`
+
+Daily aggregated trading volume per Polymarket market condition. Pre-computed from individual trades for efficient time-series queries. One row per (condition_id, block_date).
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `condition_id, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | Date of the volume observation. |
+| `condition_id` | `String` | Market condition identifier. |
+| `trade_count` | `UInt64` |  |
+| `notional_volume_usd` | `Float64` | Daily notional trading volume (one-sided, USD) |
+
+<Tip>
+
+- Much faster than aggregating polymarket_trades for daily volume — prefer this table
+- JOIN with market_details ON condition_id for market context
+- For platform-level total volume, sum across all conditions per day
+
+</Tip>
+
+<Warning>
+
+- Granularity is daily only — for intraday volume, use polymarket_trades directly
+
+</Warning>
+
+### `agent.polymarket_volume_hourly`
+
+Hourly trading volume per Polymarket condition. Pre-aggregated from individual trades for efficient intraday volume analysis without scanning the full trades table.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(toDate(block_hour))` | **ORDER BY**: `condition_id, block_hour`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_hour` | `DateTime` |  |
+| `condition_id` | `String` | Polymarket condition ID |
+| `trade_count` | `UInt64` |  |
+| `notional_volume_usd` | `Float64` | Daily notional trading volume (one-sided, USD) |
+
+<Tip>
+
+- Filter on block_date for partition pruning, then refine by hour
+- Much faster than aggregating polymarket_trades hourly
+- JOIN with polymarket_market_details ON condition_id for market context
+
+</Tip>
+
+<Warning>
+
+- Hourly granularity only — for sub-hour analysis, use polymarket_trades
+
+</Warning>
+
+### `agent.polymarket_rolling_metrics`
+
+Pre-computed rolling window metrics for Polymarket markets (e.g., 7-day volume, 30-day volume, trailing unique traders). Useful for ranking and screening markets by recent activity without expensive window function queries.
+
+<Tip>
+
+- Pre-computed rolling windows are much faster than manual window functions on trades
+- Use for market ranking and filtering — then drill into volume_daily or trades for details
+
+</Tip>
+
+<Warning>
+
+- Rolling window definitions are fixed — cannot customize the window period
+- Updated periodically, not real-time
+
+</Warning>
+
+### `agent.polymarket_open_interest_daily`
+
+Cumulative open interest per Polymarket condition derived from on-chain events (splits, merges, redemptions, conversions). SPARSE: only has rows on days with events, not every calendar day. Requires gap-fill logic for time series.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `condition_id, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | Date of the OI change event. SPARSE — not every day has a row. |
+| `condition_id` | `String` | Market condition identifier. |
+| `daily_net_change_raw` | `Int256` |  |
+| `daily_net_change_usd` | `Float64` |  |
+| `open_interest_raw` | `Int256` |  |
+| `open_interest_usd` | `Float64` | Cumulative OI in USD for this condition on this date. Can be negative for neg-risk conditions. |
+
+<Tip>
+
+- SPARSE data — use argMax(open_interest_usd, block_date) per condition to gap-fill (carry forward)
+- Do NOT use HAVING last_oi > 0 — some conditions legitimately have negative OI (neg-risk markets)
+- Do NOT filter by market resolution status — resolved markets' OI decreases naturally via PayoutRedemption
+- For global OI: sum(argMax(open_interest_usd, block_date)) across all conditions
+- Neg-risk markets: individual conditions can have large negative OI — the group total across sibling conditions is correct
+- Do NOT apply neg_risk correction (sum/count(DISTINCT condition_id)) — the raw sum is already correct
+
+</Tip>
+
+<Warning>
+
+- Sparse — only rows on days with OI-affecting events, not a continuous daily series
+- ~5% undercount vs Polymarket subgraph due to ~97K conditions missing from decoded events
+- Individual neg-risk condition OI can be large negative — always sum across sibling conditions for market-level OI
+
+</Warning>
+
+### `agent.polymarket_user_activity`
+
+Per-user trade activity on Polymarket including buy/sell counts, volume, and realized PnL. Aggregated by (address, condition_id) to show each user's activity within each market.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `account, token_id, block_time`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `account` | `String` |  |
+| `token_id` | `String` |  |
+| `event_type` | `String` |  |
+| `side` | `String` |  |
+| `amount` | `Float64` | Amount in display units (decimal-adjusted) |
+| `price` | `Float64` | Token price in USD |
+| `amount_usd` | `Float64` | USD value of transfer |
+
+<Tip>
+
+- Filter by address for single-wallet analysis
+- account = maker follows Paradigm methodology — captures both sides correctly
+- JOIN with polymarket_market_details ON condition_id for market context
+- Aggregated per (address, condition_id) — sum across conditions for total user activity
+
+</Tip>
+
+<Warning>
+
+- Uses proxy wallet addresses — no mapping to user identities
+- PnL is realized only — does not include unrealized gains on open positions
+
+</Warning>
+
+### `agent.kalshi_market_details`
+
+Kalshi market metadata and snapshot data. Contains market tickers, titles, categories, settlement details, and status. Kalshi uses a three-level hierarchy: series -> events -> markets. MVE (parlay) markets skip the event layer.
+
+**Engine**: MergeTree | **ORDER BY**: `market_ticker`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `market_ticker` | `String` | Unique market identifier (Kalshi) |
+| `event_ticker` | `String` | Parent event ticker. Empty for MVE (parlay) markets. |
+| `event_title` | `String` | Event title |
+| `event_subtitle` | `String` |  |
+| `title` | `String` | Market title/question text. |
+| `start_time` | `DateTime64(3)` |  |
+| `end_time` | `DateTime64(3)` |  |
+| `close_time` | `DateTime64(3)` |  |
+| `category` | `String` | Market category |
+| `subcategory` | `String` | Market subcategory |
+| `payout_type` | `String` |  |
+| `status` | `String` | Market status: 'active', 'closed', 'settled', etc. |
+| `last_price` | `Float64` |  |
+| `total_volume` | `UInt64` | Cumulative total volume |
+| `daily_volume` | `UInt64` | Daily contract volume |
+| `open_interest` | `Float64` | End-of-day open interest (contracts) |
+| `result` | `String` | Market result (if resolved) |
+| `yes_bid` | `Float64` |  |
+| `yes_ask` | `Float64` |  |
+| `no_bid` | `Float64` |  |
+| `no_ask` | `Float64` |  |
+| `last_day_open_interest` | `Float64` |  |
+
+<Tip>
+
+- Kalshi hierarchy: series -> events -> markets. MVE markets skip the event layer
+- event_ticker links to events; series_ticker from events links to series
+- For MVE markets, derive series_ticker from splitByChar('-', ticker)[1]
+- Use FINAL if the underlying table is ReplacingMergeTree
+
+</Tip>
+
+<Warning>
+
+- Large table (55.6M rows) due to historical snapshots — filter by status or date range
+- MVE (parlay) markets have different structure than regular markets — see Kalshi data model docs
+- Centralized exchange data — no on-chain verification possible
+
+</Warning>
+
+### `agent.kalshi_trades`
+
+Individual Kalshi trade events. Each row represents a single fill on the Kalshi exchange with price, quantity, side, and market ticker. The raw trade-level data source for Kalshi volume analysis.
+
+**Engine**: ReplacingMergeTree | **Partition**: `toYYYYMM(trade_date)` | **ORDER BY**: `ticker, created_time, trade_id`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `trade_id` | `String` |  |
+| `ticker` | `String` |  |
+| `num_contracts` | `UInt32` |  |
+| `taker_side` | `String` |  |
+| `maker_side` | `String` |  |
+| `yes_price` | `Float64` |  |
+| `no_price` | `Float64` |  |
+| `trade_date` | `Date` |  |
+| `created_time` | `DateTime64(3)` |  |
+
+<Tip>
+
+- Filter on date or created_time for partition pruning
+- ticker links to kalshi_market_details for market metadata
+- Price is in cents (0-100 range for binary markets)
+- count is the number of contracts in the fill
+
+</Tip>
+
+<Warning>
+
+- Centralized exchange data — no on-chain verification
+- Trade history depth depends on Kalshi API availability
+- No user/wallet attribution — trades are anonymous
+
+</Warning>
+
+### `agent.prediction_markets_daily`
+
+Unified daily prediction market volume and open interest across Kalshi and Polymarket. One row per (date, source, category, subcategory). Uses Paradigm-compatible category taxonomy. Only includes dates where BOTH platforms have data to avoid partial comparisons.
+
+<Tip>
+
+- source is 'Kalshi' or 'Polymarket' — filter for single-platform or compare both
+- Both platforms must have data for a date to appear — gaps mean one platform had no data
+- notional_volume_usd is one-sided volume in USD
+- open_interest_usd is cumulative OI in USD
+- For total market volume: sum both sources
+
+</Tip>
+
+<Warning>
+
+- Only dates with data from BOTH platforms — single-platform activity on gap days is lost
+- Category taxonomy depends on upstream categorization models — some markets may be 'UNKNOWN'
+- Volume methodology may differ slightly between platforms (both aim for one-sided)
+
+</Warning>
+
+### `agent.prediction_markets_matched_markets`
+
+Polymarket-to-Kalshi matched market pairs. Each row is a strict one-to-one (condition_id, market_ticker) pair linking the same event across platforms. Enriched with live volume and OI from both sides. Generated via LLM matching (Grok) with confidence scoring.
+
+<Tip>
+
+- match_type is 'exact' (same question) or 'related' (same event, different angle)
+- confidence ranges from 75-100 — higher is more reliable
+- One-to-one mapping — no fan-out or duplication
+- JOIN with platform-specific tables for additional enrichment
+
+</Tip>
+
+<Warning>
+
+- Coverage depends on LLM matching quality — not all markets are matched
+- Confidence threshold at 75+ — some lower-confidence matches may be excluded
+- Seed-based — new markets require re-running the matching pipeline
+
+</Warning>
+
+### `agent.prediction_markets_matched_daily`
+
+Daily volume and open interest comparison for matched Polymarket-Kalshi market pairs. One row per (condition_id, market_ticker, date) with side-by-side volume and OI from both platforms. The time-series companion to matched_markets.
+
+<Tip>
+
+- Filter on date for partition pruning
+- Compare polymarket_volume_usd vs kalshi_volume_usd for platform share on matched events
+- JOIN with prediction_markets_matched_markets for match metadata (confidence, match_type)
+
+</Tip>
+
+<Warning>
+
+- Only includes matched markets — unmatched markets on either platform are excluded
+- Date coverage limited to overlap period where both platforms have data
+
+</Warning>
+
+### `agent.polymarket_positions`
+
+Current Polymarket user positions with market context. A custom view that JOINs user_positions_v2 (on-chain position tracking) with market_details for enrichment. Shows open positions with balance, PnL, cost basis, and market metadata. Filters to positions with net_shares > 0.000001 (non-dust).
+
+<Tip>
+
+- Filter by address for wallet-specific portfolio view
+- holdings_usd = net_shares * value_per_share (current market value of position)
+- pnl is the realized + unrealized PnL for this position
+- cost_basis is the total USD spent acquiring the position
+- avg_buy_price is the volume-weighted average entry price
+- resolution_status shows if the market has resolved (won/lost/open)
+
+</Tip>
+
+<Warning>
+
+- Current state snapshot — does not track historical position changes
+- Only shows positions with net_shares > 0.000001 — fully closed positions are excluded
+- Proxy wallet address, not the user's main wallet — address mapping not included
+
+</Warning>

@@ -1,0 +1,88 @@
+---
+title: "Chain Metrics"
+description: "Daily chain-level aggregates including transaction counts, active addresses, gas usage, and contract deployments."
+---
+
+**3 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_chain_daily` | `agent` | `chain_metrics_ethereum.daily` | `—` |
+| `agent.base_chain_daily` | `agent` | `chain_metrics_base.daily` | `—` |
+| `agent.arbitrum_chain_daily` | `agent` | `chain_metrics_arbitrum.daily` | `—` |
+
+## Related Tables
+
+- `agent.arbitrum_dex_trades`
+- `agent.arbitrum_tvl_daily`
+- `agent.base_dex_trades`
+- `agent.base_tvl_daily`
+- `agent.ethereum_dex_trades`
+- `agent.ethereum_staking_daily`
+- `agent.ethereum_tvl_daily`
+## Table Schemas
+
+### `agent.ethereum_chain_daily`
+
+Daily chain-level activity metrics in the style of Artemis ez_metrics. Transaction counts, active addresses (HLL approximate), gas usage, native value transferred, and contract deployments.
+
+<Tip>
+
+- active_senders and active_receivers use HLL (uniq) — approximately 2% error margin
+- avg_gas_price_gwei is the mean effective gas price in Gwei — not a median or percentile
+- total_native_transferred is in native units (ETH/BNB), not USD
+- contract_deployments counts transactions where receipt_contract_address is non-empty
+
+</Tip>
+
+<Warning>
+
+- HLL-based active_senders/receivers are ~2% approximate — not exact unique counts
+- Does not distinguish EOA vs contract senders
+- No USD valuation of native transfers — join with prices table manually
+- L2 gas pricing may not reflect actual user cost (excludes L1 data fees)
+
+</Warning>
+
+### `agent.base_chain_daily`
+
+Daily chain-level activity metrics in the style of Artemis ez_metrics. Transaction counts, active addresses (HLL approximate), gas usage, native value transferred, and contract deployments.
+
+<Tip>
+
+- active_senders and active_receivers use HLL (uniq) — approximately 2% error margin
+- Base is an L2 — avg_gas_price_gwei reflects L2 execution gas only, not L1 data costs
+- total_native_transferred is in ETH (Base uses bridged ETH as native token)
+- contract_deployments on Base are typically higher than Ethereum mainnet due to lower gas costs
+
+</Tip>
+
+<Warning>
+
+- HLL-based active_senders/receivers are ~2% approximate
+- L2 gas price does not reflect actual user cost (excludes L1 data posting fees)
+- No USD valuation of native transfers
+
+</Warning>
+
+### `agent.arbitrum_chain_daily`
+
+Daily chain-level activity metrics in the style of Artemis ez_metrics. Transaction counts, active addresses (HLL approximate), gas usage, native value transferred, and contract deployments.
+
+<Tip>
+
+- active_senders and active_receivers use HLL (uniq) — approximately 2% error margin
+- Arbitrum is an L2 — avg_gas_price_gwei reflects L2 execution gas only, not L1 data costs
+- total_native_transferred is in ETH (Arbitrum uses bridged ETH as native token)
+
+</Tip>
+
+<Warning>
+
+- HLL-based active_senders/receivers are ~2% approximate
+- L2 gas price does not reflect actual user cost (excludes L1 data posting fees)
+- No USD valuation of native transfers
+
+</Warning>

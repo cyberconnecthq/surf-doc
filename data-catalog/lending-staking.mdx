@@ -1,0 +1,64 @@
+---
+title: "Lending & Staking"
+description: "Protocol-level daily activity aggregates for lending and staking protocols."
+---
+
+**2 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_lending_daily` | `agent` | `lending_ethereum.daily` | `—` |
+| `agent.ethereum_staking_daily` | `agent` | `staking_ethereum.daily` | `—` |
+
+## Related Tables
+
+- `agent.ethereum_fees_daily`
+- `agent.ethereum_prices_day`
+- `agent.ethereum_tvl_daily`
+- `agent.ethereum_yields_daily`
+## Table Schemas
+
+### `agent.ethereum_lending_daily`
+
+Protocol-level daily lending activity metrics aligned with DefiLlama format. One row per (project, version, block_date). Covers deposits, withdrawals, borrows, repayments, and liquidations with USD volumes and participant counts. Sources from 15+ lending protocols (Aave v1/v2/v3, Compound, Morpho, Spark, etc.).
+
+<Tip>
+
+- deposit_volume_usd and borrow_volume_usd are daily FLOW (activity), not outstanding STOCK
+- For net deposits: deposit_volume_usd - withdraw_volume_usd
+- liquidation_volume_usd combines supply-side + borrow-side liquidation amounts
+- active_depositors and active_borrowers are daily unique counts (not cumulative)
+- Cross-reference with tvl_daily for utilization analysis
+
+</Tip>
+
+<Warning>
+
+- Activity metrics only — for outstanding balances, use TVL tables
+- USD pricing via CoinGecko — same coverage gaps as other USD-denominated tables
+- Not all lending protocols are covered — new or niche protocols may be missing
+
+</Warning>
+
+### `agent.ethereum_staking_daily`
+
+Ethereum beacon chain staking flows by entity, aggregated daily. One row per (entity, entity_category, block_date). Tracks deposits, withdrawals (full + partial), net flow in both ETH and USD. Entity attribution maps validators to staking providers (Lido, Coinbase, Rocket Pool, etc.).
+
+<Tip>
+
+- entity is the staking provider name (e.g., 'Lido', 'Coinbase', 'Rocket Pool')
+- entity_category groups providers (e.g., 'liquid_staking', 'cex', 'solo', 'staking_pool')
+- net_flow_eth = deposits_eth - withdrawals_eth (positive = net staking inflow)
+- USD values use WETH price from CoinGecko — null on days with missing ETH price
+
+</Tip>
+
+<Warning>
+
+- Entity attribution is best-effort — some validators are unattributed ('unknown')
+- Does not include consensus rewards, only deposit/withdrawal flows
+- Partial withdrawals (skimming) and full withdrawals are combined in withdrawals_eth
+
+</Warning>

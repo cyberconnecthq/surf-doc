@@ -1,0 +1,143 @@
+---
+title: "Hyperliquid"
+description: "Perpetual futures market data, funding rates, and contract metadata from Hyperliquid L1."
+---
+
+**3 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.hyperliquid_market_data` | `agent` | `hyperliquid.market_data` | `coin, snapshot_time` |
+| `agent.hyperliquid_funding_rates` | `agent` | `hyperliquid.funding_rates` | `coin, time` |
+| `agent.hyperliquid_perp_meta` | `agent` | `hyperliquid.perp_meta` | `coin` |
+
+## Related Tables
+
+- `agent.hyperevm_dex_trades`
+
+## Sample Queries
+
+### 1. Get recent Transfer events for USDC
+
+```sql
+SELECT *
+FROM ethereum.event_logs
+WHERE topics[1] = '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
+  AND address = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+ORDER BY block_number DESC
+LIMIT 10
+```
+
+### 2. Count transactions per day for the last week
+
+```sql
+SELECT block_date, count() AS tx_count
+FROM ethereum.transactions
+WHERE block_date >= today() - 7
+GROUP BY block_date
+ORDER BY block_date
+```
+
+## Table Schemas
+
+### `agent.hyperliquid_market_data`
+
+Hourly perpetual futures market snapshots from Hyperliquid Info API. Includes funding rates, open interest, prices (oracle, mark, mid), 24h volume, and premium for all listed perpetual contracts. ReplacingMergeTree — use FINAL.
+
+**Engine**: ReplacingMergeTree | **Partition**: `toYYYYMM(snapshot_date)` | **ORDER BY**: `coin, snapshot_time`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `snapshot_time` | `DateTime64(3)` | Hourly snapshot timestamp (DateTime64). |
+| `coin` | `String` | Perpetual contract ticker (e.g., 'BTC', 'ETH', 'SOL'). Links to perp_meta. |
+| `funding` | `Float64` | Current predicted funding rate (per-hour). Positive = longs pay shorts. |
+| `open_interest` | `Float64` | Total open interest in contract units (not USD). |
+| `prev_day_px` | `Float64` | Previous day's closing price. |
+| `day_ntl_vlm` | `Float64` | 24-hour notional volume in USD. |
+| `premium` | `Nullable(Float64)` | Basis premium (mark - oracle). Nullable. |
+| `oracle_px` | `Float64` | Oracle price (external reference, typically Pyth/Chainlink). |
+| `mark_px` | `Float64` | Mark price (used for margin and liquidation calculations). |
+| `mid_px` | `Nullable(Float64)` | Mid price of the order book. Nullable. |
+| `impact_bid_px` | `Nullable(Float64)` | Price for a standard-size market sell. Nullable — indicates depth. |
+| `impact_ask_px` | `Nullable(Float64)` | Price for a standard-size market buy. Nullable — indicates depth. |
+| `snapshot_date` | `Date` | Date of the snapshot (partition key). |
+
+<Tip>
+
+- Use FINAL when querying — this is a ReplacingMergeTree table
+- snapshot_time is hourly — one snapshot per (coin, hour)
+- day_ntl_vlm is 24h notional volume in USD at snapshot time
+- funding is the current predicted funding rate (annualize by multiplying by 8760)
+- open_interest is in contract units, not USD — multiply by mark_px for USD OI
+
+</Tip>
+
+<Warning>
+
+- Hourly snapshots only — no tick-level or trade-level data
+- ReplacingMergeTree — always use FINAL for consistent reads
+- OI is in contract units, not USD — requires multiplication by price
+- Not all fields are always populated (mid_px, impact_bid/ask_px can be null)
+
+</Warning>
+
+### `agent.hyperliquid_funding_rates`
+
+Historical funding rate settlements for Hyperliquid perpetual contracts. Every 1-hour funding event is recorded with the settlement rate and premium. ReplacingMergeTree — use FINAL.
+
+**Engine**: ReplacingMergeTree | **Partition**: `toYYYYMM(funding_date)` | **ORDER BY**: `coin, time`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `time` | `DateTime64(3)` | Settlement timestamp (DateTime64). |
+| `coin` | `String` | Perpetual contract ticker (e.g., 'BTC', 'ETH'). Links to perp_meta. |
+| `funding_rate` | `Float64` | Settlement funding rate. Positive = longs pay shorts. |
+| `premium` | `Float64` | Mark-to-oracle premium at settlement time. |
+| `funding_date` | `Date` | Date of the funding settlement (partition key). |
+
+<Tip>
+
+- Use FINAL when querying — ReplacingMergeTree table
+- funding_rate is per-settlement-period (hourly). Annualize: rate * 8760
+- premium tracks the basis between mark and oracle price at settlement
+- For average daily funding: avg(funding_rate) grouped by funding_date and coin
+
+</Tip>
+
+<Warning>
+
+- ReplacingMergeTree — use FINAL for deduplication
+- Funding rates are per-hour settlements — not continuous
+- Historical backfill depth depends on when the pipeline was started
+
+</Warning>
+
+### `agent.hyperliquid_perp_meta`
+
+Perpetual contract metadata for all listed Hyperliquid perps. Small dimension table with coin name, size decimals, and maximum leverage. Updated on each market data ingestion run.
+
+**Engine**: ReplacingMergeTree | **ORDER BY**: `coin`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `coin` | `String` | Perpetual contract ticker (e.g., 'BTC', 'ETH', 'SOL'). Primary key. |
+| `sz_decimals` | `UInt8` | Number of decimal places for position/order sizing. |
+| `max_leverage` | `UInt16` | Maximum leverage allowed for this contract. |
+| `updated_at` | `DateTime64(3)` | Last metadata refresh timestamp. |
+
+<Tip>
+
+- Small table (~229 rows) — safe to SELECT * or use in subqueries without filtering
+- JOIN with market_data or funding_rates ON coin for enrichment
+- sz_decimals determines the minimum trade size increment for each contract
+
+</Tip>
+
+<Warning>
+
+- Only covers perpetual contracts — no spot or options metadata
+- Max leverage may change over time — only current value is stored
+
+</Warning>
