@@ -1,61 +1,61 @@
 ---
 title: 'Overview'
-description: 'Surf API - AI-powered crypto intelligence platform'
+description: 'Surf — AI-powered crypto intelligence for agents and developers'
 ---
 
-## About Surf
+## What is Surf
 
-Launched by Cyber, Surf is an AI-powered crypto intelligence platform that combines on-chain data, market analytics, and social sentiment to deliver real-time insights for digital asset research and execution. Surf API provides structured access to these data streams through RESTful JSON endpoints, enabling developers and analysts to integrate crypto-native intelligence directly into their products and workflows.
+Surf is an AI-powered crypto intelligence platform that gives agents and developers unified access to on-chain data, market analytics, social sentiment, and prediction markets — across **40+ blockchains** and **200+ data sources**.
+
+## How to Use Surf
+
+<CardGroup cols={3}>
+  <Card title="Surf Skill" icon="wand-magic-sparkles" href="/cli/skills">
+    Install into your AI agent for automatic crypto data access
+  </Card>
+  <Card title="Chat API" icon="message-bot" href="/chat-completions">
+    Natural language queries via chat completions
+  </Card>
+  <Card title="Data API" icon="database" href="/data-api/overview">
+    83 RESTful endpoints across 12 domains
+  </Card>
+</CardGroup>
+
+### Quick Start with an AI Agent
+
+```bash
+npx skills add asksurf-ai/surf-skills --skill surf
+```
+
+Once installed, just ask your agent things like "what's the price of ETH" or "show me the top Polymarket markets" — the skill handles discovery, authentication, and data fetching automatically.
+
+### Quick Start with the CLI
+
+```bash
+curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh
+surf login
+surf market-price --symbol BTC
+```
 
 ## Platform Coverage
 
-Surf API covers **40+ blockchains**, **200+ data sources**, and **100k+ verified crypto voices**, offering unified access to:
+- **Market** — prices, rankings, technical indicators, fear & greed, liquidations, futures, options, ETFs
+- **Exchange** — order books, candlesticks, funding rates, long/short ratios
+- **Wallet** — balances, transfers, DeFi positions, net worth, labels
+- **Social** — Twitter/X profiles, posts, followers, mindshare, sentiment
+- **Token** — holders, DEX trades, transfers, unlock schedules
+- **Project** — profiles, DeFi TVL, protocol metrics
+- **Prediction Markets** — Polymarket and Kalshi markets, trades, prices, open interest
+- **On-chain** — transaction lookup, SQL queries, gas prices, bridge and yield rankings
+- **News & Search** — cross-domain entity search, news feed, web fetch
 
-- Market and technical metrics
-- Token movements
-- Derivatives data
-- Sentiment trends
+## Additional Resources
 
-Each endpoint is designed to deliver consistent and high-fidelity data across multiple domains, including DeFi, restaking, AI agents, and emerging on-chain narratives.
-
-## Why Surf API?
-
-Teams across trading, analytics, and research use Surf API to power dashboards, automated strategies, and intelligence systems with accurate, real-time data. By connecting to Surf, developers gain a **single interface** for:
-
-- Cross-chain monitoring
-- Protocol research
-- Market signal detection
-
-Built for **speed**, **transparency**, and **extensibility**.
-
-## Common Use Cases
-
-<AccordionGroup>
-  <Accordion title="Trading & Finance">
-    - Crypto exchanges (CEX, DEX)
-    - Wallets (hot, cold, smart wallets)
-    - Digital banks and fintech integrations
-    - Quant / backtesting environments
-    - On-chain oracles and trading bots
-    - Payment gateways and e-commerce systems
-  </Accordion>
-
-  <Accordion title="Data & Analytics">
-    - Data aggregators, analytics dashboards
-    - Portfolio trackers and research terminals
-    - Block explorers and intelligence platforms
-    - Accounting, compliance, and audit tools
-    - Institutional & academic research
-  </Accordion>
-
-  <Accordion title="AI & Innovation">
-    - AI agents, DeFAI applications
-    - DeFi protocols and NFT marketplaces
-    - Media analytics and VC due diligence
-  </Accordion>
-</AccordionGroup>
-
-<Card title="Ready to get started?" icon="rocket" href="/api-reference/enterprise-chat/quick-select">
-  Explore our API Reference to start building with Surf API
-</Card>
-
+<CardGroup cols={2}>
+  <Card title="CLI & Skills" icon="terminal" href="/cli/introduction">
+    Terminal-based research and agent integration
+  </Card>
+  <Card title="Data Catalog" icon="table" href="/data-catalog/overview">
+    58 analyst-ready ClickHouse tables for direct SQL access
+  </Card>
+</CardGroup>
