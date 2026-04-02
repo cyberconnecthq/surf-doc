@@ -1,0 +1,249 @@
+---
+title: "Transfers"
+description: "ERC-20 and native token transfers enriched with symbols and USD pricing."
+---
+
+**5 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_transfers` | `agent` | `tokens_ethereum.transfers` | `contract_address, block_number, tx_hash, evt_index` |
+| `agent.base_transfers` | `agent` | `tokens_base.transfers` | `contract_address, block_number, tx_hash, evt_index` |
+| `agent.arbitrum_transfers` | `agent` | `tokens_arbitrum.transfers` | `contract_address, block_number, tx_hash, evt_index` |
+| `agent.bsc_transfers` | `agent` | `tokens_bsc.transfers` | `—` |
+| `agent.tron_transfers` | `agent` | `tokens_tron.transfers` | `contract_address, block_number, tx_hash, evt_index` |
+
+## Related Tables
+
+- `agent.arbitrum_prices_day`
+- `agent.base_prices_day`
+- `agent.ethereum_erc20`
+- `agent.ethereum_prices_day`
+
+## Sample Queries
+
+### 1. Largest USDC transfers today
+
+```sql
+SELECT block_time, `from`, `to`, amount, amount_usd
+FROM agent.ethereum_transfers
+WHERE symbol = 'USDC'
+  AND block_date = today() - 1
+ORDER BY amount_usd DESC
+LIMIT 20
+```
+
+## Table Schemas
+
+### `agent.ethereum_transfers`
+
+ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. Includes WETH wrap/unwrap. Enriched with tx_from, tx_to, tx_index from transaction lookup. One row per transfer event or trace.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_number, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `trace_address` | `Array(Int64)` | Non-empty for native trace-based transfers. Empty string for event-based ERC-20 transfers. |
+| `token_standard` | `String` | 'erc20' for ERC-20 Transfer events, 'native' for ETH/BNB/TRX trace transfers. |
+| `tx_from` | `String` | Transaction sender (EOA that signed the tx). From transaction lookup. |
+| `tx_to` | `String` | Transaction recipient (first-level contract called). From transaction lookup. |
+| `tx_index` | `UInt32` | Transaction index in block |
+| `from` | `String` | Transfer sender address. |
+| `to` | `String` | Transfer recipient address. |
+| `contract_address` | `String` | Token contract address. Zero address (0x0000...0000) for native token transfers. |
+| `symbol` | `String` | Token symbol |
+| `amount_raw` | `UInt256` | Raw uint256 transfer amount. Divide by 10^decimals for human-readable value. |
+| `amount` | `Float64` | Amount in display units (decimal-adjusted) |
+| `price_usd` | `Float64` | USD price at transfer time |
+| `amount_usd` | `Nullable(Float64)` | USD value of transfer |
+
+<Tip>
+
+- These tables are VERY large (billions of rows) — always filter on block_date first
+- token_standard is 'erc20' or 'native' — filter accordingly
+- amount_raw is uint256 before decimal adjustment — divide by 10^decimals for human-readable amounts
+- JOIN with ethereum_erc20 on contract_address for symbol and decimals
+- For net flows: SUM(amount_raw) WHERE to=addr minus SUM(amount_raw) WHERE from=addr
+
+</Tip>
+
+<Warning>
+
+- No USD amounts — join with prices tables for valuation
+- Native transfers from trace data may include internal contract-to-contract transfers
+- Does not include ERC-721 (NFT) or ERC-1155 (multi-token) transfers
+- amount_raw is raw — you must know the token's decimals to interpret correctly
+
+</Warning>
+
+### `agent.base_transfers`
+
+ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. Includes WETH wrap/unwrap. Enriched with tx_from, tx_to, tx_index from transaction lookup. One row per transfer event or trace.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_number, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `trace_address` | `Array(Int64)` | Non-empty for native trace-based transfers. Empty string for event-based ERC-20 transfers. |
+| `token_standard` | `String` | 'erc20' for ERC-20 Transfer events, 'native' for ETH/BNB/TRX trace transfers. |
+| `tx_from` | `String` | Transaction sender (EOA that signed the tx). From transaction lookup. |
+| `tx_to` | `String` | Transaction recipient (first-level contract called). From transaction lookup. |
+| `tx_index` | `UInt32` | Transaction index in block |
+| `from` | `String` | Transfer sender address. |
+| `to` | `String` | Transfer recipient address. |
+| `contract_address` | `String` | Token contract address. Zero address (0x0000...0000) for native token transfers. |
+| `symbol` | `String` | Token symbol |
+| `amount_raw` | `UInt256` | Raw uint256 transfer amount. Divide by 10^decimals for human-readable value. |
+| `amount` | `Float64` | Amount in display units (decimal-adjusted) |
+| `price_usd` | `Float64` | USD price at transfer time |
+| `amount_usd` | `Nullable(Float64)` | USD value of transfer |
+
+<Tip>
+
+- This table has 7.5B+ rows — ALWAYS use tight block_date filters
+- token_standard is 'erc20' or 'native' — filter accordingly
+- amount_raw is uint256 before decimal adjustment — divide by 10^decimals
+- Base native token is ETH (bridged), same decimals as Ethereum ETH
+
+</Tip>
+
+<Warning>
+
+- No USD amounts — join with prices tables for valuation
+- Native transfers from trace data may include internal contract-to-contract transfers
+- Does not include ERC-721 (NFT) or ERC-1155 (multi-token) transfers
+- amount_raw is raw — you must know the token's decimals to interpret correctly
+
+</Warning>
+
+### `agent.arbitrum_transfers`
+
+ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. Includes WETH wrap/unwrap. Enriched with tx_from, tx_to, tx_index from transaction lookup. One row per transfer event or trace.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_number, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `trace_address` | `Array(Int64)` | Non-empty for native trace-based transfers. Empty string for event-based ERC-20 transfers. |
+| `token_standard` | `String` | 'erc20' for ERC-20 Transfer events, 'native' for ETH/BNB/TRX trace transfers. |
+| `tx_from` | `String` | Transaction sender (EOA that signed the tx). From transaction lookup. |
+| `tx_to` | `String` | Transaction recipient (first-level contract called). From transaction lookup. |
+| `tx_index` | `UInt32` | Transaction index in block |
+| `from` | `String` | Transfer sender address. |
+| `to` | `String` | Transfer recipient address. |
+| `contract_address` | `String` | Token contract address. Zero address (0x0000...0000) for native token transfers. |
+| `symbol` | `String` | Token symbol |
+| `amount_raw` | `UInt256` | Raw uint256 transfer amount. Divide by 10^decimals for human-readable value. |
+| `amount` | `Float64` | Amount in display units (decimal-adjusted) |
+| `price_usd` | `Float64` | USD price at transfer time |
+| `amount_usd` | `Nullable(Float64)` | USD value of transfer |
+
+<Tip>
+
+- These tables are VERY large (billions of rows) — always filter on block_date first
+- token_standard is 'erc20' or 'native' — filter accordingly
+- amount_raw is uint256 before decimal adjustment — divide by 10^decimals for human-readable amounts
+- JOIN with ethereum_erc20 on contract_address for symbol and decimals
+- For net flows: SUM(amount_raw) WHERE to=addr minus SUM(amount_raw) WHERE from=addr
+
+</Tip>
+
+<Warning>
+
+- No USD amounts — join with prices tables for valuation
+- Native transfers from trace data may include internal contract-to-contract transfers
+- Does not include ERC-721 (NFT) or ERC-1155 (multi-token) transfers
+- amount_raw is raw — you must know the token's decimals to interpret correctly
+
+</Warning>
+
+### `agent.bsc_transfers`
+
+ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. Includes WETH wrap/unwrap. Enriched with tx_from, tx_to, tx_index from transaction lookup. One row per transfer event or trace.
+
+<Tip>
+
+- BSC transfer tables can be very large — always filter on block_date first
+- Native token is BNB, not ETH — 18 decimals
+- amount_raw is uint256 before decimal adjustment
+
+</Tip>
+
+<Warning>
+
+- No USD amounts — join with prices tables for valuation
+- Native transfers from trace data may include internal contract-to-contract transfers
+- Does not include ERC-721 (NFT) or ERC-1155 (multi-token) transfers
+- amount_raw is raw — you must know the token's decimals to interpret correctly
+
+</Warning>
+
+### `agent.tron_transfers`
+
+ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. Includes WETH wrap/unwrap. Enriched with tx_from, tx_to, tx_index from transaction lookup. One row per transfer event or trace.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_number, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `trace_address` | `Array(Int64)` | Non-empty for native trace-based transfers. Empty string for event-based ERC-20 transfers. |
+| `token_standard` | `String` | 'erc20' for ERC-20 Transfer events, 'native' for ETH/BNB/TRX trace transfers. |
+| `tx_from` | `String` | Transaction sender (EOA that signed the tx). From transaction lookup. |
+| `tx_to` | `String` | Transaction recipient (first-level contract called). From transaction lookup. |
+| `tx_index` | `UInt32` | Transaction index in block |
+| `from` | `String` | Transfer sender address. |
+| `to` | `String` | Transfer recipient address. |
+| `contract_address` | `String` | Token contract address. Zero address (0x0000...0000) for native token transfers. |
+| `symbol` | `String` | Token symbol |
+| `amount_raw` | `UInt256` | Raw uint256 transfer amount. Divide by 10^decimals for human-readable value. |
+| `amount` | `Float64` | Amount in display units (decimal-adjusted) |
+| `price_usd` | `Nullable(Float64)` | USD price at transfer time |
+| `amount_usd` | `Nullable(Float64)` | USD value of transfer |
+
+<Tip>
+
+- 4.6B rows — ALWAYS filter on block_date
+- Tron addresses use base58 format (T...) not hex
+- Native token is TRX (6 decimals for energy, but TRX transfers use sun = 1e-6)
+- USDT on Tron is extremely high volume — can dominate results if not filtered
+
+</Tip>
+
+<Warning>
+
+- No USD amounts — join with prices tables for valuation
+- Native transfers from trace data may include internal contract-to-contract transfers
+- Does not include ERC-721 (NFT) or ERC-1155 (multi-token) transfers
+- amount_raw is raw — you must know the token's decimals to interpret correctly
+
+</Warning>

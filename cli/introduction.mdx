@@ -1,0 +1,29 @@
+---
+title: "Introduction"
+description: "Introduction to Surf Skills and CLI"
+---
+
+Surf gives AI coding agents and developers direct access to crypto intelligence — market data, wallets, social, on-chain analytics, prediction markets, and more.
+
+There are two ways to use it:
+
+- **Surf Skill** — Install into your AI agent (Claude Code, Codex, etc.) so it automatically knows how to fetch crypto data when you ask. This is the recommended way for most users.
+- **Surf CLI** — A standalone command-line tool for terminal-based research, scripting, and automation.
+
+## Quick Start
+
+### With an AI Agent (Recommended)
+
+```bash
+npx skills add asksurf-ai/surf-skills --skill surf
+```
+
+Once installed, just ask your agent things like "what's the price of ETH" or "show me the top wallets holding AAVE" — the skill handles the rest.
+
+### With the CLI Directly
+
+```bash
+curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh
+surf login
+surf market-price --symbol BTC
+```

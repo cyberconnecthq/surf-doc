@@ -1,0 +1,356 @@
+---
+title: "DEX Trades"
+description: "Enriched swap events across 6 chains with token symbols, USD amounts, and protocol attribution."
+---
+
+**6 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_dex_trades` | `agent` | `dex_ethereum.trades` | `block_time, tx_hash, evt_index` |
+| `agent.base_dex_trades` | `agent` | `dex_base.trades` | `block_time, tx_hash, evt_index` |
+| `agent.arbitrum_dex_trades` | `agent` | `dex_arbitrum.trades` | `block_time, tx_hash, evt_index` |
+| `agent.bsc_dex_trades` | `agent` | `dex_bnb.trades` | `block_time, tx_hash, evt_index` |
+| `agent.tron_dex_trades` | `agent` | `dex_tron.trades` | `block_time, tx_hash, evt_index` |
+| `agent.hyperevm_dex_trades` | `agent` | `dex_hyperevm.trades` | `block_time, tx_hash, evt_index` |
+
+## Related Tables
+
+- `agent.arbitrum_prices_day`
+- `agent.base_prices_day`
+- `agent.ethereum_erc20`
+- `agent.ethereum_fees_daily`
+- `agent.ethereum_prices_day`
+- `agent.hyperliquid_market_data`
+- `agent.hyperliquid_perp_meta`
+
+## Sample Queries
+
+### 1. Top 10 DEX protocols by volume today
+
+```sql
+SELECT project, sum(amount_usd) AS volume_usd
+FROM agent.ethereum_dex_trades
+WHERE block_date = today() - 1
+GROUP BY project
+ORDER BY volume_usd DESC
+LIMIT 10
+```
+
+### 2. Uniswap V3 WETH/USDC trades in the last 24 hours
+
+```sql
+SELECT block_time, token_bought_symbol, token_sold_symbol,
+       token_bought_amount, token_sold_amount, amount_usd
+FROM agent.ethereum_dex_trades
+WHERE project = 'uniswap' AND version = '3'
+  AND token_pair = 'USDC-WETH'
+  AND block_date >= today() - 1
+ORDER BY block_time DESC
+LIMIT 20
+```
+
+## Table Schemas
+
+### `agent.ethereum_dex_trades`
+
+Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol attribution. One row per swap event. Combines decoded events from all supported DEX protocols on this chain.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, sushiswap, curve, pancakeswap, aerodrome, etc. |
+| `version` | `String` | Protocol version string: '1', '2', '3', 'v3', 'slipstream', etc. |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | Partition key. Always filter on this column for performance. |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `token_bought_symbol` | `Nullable(String)` | Symbol of token received |
+| `token_sold_symbol` | `Nullable(String)` | Symbol of token sent |
+| `token_pair` | `String` | Alphabetically sorted pair string (e.g., 'ETH-USDC'). Useful for GROUP BY. |
+| `token_bought_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_sold_amount` | `Nullable(Float64)` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_bought_amount_raw` | `UInt256` | Raw token received amount (pre-decimal) |
+| `token_sold_amount_raw` | `Nullable(UInt256)` | Raw token sent amount (pre-decimal) |
+| `amount_usd` | `Nullable(Float64)` | One-sided USD value of token_sold. Prices from CoinGecko hourly + DEX VWAP. Null for unpriced tokens. |
+| `token_bought_address` | `Nullable(String)` | Bought token contract address |
+| `token_sold_address` | `Nullable(String)` | Sold token contract address |
+| `taker` | `String` | EOA that initiated the swap transaction, not the router/aggregator contract |
+| `maker` | `Nullable(String)` | Liquidity pool address that provided the other side of the trade |
+| `project_contract_address` | `String` | Pool or router contract address |
+| `tx_hash` | `String` | Transaction hash |
+| `tx_from` | `String` | Transaction sender (EOA) |
+| `tx_to` | `String` | Transaction recipient |
+| `evt_index` | `UInt32` | Event log index in transaction |
+
+<Tip>
+
+- amount_usd is one-sided (token_sold value) following DefiLlama methodology — multiply by 2 for two-sided
+- Filter by project + version for protocol-specific analysis (e.g., project='uniswap', version='3')
+- taker is the EOA that initiated the swap, not the router contract
+- token_pair is alphabetically sorted (ETH-USDC not USDC-ETH) for consistent grouping
+- Use block_date for daily aggregations — it is the partition key
+
+</Tip>
+
+<Warning>
+
+- No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
+- USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
+- Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>
+
+### `agent.base_dex_trades`
+
+Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol attribution. One row per swap event. Combines decoded events from all supported DEX protocols on this chain.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, sushiswap, curve, pancakeswap, aerodrome, etc. |
+| `version` | `String` | Protocol version string: '1', '2', '3', 'v3', 'slipstream', etc. |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | Partition key. Always filter on this column for performance. |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `token_bought_symbol` | `Nullable(String)` | Symbol of token received |
+| `token_sold_symbol` | `Nullable(String)` | Symbol of token sent |
+| `token_pair` | `String` | Alphabetically sorted pair string (e.g., 'ETH-USDC'). Useful for GROUP BY. |
+| `token_bought_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_sold_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_bought_amount_raw` | `UInt256` | Raw token received amount (pre-decimal) |
+| `token_sold_amount_raw` | `UInt256` | Raw token sent amount (pre-decimal) |
+| `amount_usd` | `Nullable(Float64)` | One-sided USD value of token_sold. Prices from CoinGecko hourly + DEX VWAP. Null for unpriced tokens. |
+| `token_bought_address` | `String` | Bought token contract address |
+| `token_sold_address` | `String` | Sold token contract address |
+| `taker` | `String` | EOA that initiated the swap transaction, not the router/aggregator contract |
+| `maker` | `Nullable(String)` | Liquidity pool address that provided the other side of the trade |
+| `project_contract_address` | `String` | Pool or router contract address |
+| `tx_hash` | `String` | Transaction hash |
+| `tx_from` | `String` | Transaction sender (EOA) |
+| `tx_to` | `String` | Transaction recipient |
+| `evt_index` | `UInt32` | Event log index in transaction |
+
+<Tip>
+
+- amount_usd is one-sided (token_sold value) following DefiLlama methodology — multiply by 2 for two-sided
+- Filter by project + version for protocol-specific analysis (e.g., project='uniswap', version='3')
+- taker is the EOA that initiated the swap, not the router contract
+- token_pair is alphabetically sorted (ETH-USDC not USDC-ETH) for consistent grouping
+- Use block_date for daily aggregations — it is the partition key
+
+</Tip>
+
+<Warning>
+
+- No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
+- USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
+- Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>
+
+### `agent.arbitrum_dex_trades`
+
+Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol attribution. One row per swap event. Combines decoded events from all supported DEX protocols on this chain.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, sushiswap, curve, pancakeswap, aerodrome, etc. |
+| `version` | `String` | Protocol version string: '1', '2', '3', 'v3', 'slipstream', etc. |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | Partition key. Always filter on this column for performance. |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `token_bought_symbol` | `Nullable(String)` | Symbol of token received |
+| `token_sold_symbol` | `Nullable(String)` | Symbol of token sent |
+| `token_pair` | `String` | Alphabetically sorted pair string (e.g., 'ETH-USDC'). Useful for GROUP BY. |
+| `token_bought_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_sold_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_bought_amount_raw` | `UInt256` | Raw token received amount (pre-decimal) |
+| `token_sold_amount_raw` | `UInt256` | Raw token sent amount (pre-decimal) |
+| `amount_usd` | `Nullable(Float64)` | One-sided USD value of token_sold. Prices from CoinGecko hourly + DEX VWAP. Null for unpriced tokens. |
+| `token_bought_address` | `String` | Bought token contract address |
+| `token_sold_address` | `String` | Sold token contract address |
+| `taker` | `String` | EOA that initiated the swap transaction, not the router/aggregator contract |
+| `maker` | `Nullable(String)` | Liquidity pool address that provided the other side of the trade |
+| `project_contract_address` | `String` | Pool or router contract address |
+| `tx_hash` | `String` | Transaction hash |
+| `tx_from` | `String` | Transaction sender (EOA) |
+| `tx_to` | `String` | Transaction recipient |
+| `evt_index` | `UInt64` | Event log index in transaction |
+
+<Tip>
+
+- amount_usd is one-sided (token_sold value) following DefiLlama methodology — multiply by 2 for two-sided
+- Filter by project + version for protocol-specific analysis (e.g., project='uniswap', version='3')
+- taker is the EOA that initiated the swap, not the router contract
+- token_pair is alphabetically sorted (ETH-USDC not USDC-ETH) for consistent grouping
+- Use block_date for daily aggregations — it is the partition key
+
+</Tip>
+
+<Warning>
+
+- No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
+- USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
+- Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>
+
+### `agent.bsc_dex_trades`
+
+Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol attribution. One row per swap event. Combines decoded events from all supported DEX protocols on this chain.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, sushiswap, curve, pancakeswap, aerodrome, etc. |
+| `version` | `String` | Protocol version string: '1', '2', '3', 'v3', 'slipstream', etc. |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | Partition key. Always filter on this column for performance. |
+| `block_time` | `DateTime` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `token_bought_symbol` | `Nullable(String)` | Symbol of token received |
+| `token_sold_symbol` | `Nullable(String)` | Symbol of token sent |
+| `token_pair` | `String` | Alphabetically sorted pair string (e.g., 'ETH-USDC'). Useful for GROUP BY. |
+| `token_bought_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_sold_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_bought_amount_raw` | `UInt256` | Raw token received amount (pre-decimal) |
+| `token_sold_amount_raw` | `UInt256` | Raw token sent amount (pre-decimal) |
+| `amount_usd` | `Nullable(Float64)` | One-sided USD value of token_sold. Prices from CoinGecko hourly + DEX VWAP. Null for unpriced tokens. |
+| `token_bought_address` | `String` | Bought token contract address |
+| `token_sold_address` | `String` | Sold token contract address |
+| `taker` | `String` | EOA that initiated the swap transaction, not the router/aggregator contract |
+| `maker` | `String` | Liquidity pool address that provided the other side of the trade |
+| `project_contract_address` | `String` | Pool or router contract address |
+| `tx_hash` | `String` | Transaction hash |
+| `tx_from` | `String` | Transaction sender (EOA) |
+| `tx_to` | `String` | Transaction recipient |
+| `evt_index` | `UInt64` | Event log index in transaction |
+
+<Tip>
+
+- amount_usd is one-sided (token_sold value) following DefiLlama methodology — multiply by 2 for two-sided
+- This is the LARGEST dex_trades table (~4B rows) — always use tight block_date filters
+- PancakeSwap dominates BSC DEX volume — filter by project='pancakeswap' for protocol-specific analysis
+- taker is the EOA that initiated the swap, not the router contract
+
+</Tip>
+
+<Warning>
+
+- No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
+- USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
+- Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>
+
+### `agent.tron_dex_trades`
+
+Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol attribution. One row per swap event. Combines decoded events from all supported DEX protocols on this chain.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, sushiswap, curve, pancakeswap, aerodrome, etc. |
+| `version` | `String` | Protocol version string: '1', '2', '3', 'v3', 'slipstream', etc. |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | Partition key. Always filter on this column for performance. |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `token_bought_symbol` | `Nullable(String)` | Symbol of token received |
+| `token_sold_symbol` | `Nullable(String)` | Symbol of token sent |
+| `token_pair` | `String` | Alphabetically sorted pair string (e.g., 'ETH-USDC'). Useful for GROUP BY. |
+| `token_bought_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_sold_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_bought_amount_raw` | `UInt256` | Raw token received amount (pre-decimal) |
+| `token_sold_amount_raw` | `UInt256` | Raw token sent amount (pre-decimal) |
+| `amount_usd` | `Nullable(Float64)` | One-sided USD value of token_sold. Prices from CoinGecko hourly + DEX VWAP. Null for unpriced tokens. |
+| `token_bought_address` | `String` | Bought token contract address |
+| `token_sold_address` | `String` | Sold token contract address |
+| `taker` | `String` | EOA that initiated the swap transaction, not the router/aggregator contract |
+| `maker` | `String` | Liquidity pool address that provided the other side of the trade |
+| `project_contract_address` | `String` | Pool or router contract address |
+| `tx_hash` | `String` | Transaction hash |
+| `tx_from` | `String` | Transaction sender (EOA) |
+| `tx_to` | `String` | Transaction recipient |
+| `evt_index` | `UInt32` | Event log index in transaction |
+
+<Tip>
+
+- amount_usd is one-sided (token_sold value) following DefiLlama methodology
+- Tron addresses use base58 format (T...) not hex — keep this in mind for address filters
+- SunSwap dominates Tron DEX volume
+
+</Tip>
+
+<Warning>
+
+- No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
+- USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
+- Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>
+
+### `agent.hyperevm_dex_trades`
+
+Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol attribution. One row per swap event. Combines decoded events from all supported DEX protocols on this chain.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name (lowercase): uniswap, sushiswap, curve, pancakeswap, aerodrome, etc. |
+| `version` | `String` | Protocol version string: '1', '2', '3', 'v3', 'slipstream', etc. |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | Partition key. Always filter on this column for performance. |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `token_bought_symbol` | `String` | Symbol of token received |
+| `token_sold_symbol` | `String` | Symbol of token sent |
+| `token_pair` | `String` | Alphabetically sorted pair string (e.g., 'ETH-USDC'). Useful for GROUP BY. |
+| `token_bought_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_sold_amount` | `Float64` | Human-readable amount (divided by token decimals). Null if decimals unknown. |
+| `token_bought_amount_raw` | `UInt256` | Raw token received amount (pre-decimal) |
+| `token_sold_amount_raw` | `UInt256` | Raw token sent amount (pre-decimal) |
+| `amount_usd` | `Nullable(Float64)` | One-sided USD value of token_sold. Prices from CoinGecko hourly + DEX VWAP. Null for unpriced tokens. |
+| `token_bought_address` | `String` | Bought token contract address |
+| `token_sold_address` | `String` | Sold token contract address |
+| `taker` | `String` | EOA that initiated the swap transaction, not the router/aggregator contract |
+| `maker` | `Nullable(String)` | Liquidity pool address that provided the other side of the trade |
+| `project_contract_address` | `String` | Pool or router contract address |
+| `tx_hash` | `String` | Transaction hash |
+| `tx_from` | `String` | Transaction sender (EOA) |
+| `tx_to` | `String` | Transaction recipient |
+| `evt_index` | `UInt32` | Event log index in transaction |
+
+<Tip>
+
+- amount_usd is one-sided (token_sold value) following DefiLlama methodology
+- HyperEVM is the EVM-compatible layer on Hyperliquid — distinct from perp trading data
+- Newer chain — data starts from HyperEVM launch, coverage may be thinner than Ethereum
+
+</Tip>
+
+<Warning>
+
+- No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
+- USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
+- Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>

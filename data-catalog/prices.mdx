@@ -1,0 +1,140 @@
+---
+title: "Prices"
+description: "Daily token prices combining CoinGecko data and DEX VWAP calculations."
+---
+
+**3 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_prices_day` | `agent` | `prices_ethereum.day` | `contract_address, block_date` |
+| `agent.base_prices_day` | `agent` | `prices_base.day` | `contract_address, block_date` |
+| `agent.arbitrum_prices_day` | `agent` | `prices_arbitrum.day` | `contract_address, block_date` |
+
+## Related Tables
+
+- `agent.arbitrum_dex_trades`
+- `agent.base_dex_trades`
+- `agent.ethereum_dex_trades`
+- `agent.ethereum_erc20`
+
+## Sample Queries
+
+### 1. ETH daily price for the last 30 days
+
+```sql
+SELECT block_date, price
+FROM agent.ethereum_prices_day
+WHERE symbol = 'WETH'
+  AND block_date >= today() - 30
+ORDER BY block_date
+```
+
+## Table Schemas
+
+### `agent.ethereum_prices_day`
+
+Daily token prices combining CoinGecko hourly snapshots and DEX VWAP calculations. One row per (contract_address, block_date, source). Prefer source='coingecko' when available.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `contract_address` | `String` | Token contract address (lowercase hex). Zero address for native token. |
+| `decimals` | `Int64` | Token decimals (from erc20 metadata). Needed when converting raw amounts. |
+| `symbol` | `String` | Token symbol. May be null for unregistered tokens. |
+| `price` | `Float64` | USD price. CoinGecko source is hourly snapshot; DEX VWAP is volume-weighted from on-chain swaps. |
+| `volume_usd` | `Float64` | Trading volume in USD |
+| `source` | `String` | 'coingecko' or 'dex_vwap'. Prefer coingecko for stable reference; dex_vwap fills gaps. |
+
+<Tip>
+
+- Use argMax(price, source = 'coingecko') to prefer CoinGecko over DEX VWAP when both exist
+- JOIN on (contract_address, block_date) for daily valuations
+- WETH contract (0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) is the ETH price proxy on Ethereum
+- Coverage gaps exist for illiquid/new tokens — always handle NULL prices
+
+</Tip>
+
+<Warning>
+
+- CoinGecko prices are hourly snapshots, not tick-level — intraday precision is limited
+- DEX VWAP can be skewed by low-liquidity pools or wash trading
+- New tokens may have no price for the first few days after deployment
+- Stablecoins may show slight depegs in CoinGecko data during volatility
+
+</Warning>
+
+### `agent.base_prices_day`
+
+Daily token prices combining CoinGecko hourly snapshots and DEX VWAP calculations. One row per (contract_address, block_date, source). Prefer source='coingecko' when available.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `contract_address` | `String` | Token contract address (lowercase hex). Zero address for native token. |
+| `decimals` | `Int64` | Token decimals (from erc20 metadata). Needed when converting raw amounts. |
+| `symbol` | `String` | Token symbol. May be null for unregistered tokens. |
+| `price` | `Nullable(Float64)` | USD price. CoinGecko source is hourly snapshot; DEX VWAP is volume-weighted from on-chain swaps. |
+| `volume_usd` | `Float64` | Trading volume in USD |
+| `source` | `String` | 'coingecko' or 'dex_vwap'. Prefer coingecko for stable reference; dex_vwap fills gaps. |
+
+<Tip>
+
+- Use argMax(price, source = 'coingecko') to prefer CoinGecko over DEX VWAP when both exist
+- JOIN on (contract_address, block_date) for daily valuations
+- WETH contract (0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) is the ETH price proxy on Ethereum
+- Coverage gaps exist for illiquid/new tokens — always handle NULL prices
+
+</Tip>
+
+<Warning>
+
+- CoinGecko prices are hourly snapshots, not tick-level — intraday precision is limited
+- DEX VWAP can be skewed by low-liquidity pools or wash trading
+- New tokens may have no price for the first few days after deployment
+- Stablecoins may show slight depegs in CoinGecko data during volatility
+
+</Warning>
+
+### `agent.arbitrum_prices_day`
+
+Daily token prices combining CoinGecko hourly snapshots and DEX VWAP calculations. One row per (contract_address, block_date, source). Prefer source='coingecko' when available.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `contract_address` | `String` | Token contract address (lowercase hex). Zero address for native token. |
+| `decimals` | `Int64` | Token decimals (from erc20 metadata). Needed when converting raw amounts. |
+| `symbol` | `String` | Token symbol. May be null for unregistered tokens. |
+| `price` | `Nullable(Float64)` | USD price. CoinGecko source is hourly snapshot; DEX VWAP is volume-weighted from on-chain swaps. |
+| `volume_usd` | `Float64` | Trading volume in USD |
+| `source` | `String` | 'coingecko' or 'dex_vwap'. Prefer coingecko for stable reference; dex_vwap fills gaps. |
+
+<Tip>
+
+- Use argMax(price, source = 'coingecko') to prefer CoinGecko over DEX VWAP when both exist
+- JOIN on (contract_address, block_date) for daily valuations
+- WETH contract (0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2) is the ETH price proxy on Ethereum
+- Coverage gaps exist for illiquid/new tokens — always handle NULL prices
+
+</Tip>
+
+<Warning>
+
+- CoinGecko prices are hourly snapshots, not tick-level — intraday precision is limited
+- DEX VWAP can be skewed by low-liquidity pools or wash trading
+- New tokens may have no price for the first few days after deployment
+- Stablecoins may show slight depegs in CoinGecko data during volatility
+
+</Warning>

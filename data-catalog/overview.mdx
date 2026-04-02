@@ -1,0 +1,99 @@
+---
+title: "Data Catalog"
+description: "58 analyst-ready ClickHouse tables for crypto data analysis"
+---
+
+> **58 tables** across 11 categories, available via a readonly ClickHouse account.
+
+The Surf Data Catalog documents all tables available to agents and analysts. Tables are organized into categories and exposed as ClickHouse views in the `agent` and `curated` databases.
+
+## Connection
+
+| Setting | Value |
+|---------|-------|
+| **Protocol** | ClickHouse HTTP interface (port 8443, TLS) |
+| **User** | `agent` (readonly) |
+| **Databases** | `agent` (enriched tables), `curated` (analytics views) |
+| **Max execution time** | 120s |
+| **Max memory** | 16GB |
+| **Max result rows** | 1M |
+
+## Quick Start
+
+```sql
+-- Top DEX protocols by volume yesterday
+SELECT project, sum(amount_usd) AS volume_usd
+FROM agent.ethereum_dex_trades
+WHERE block_date = today() - 1
+GROUP BY project
+ORDER BY volume_usd DESC
+LIMIT 10
+```
+
+<Tip>
+Always filter on `block_date` first — it is the partition key for most tables and enables ClickHouse to skip entire partitions.
+</Tip>
+
+## Categories
+
+| Category | Tables | Description |
+|----------|--------|-------------|
+| [DEX Trades](/data-catalog/dex-trades) | 6 | Enriched swap events across 6 chains with token symbols, USD amounts, and protocol attribution. |
+| [Prices](/data-catalog/prices) | 3 | Daily token prices combining CoinGecko data and DEX VWAP calculations. |
+| [Token Metadata](/data-catalog/token-metadata) | 1 | ERC-20 contract registry mapping addresses to symbols, names, and decimals. |
+| [Transfers](/data-catalog/transfers) | 5 | ERC-20 and native token transfers enriched with symbols and USD pricing. |
+| [TVL / Fees / Yields](/data-catalog/tvl-fees-yields) | 6 | Protocol-level daily aggregates for total value locked, fee revenue, and yield rates. |
+| [Lending & Staking](/data-catalog/lending-staking) | 2 | Protocol-level daily activity aggregates for lending and staking protocols. |
+| [Bridges](/data-catalog/bridges) | 1 | Cross-chain bridge volume aggregated daily. |
+| [Prediction Markets](/data-catalog/prediction-markets) | 17 | Polymarket, Kalshi, and cross-platform prediction market data — trades, market details, prices, volume, and open interest. |
+| [Curated Analytics](/data-catalog/curated-analytics) | 11 | Dashboard-ready pre-computed analytics — whale trades, hot markets, leaderboards, and daily reports. |
+| [Hyperliquid](/data-catalog/hyperliquid) | 3 | Perpetual futures market data, funding rates, and contract metadata from Hyperliquid L1. |
+| [Chain Metrics](/data-catalog/chain-metrics) | 3 | Daily chain-level aggregates including transaction counts, active addresses, gas usage, and contract deployments. |
+
+## Query Best Practices
+
+1. Always filter on block_date — partition pruning is the #1 performance lever
+2. Use LIMIT liberally during exploration; remove for final aggregation
+3. Pre-filter in CTEs before JOINing — ClickHouse puts RIGHT side into hash table
+4. Use IN (SELECT ...) instead of JOIN when you only need existence checks
+5. Avoid SELECT * on billion-row tables — project only needed columns
+6. For ReplacingMergeTree tables, always use FINAL to get deduplicated rows
+7. Date range first, then entity filters — this matches partition layout
+8. Use toStartOfWeek/toStartOfMonth for time-series rollups, not GROUP BY toString(block_date)
+9. When counting unique addresses, uniq() is faster than count(DISTINCT) and equally accurate
+10. For cross-table analysis, filter each table independently in CTEs before joining
+11. Handle NULLs explicitly — use ifNull(col, default) or coalesce(). ClickHouse 3-valued logic silently drops NULL rows in WHERE filters.
+12. FINAL syntax: FROM table_name alias FINAL (not FROM table_name FINAL alias). Place FINAL after the alias.
+
+## Entity Linking
+
+Common join patterns across tables:
+
+- `token_address -> symbol: JOIN agent.ethereum_erc20 ON contract_address`
+- `condition_id -> market_question: JOIN agent.polymarket_market_details ON condition_id`
+- `market_ticker -> category: Use curated.kalshi_daily_categorized (pre-joined)`
+- `coin -> max_leverage: JOIN agent.hyperliquid_perp_meta ON coin`
+- `project + version -> TVL: JOIN agent.ethereum_tvl_daily ON (project, version, block_date)`
+
+## Data Freshness
+
+| Pipeline | Schedule | Typical Lag |
+|----------|----------|-------------|
+| Ethereum raw (BQ) | 12:00 UTC | ~1 day |
+| Base raw (cryo) | Sensor (6h) | ~6 hours |
+| Arbitrum raw (BQ) | 12:30 UTC | ~1 day |
+| Polygon raw (BQ) | Every 30 min | ~1 hour |
+| TRON raw (BQ) | 13:30 UTC | ~1 day |
+| Bitcoin raw (BQ) | 14:00 UTC | ~1 day |
+| HyperEVM (S3) | 13:00 UTC | ~1 day |
+| CoinGecko prices | Hourly | ~1 hour |
+| RPC snapshots | Daily | ~1 day |
+| Kalshi API | Every 6h | ~6 hours |
+| Polymarket (BQ) | 03:00 UTC | ~1 day |
+| dbt models | Post-ingestion | +30 min |
+
+Check freshness for any table:
+
+```sql
+SELECT max(block_date) FROM agent.<table_name>
+```

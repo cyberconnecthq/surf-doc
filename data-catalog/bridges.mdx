@@ -1,0 +1,67 @@
+---
+title: "Bridges"
+description: "Cross-chain bridge volume aggregated daily."
+---
+
+**1 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.bridge_volume_daily` | `agent` | `bridges.bridge_volume_daily` | `block_date, project, version, source_chain` |
+
+## Related Tables
+
+- `agent.ethereum_chain_daily`
+- `agent.ethereum_prices_day`
+
+## Sample Queries
+
+### 1. Bridge volume by protocol this week
+
+```sql
+SELECT bridge_name, count() AS transfers,
+       sum(deposit_amount_raw) AS total_raw
+FROM bridges_ethereum.deposits
+WHERE block_date >= today() - 7
+GROUP BY bridge_name
+ORDER BY transfers DESC
+```
+
+## Table Schemas
+
+### `agent.bridge_volume_daily`
+
+Daily cross-chain bridge volume in USD with directional flow tracking. One row per (block_date, project, version, source_chain, destination_chain). Each row is a directional flow: deposits contribute (ethereum, X) rows, withdrawals contribute (X, ethereum) rows. Covers Across, Polygon, USDT0, Lighter, Mayan, and other bridges with USD pricing from hourly prices.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date, project, version, source_chain`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Bridge protocol name (lowercase): across, polygon, arbitrum, usdt0, lighter, mayan. |
+| `version` | `String` | Bridge protocol version. |
+| `source_chain` | `String` | Origin chain of the bridged funds. |
+| `destination_chain` | `String` | Target chain of the bridged funds. |
+| `volume_usd` | `Float64` | Total USD value bridged. Priced at hourly rate (toStartOfHour). |
+| `tx_count` | `UInt64` | Number of bridge transactions in this direction on this day. |
+
+<Tip>
+
+- Each row is directional — (Ethereum, Arbitrum) is a separate row from (Arbitrum, Ethereum)
+- For total bridge volume regardless of direction: sum both directions
+- Filter source_chain or destination_chain for chain-specific inflow/outflow analysis
+- volume_usd uses hourly price at bridge time — more precise than daily price
+
+</Tip>
+
+<Warning>
+
+- Ethereum-centric — only covers bridges with Ethereum as one endpoint
+- Not all bridge protocols are indexed — newer or smaller bridges may be missing
+- USD pricing from hourly CoinGecko — same limitations as DEX prices
+- Mayan bridge uses a separate volume model with different source methodology
+
+</Warning>

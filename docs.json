@@ -22,6 +22,20 @@
                 ]
             },
             {
+                "tab": "CLI & Skills",
+                "groups": [
+                    {
+                        "group": "API Reference",
+                        "pages": [
+                            "cli/introduction",
+                            "cli/skills",
+                            "cli/cli",
+                            "cli/use-cases-and-positioning"
+                        ]
+                    }
+                ]
+            },
+            {
                 "tab": "Chat API",
                 "groups": [
                     {
@@ -194,6 +208,33 @@
                                     "data-api/prediction-market/kalshi-ranking"
                                 ]
                             }
+                        ]
+                    }
+                ]
+            },
+            {
+                "tab": "Data Catalog",
+                "groups": [
+                    {
+                        "group": "Overview",
+                        "pages": [
+                            "data-catalog/overview"
+                        ]
+                    },
+                    {
+                        "group": "Categories",
+                        "pages": [
+                            "data-catalog/dex-trades",
+                            "data-catalog/prices",
+                            "data-catalog/token-metadata",
+                            "data-catalog/transfers",
+                            "data-catalog/tvl-fees-yields",
+                            "data-catalog/lending-staking",
+                            "data-catalog/bridges",
+                            "data-catalog/prediction-markets",
+                            "data-catalog/curated-analytics",
+                            "data-catalog/hyperliquid",
+                            "data-catalog/chain-metrics"
                         ]
                     }
                 ]

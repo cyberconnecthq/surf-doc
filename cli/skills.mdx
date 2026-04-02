@@ -1,0 +1,41 @@
+---
+title: "Skills"
+description: "Agent skills that teach AI coding agents how to use the Surf CLI"
+---
+
+Surf Skills are instruction packages that teach AI coding agents how to use the Surf CLI correctly and efficiently.
+
+In a skills-compatible agent environment, a Surf Skill can help the agent:
+
+- Discover the right Surf command for a natural-language request
+- Use the correct parameter names and command patterns
+- Avoid common mistakes around search flags, chain names, and output formatting
+- Move from exploration to implementation faster when building Surf-powered apps
+
+## Installation
+
+The Surf Skill is hosted at [asksurf-ai/surf-skills](https://github.com/asksurf-ai/surf-skills).
+
+```bash
+npx skills add asksurf-ai/surf-skills --skill surf
+```
+
+This works with any agent that supports the skills protocol (Claude Code, Codex, etc.).
+
+### Prerequisites
+
+The Surf CLI must be installed and authenticated:
+
+```bash
+curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh
+surf login
+```
+
+## What the Skill Teaches
+
+The `surf` skill teaches an agent to:
+
+1. Run `surf sync` before discovery
+2. Use `surf list-operations` and `surf <command> --help` to find the right endpoint
+3. Prefer JSON output with `-o json -f body.data` for structured downstream processing
+4. Match user intent to the correct domain (market, wallet, social, token, onchain, etc.)

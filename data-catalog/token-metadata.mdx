@@ -1,0 +1,49 @@
+---
+title: "Token Metadata"
+description: "ERC-20 contract registry mapping addresses to symbols, names, and decimals."
+---
+
+**1 tables** in this category.
+
+## Tables
+
+| View Name | Database | Source | ORDER BY |
+|-----------|----------|--------|----------|
+| `agent.ethereum_erc20` | `agent` | `tokens.erc20` | `contract_address` |
+
+## Related Tables
+
+- `agent.ethereum_dex_trades`
+- `agent.ethereum_prices_day`
+- `agent.ethereum_transfers`
+## Table Schemas
+
+### `agent.ethereum_erc20`
+
+ERC-20 token metadata registry: contract address, symbol, name, and decimals. Used as a dimension table for enriching addresses into human-readable token info.
+
+**Engine**: MergeTree | **ORDER BY**: `contract_address`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `contract_address` | `String` | Lowercase hex token contract address. Primary key for joins. |
+| `symbol` | `Nullable(String)` | Token ticker symbol (e.g., USDC, WETH). Not unique — multiple contracts can share a symbol. |
+| `name` | `Nullable(String)` | Full token name (e.g., 'USD Coin', 'Wrapped Ether'). |
+| `decimals` | `Nullable(Int64)` | Token decimals (typically 18 for ETH-like, 6 for USDC/USDT). Used for amount_raw conversion. |
+
+<Tip>
+
+- This is a small dimension table — safe to use in subqueries or JOINs without filtering
+- contract_address is lowercase hex — ensure your join keys are also lowercase
+- Some tokens have duplicate symbols (multiple USDT contracts exist) — always join on address, not symbol
+
+</Tip>
+
+<Warning>
+
+- Ethereum-only. Other chains do not have a separate erc20 metadata table exposed.
+- May not include every token — new or very obscure tokens might be missing
+- Symbol and name are from deployment — tokens can rebrand but this table reflects original metadata
+
+</Warning>

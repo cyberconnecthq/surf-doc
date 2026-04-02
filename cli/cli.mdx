@@ -1,0 +1,89 @@
+---
+title: "CLI"
+description: "Install, authenticate, and use the Surf CLI"
+---
+
+## CLI
+
+### Install
+
+```bash
+curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh
+```
+
+This installs the `surf` binary and sets up the default configuration under `~/.config/surf/`.
+
+### Authenticate
+
+```bash
+surf login
+```
+
+If your session expires later, run:
+
+```bash
+surf refresh
+```
+
+### Discover Commands
+
+```bash
+surf sync
+surf list-operations -g
+```
+
+Inspect any command before using it:
+
+```bash
+surf market-price --help
+surf wallet-detail --help
+surf search-project --help
+```
+
+### Common Examples
+
+```bash
+# Market data
+surf market-price --symbol BTC
+
+# Wallet intelligence
+surf wallet-detail --address 0x1234...
+
+# Social lookup
+surf social-user --handle vitalikbuterin
+
+# Project search
+surf search-project --q aave
+```
+
+For scripts and agents, use structured output:
+
+```bash
+surf market-price --symbol BTC -o json -f body.data
+surf wallet-detail --address 0x1234... -o json -f body.data
+surf social-user --handle vitalikbuterin -o json -f body.data
+```
+
+### Command Conventions
+
+| Pattern | Recommendation |
+| --- | --- |
+| Flags | Use kebab-case CLI flags such as `--time-range` and `--token-address` |
+| Search | Use `--q`, not `-q`, for search parameters |
+| Chains | Use canonical names such as `ethereum`, `solana`, `base`, and `arbitrum` |
+| Discovery | Prefer `surf <command> --help` to inspect enums, defaults, and response fields |
+| Structured output | Use `-o json` for scripts, tooling, and agent workflows |
+
+### What You Can Query
+
+The CLI covers the same core domains exposed in the Surf Data API:
+
+- Market data and technical indicators
+- Exchange data such as ticker, order book depth, funding history, and candlesticks
+- Wallet balances, transfers, protocol positions, and net worth
+- Social profiles, posts, followers, and mindshare
+- Project profiles and DeFi metrics
+- Token holders, transfers, DEX trades, and unlock schedules
+- Prediction markets across Polymarket and Kalshi
+- On-chain transaction lookups, structured query, SQL, and gas prices
+- News, web fetch, and unified search
