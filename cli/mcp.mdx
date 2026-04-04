@@ -1,0 +1,113 @@
+---
+title: MCP Server
+description: Connect any MCP-compatible AI client to Surf's crypto data API — 12 tools, 86 endpoints, zero code
+---
+
+# MCP Server
+
+The Surf MCP server gives any MCP-compatible AI client (Claude Desktop, Cursor, Windsurf, etc.) direct access to crypto data. It dynamically generates tools from the OpenAPI spec — no code to write, no endpoints to memorize.
+
+## Quick Start
+
+Add to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "surf": {
+      "command": "npx",
+      "args": ["-y", "@surf-ai/surf-mcp"],
+      "env": {
+        "SURF_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+Or with Bun (faster startup):
+
+```json
+{
+  "mcpServers": {
+    "surf": {
+      "command": "bunx",
+      "args": ["@surf-ai/surf-mcp"],
+      "env": {
+        "SURF_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+### Prerequisites
+
+- A Surf API key ([get one here](https://ask.surf))
+- Node.js 20+ or [Bun](https://bun.sh)
+
+### Config File Locations
+
+| Client | Path |
+|--------|------|
+| **Claude Code** | `.mcp.json` in project root or `~/.claude.json` |
+| **Claude Desktop** | `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) |
+| **Cursor** | MCP settings in the IDE |
+
+## Tools
+
+The server exposes 12 tools, one per API domain:
+
+| Tool | Commands | Description |
+|------|----------|-------------|
+| `surf_market` | `price`, `ranking`, `etf`, `futures`, `options`, `fear-greed`, `liquidation-*`, `onchain-indicator`, `price-indicator` | Market overview, rankings, indicators, ETF flows |
+| `surf_exchange` | `depth`, `klines`, `funding-history`, `perp`, `price`, `markets`, `long-short-ratio` | Live exchange data from Binance, OKX, Bybit, etc. |
+| `surf_wallet` | `detail`, `transfers`, `history`, `net-worth`, `protocols`, `labels-batch` | Wallet balances, transfers, DeFi positions |
+| `surf_token` | `holders`, `dex-trades`, `transfers`, `tokenomics` | Token holder analysis, DEX trades, unlocks |
+| `surf_social` | `detail`, `user`, `user-posts`, `tweets`, `mindshare`, `ranking`, `smart-followers-history` | X (Twitter) social signals and sentiment |
+| `surf_project` | `detail`, `defi-metrics`, `defi-ranking` | Project profiles, DeFi TVL/fees/revenue |
+| `surf_onchain` | `sql`, `tx`, `gas-price`, `schema`, `bridge-ranking`, `yield-ranking` | On-chain SQL queries, tx lookup, gas prices |
+| `surf_search` | `project`, `wallet`, `news`, `web`, `fund`, `polymarket`, `kalshi`, `airdrop` | Unified search across all data types |
+| `surf_prediction_market` | `kalshi-*`, `polymarket-*`, `category-metrics` | Polymarket and Kalshi prediction markets |
+| `surf_fund` | `detail`, `portfolio`, `ranking` | Crypto VC fund profiles and portfolios |
+| `surf_news` | `feed`, `detail` | Crypto news from major outlets |
+| `surf_web` | `fetch` | Fetch any URL as clean markdown |
+
+## Usage Examples
+
+Once configured, your AI assistant can use the tools directly:
+
+```
+"What's the BTC price?"        → surf_market({ command: "price", params: { symbol: "BTC" } })
+"Check vitalik's wallet"       → surf_wallet({ command: "detail", params: { address: "vitalik.eth" } })
+"Search for DeFi projects"     → surf_search({ command: "project", params: { q: "defi lending" } })
+"Run an on-chain SQL query"    → surf_onchain({ command: "sql", params: { sql: "SELECT ..." } })
+"ETH social sentiment"         → surf_social({ command: "detail", params: { q: "ethereum" } })
+```
+
+## How It Works
+
+On startup, the server:
+
+1. Fetches the OpenAPI spec from `https://api.ask.surf/gateway/openapi.json` (cached for 24h)
+2. Groups all operations by their API tag
+3. Registers one MCP tool per tag with auto-generated descriptions and command enums
+4. Routes tool calls through `@surf-ai/sdk` for HTTP transport and auth
+
+The server automatically picks up new API endpoints when the spec is updated — just restart.
+
+## Surf Skill vs MCP Server
+
+| | Surf Skill | MCP Server |
+|---|---|---|
+| **Install** | `npx skills add asksurf-ai/surf-skills` | JSON config in MCP settings |
+| **Works with** | Claude Code, Codex | Claude Desktop, Cursor, Windsurf, any MCP client |
+| **Auth** | `SURF_API_KEY` env var | `SURF_API_KEY` env var |
+| **How it works** | Teaches agent to use CLI | Exposes tools via MCP protocol |
+| **Best for** | Coding agents | General-purpose AI assistants |
+
+## Resources
+
+- **npm**: [@surf-ai/surf-mcp](https://www.npmjs.com/package/@surf-ai/surf-mcp)
+- **GitHub**: [asksurf-ai/surf-mcp](https://github.com/asksurf-ai/surf-mcp)
+- **API Docs**: [docs.asksurf.ai](https://docs.asksurf.ai)
