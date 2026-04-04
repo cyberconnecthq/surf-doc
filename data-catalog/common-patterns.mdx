@@ -1,0 +1,224 @@
+---
+title: "Common Patterns"
+description: "Practical SQL query patterns for the most frequent on-chain data analysis tasks."
+---
+
+Copy-paste-ready query patterns. Each one works against Surf's ClickHouse tables via [`POST /onchain/sql`](/data-api/onchain/sql).
+
+## DEX Volume
+
+### Top protocols by volume yesterday
+
+```sql
+SELECT project, sum(amount_usd) AS volume_usd
+FROM agent.ethereum_dex_trades
+WHERE block_date = today() - 1
+GROUP BY project
+ORDER BY volume_usd DESC
+LIMIT 10
+```
+
+### Daily volume trend for a specific pair
+
+```sql
+SELECT block_date, sum(amount_usd) AS volume_usd, count() AS trades
+FROM agent.ethereum_dex_trades
+WHERE token_pair = 'USDC-WETH'
+  AND block_date >= today() - 30
+GROUP BY block_date
+ORDER BY block_date
+```
+
+<Tip>
+`token_pair` is alphabetically sorted (ETH-USDC, not USDC-ETH). Use this for consistent grouping.
+</Tip>
+
+## Token Prices
+
+### Get ETH price for the last 30 days
+
+```sql
+SELECT block_date, price
+FROM agent.ethereum_prices_day
+WHERE symbol = 'WETH'
+  AND source = 'coingecko'
+  AND block_date >= today() - 30
+ORDER BY block_date
+```
+
+### Price a token by contract address
+
+```sql
+SELECT block_date, price, source
+FROM agent.ethereum_prices_day
+WHERE contract_address = '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' -- USDC
+  AND block_date >= today() - 7
+ORDER BY block_date, source
+```
+
+<Tip>
+When both CoinGecko and DEX VWAP prices exist, prefer CoinGecko (`source = 'coingecko'`). DEX VWAP fills gaps for tokens CoinGecko doesn't cover.
+</Tip>
+
+## Large Transfers
+
+### Biggest USDC transfers yesterday
+
+```sql
+SELECT block_time, `from`, `to`, amount, amount_usd
+FROM agent.ethereum_transfers
+WHERE symbol = 'USDC'
+  AND block_date = today() - 1
+ORDER BY amount_usd DESC
+LIMIT 20
+```
+
+### Net flow for a wallet
+
+```sql
+SELECT
+  sum(if(`to` = '0x...your_address...', amount_usd, 0)) AS inflow,
+  sum(if(`from` = '0x...your_address...', amount_usd, 0)) AS outflow
+FROM agent.ethereum_transfers
+WHERE block_date >= today() - 7
+  AND (`from` = '0x...your_address...' OR `to` = '0x...your_address...')
+```
+
+## DeFi Protocols
+
+### Top protocols by TVL
+
+```sql
+SELECT project, version, tvl_usd
+FROM agent.ethereum_tvl_daily
+WHERE block_date = (SELECT max(block_date) FROM agent.ethereum_tvl_daily)
+ORDER BY tvl_usd DESC
+LIMIT 20
+```
+
+### Highest-fee protocols this week
+
+```sql
+SELECT project, sum(daily_fees_usd) AS weekly_fees
+FROM agent.ethereum_fees_daily
+WHERE block_date >= today() - 7
+GROUP BY project
+ORDER BY weekly_fees DESC
+LIMIT 10
+```
+
+### Best yields above $1M TVL
+
+```sql
+SELECT project, symbol, pool_meta, apy, tvl_usd
+FROM agent.ethereum_yields_daily
+WHERE block_date = (SELECT max(block_date) FROM agent.ethereum_yields_daily)
+  AND tvl_usd > 1000000
+ORDER BY apy DESC
+LIMIT 20
+```
+
+<Tip>
+Use `apy_mean_30d` instead of `apy` for smoothed comparison — daily APY can be volatile.
+</Tip>
+
+## Prediction Markets
+
+### Polymarket: daily volume by platform
+
+```sql
+SELECT date, source,
+       sum(notional_volume_usd) AS volume,
+       sum(open_interest_usd) AS oi
+FROM agent.prediction_markets_daily
+WHERE date >= today() - 30
+GROUP BY date, source
+ORDER BY date DESC, source
+```
+
+### Find a market by keyword
+
+```sql
+SELECT condition_id, question, category,
+       volume_total, active
+FROM agent.polymarket_market_details
+WHERE question ILIKE '%bitcoin%100k%'
+  AND outcome_index = 0
+ORDER BY volume_total DESC
+LIMIT 10
+```
+
+### Latest open interest (gap-filled)
+
+Polymarket OI is sparse — only rows on days with events. Use `argMax` to carry forward:
+
+```sql
+SELECT
+  condition_id,
+  argMax(open_interest_usd, block_date) AS latest_oi
+FROM agent.polymarket_open_interest_daily
+GROUP BY condition_id
+ORDER BY latest_oi DESC
+LIMIT 20
+```
+
+<Warning>
+Do not filter `HAVING latest_oi > 0` — neg-risk markets legitimately have negative OI on individual conditions. The sum across sibling conditions is correct.
+</Warning>
+
+## Hyperliquid
+
+### Current funding rates (use FINAL)
+
+```sql
+SELECT coin, funding_rate,
+       funding_rate * 8760 AS annualized
+FROM agent.hyperliquid_funding_rates FINAL
+WHERE funding_date = today() - 1
+ORDER BY abs(funding_rate) DESC
+LIMIT 20
+```
+
+### Open interest in USD
+
+```sql
+SELECT coin, open_interest * mark_px AS oi_usd, day_ntl_vlm
+FROM agent.hyperliquid_market_data FINAL
+WHERE snapshot_date = today() - 1
+ORDER BY oi_usd DESC
+LIMIT 20
+```
+
+<Tip>
+`open_interest` is in contract units — multiply by `mark_px` for USD value.
+</Tip>
+
+## Chain Activity
+
+### Daily active addresses across chains
+
+```sql
+SELECT 'ethereum' AS chain, block_date, active_senders
+FROM agent.ethereum_chain_daily WHERE block_date >= today() - 7
+UNION ALL
+SELECT 'base', block_date, active_senders
+FROM agent.base_chain_daily WHERE block_date >= today() - 7
+UNION ALL
+SELECT 'arbitrum', block_date, active_senders
+FROM agent.arbitrum_chain_daily WHERE block_date >= today() - 7
+ORDER BY block_date, chain
+```
+
+## Query Tips
+
+1. **Pre-filter in CTEs before JOINing.** ClickHouse puts the RIGHT side of a JOIN into a hash table — keep it small.
+
+2. **Use `IN (SELECT ...)` instead of JOIN** when you only need an existence check.
+
+3. **Avoid `SELECT *`** on billion-row tables — project only the columns you need.
+
+4. **Use `uniq()` instead of `count(DISTINCT)`** — it's faster and equally accurate.
+
+5. **For time-series rollups**, use `toStartOfWeek(block_date)` or `toStartOfMonth(block_date)` instead of `GROUP BY toString(block_date)`.
+
+6. **For cross-table analysis**, filter each table independently in CTEs before joining.
