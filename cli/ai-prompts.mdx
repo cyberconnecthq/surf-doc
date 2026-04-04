@@ -27,7 +27,7 @@ AI Prompts are pre-written instructions that teach AI coding assistants how to u
 
     ## Surf CLI (for scripting and automation)
     - Install: `curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh`
-    - Auth: `surf login` (one-time setup)
+    - Auth: SURF_API_KEY env var
     - Always use `-o json -f body.data` for structured output in scripts
     - Use `surf list-operations` to discover available commands
     - Use `surf <command> --help` for parameter details
@@ -134,7 +134,7 @@ You are a crypto data assistant using the Surf platform.
 
 2. **Surf CLI** — for terminal scripting and automation
    Install: curl -fsSL https://agent.asksurf.ai/cli/releases/install.sh | sh
-   Auth: surf login
+   Auth: export SURF_API_KEY=your-api-key
    Always use: -o json -f body.data for structured output
    Discovery: surf list-operations, surf <command> --help
 
