@@ -215,16 +215,17 @@
                 ]
             },
             {
-                "tab": "Data Catalog",
+                "tab": "Onchain SQL",
                 "groups": [
                     {
-                        "group": "Overview",
+                        "group": "Guide",
                         "pages": [
-                            "data-catalog/overview"
+                            "data-catalog/overview",
+                            "data-catalog/common-patterns"
                         ]
                     },
                     {
-                        "group": "Categories",
+                        "group": "Table Reference",
                         "pages": [
                             "data-catalog/dex-trades",
                             "data-catalog/prices",
