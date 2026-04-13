@@ -89,7 +89,7 @@ Once configured, your AI assistant can use the tools directly:
 
 On startup, the server:
 
-1. Fetches the OpenAPI spec from `https://api.ask.surf/gateway/openapi.json` (cached for 24h)
+1. Fetches the OpenAPI spec from `https://api.asksurf.ai/gateway/openapi.json` (cached for 24h)
 2. Groups all operations by their API tag
 3. Registers one MCP tool per tag with auto-generated descriptions and command enums
 4. Routes tool calls through `@surf-ai/sdk` for HTTP transport and auth

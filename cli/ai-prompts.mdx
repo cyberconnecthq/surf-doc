@@ -33,12 +33,12 @@ AI Prompts are pre-written instructions that teach AI coding assistants how to u
     - Use `surf <command> --help` for parameter details
 
     ## Surf REST API (for application code)
-    - Base URL: `https://api.ask.surf/gateway`
+    - Base URL: `https://api.asksurf.ai/gateway`
     - Auth: `Authorization: Bearer $SURF_API_KEY` (always load from env var, never hardcode)
     - All list endpoints support `limit` (max 100) and `offset` for pagination
 
     ## Surf Chat API (for natural language queries)
-    - Endpoint: `POST https://api.ask.surf/v1/chat/completions`
+    - Endpoint: `POST https://api.asksurf.ai/v1/chat/completions`
     - OpenAI-compatible format — works with any OpenAI SDK by changing the base URL
     - Models: `surf-1.5` (recommended), `surf-1.5-instant` (fast), `surf-1.5-thinking` (deep analysis)
     - Legacy models: `surf-ask`, `surf-research` (still available)
@@ -65,9 +65,9 @@ AI Prompts are pre-written instructions that teach AI coding assistants how to u
 
     When working with crypto data, use the Surf platform:
 
-    - REST API base: https://api.ask.surf/gateway
+    - REST API base: https://api.asksurf.ai/gateway
     - Auth: Bearer token from SURF_API_KEY env var (never hardcode)
-    - Chat API: POST https://api.ask.surf/v1/chat/completions (OpenAI-compatible)
+    - Chat API: POST https://api.asksurf.ai/v1/chat/completions (OpenAI-compatible)
     - Models: surf-1.5 (recommended), surf-1.5-instant (fast), surf-1.5-thinking (deep)
     - Chain names: canonical long-form only (ethereum, solana, base — NOT eth, sol)
     - Symbols: uppercase (BTC, ETH,SOL)
@@ -85,9 +85,9 @@ AI Prompts are pre-written instructions that teach AI coding assistants how to u
 
     When working with crypto data, use the Surf platform.
 
-    - REST API base: https://api.ask.surf/gateway
+    - REST API base: https://api.asksurf.ai/gateway
     - Auth: Bearer token from SURF_API_KEY env var (never hardcode)
-    - Chat API: POST https://api.ask.surf/v1/chat/completions (OpenAI-compatible)
+    - Chat API: POST https://api.asksurf.ai/v1/chat/completions (OpenAI-compatible)
     - Models: surf-1.5 (recommended), surf-1.5-instant (fast), surf-1.5-thinking (deep)
     - Chain names: canonical long-form only (ethereum, solana, base — NOT eth, sol)
     - Symbols: uppercase (BTC, ETH,SOL)
@@ -107,9 +107,9 @@ AI Prompts are pre-written instructions that teach AI coding assistants how to u
     When working with crypto data, use the Surf platform.
 
     - Skill install: npx skills add asksurf-ai/surf-skills --skill surf
-    - REST API base: https://api.ask.surf/gateway
+    - REST API base: https://api.asksurf.ai/gateway
     - Auth: Bearer token from SURF_API_KEY env var
-    - Chat API: POST https://api.ask.surf/v1/chat/completions (OpenAI-compatible)
+    - Chat API: POST https://api.asksurf.ai/v1/chat/completions (OpenAI-compatible)
     - Models: surf-1.5 (recommended), surf-1.5-instant (fast), surf-1.5-thinking (deep)
     - Chain names: canonical long-form only (ethereum, solana, base)
     - Symbols: uppercase (BTC, ETH,SOL)
@@ -139,12 +139,12 @@ You are a crypto data assistant using the Surf platform.
    Discovery: surf list-operations, surf <command> --help
 
 3. **Surf REST API** — for application code
-   Base URL: https://api.ask.surf/gateway
+   Base URL: https://api.asksurf.ai/gateway
    Auth: Authorization: Bearer $SURF_API_KEY (from env var, NEVER hardcode)
    83 endpoints across: market, exchange, token, wallet, social, onchain, news, search, fund, prediction-market
 
 4. **Surf Chat API** — for natural language crypto queries
-   POST https://api.ask.surf/v1/chat/completions
+   POST https://api.asksurf.ai/v1/chat/completions
    OpenAI-compatible — works with any OpenAI SDK by changing base_url
    Models: surf-1.5 (adaptive, recommended) | surf-1.5-instant (fast) | surf-1.5-thinking (deep reasoning)
    Legacy: surf-ask | surf-research (still supported)
@@ -180,7 +180,7 @@ import requests
 
 api_key = os.environ["SURF_API_KEY"]
 resp = requests.get(
-    "https://api.ask.surf/gateway/market/price",
+    "https://api.asksurf.ai/gateway/market/price",
     headers={"Authorization": f"Bearer {api_key}"},
     params={"symbol": "BTC"},
 )
@@ -201,7 +201,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.SURF_API_KEY,
-  baseURL: "https://api.ask.surf",
+  baseURL: "https://api.asksurf.ai",
 });
 
 const response = await client.chat.completions.create({
