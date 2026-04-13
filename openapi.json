@@ -2260,7 +2260,7 @@
   },
   "servers": [
     {
-      "url": "https://api.ask.surf/gateway"
+      "url": "https://api.asksurf.ai/gateway"
     }
   ],
   "components": {
