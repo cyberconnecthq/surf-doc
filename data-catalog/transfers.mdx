@@ -1,9 +1,9 @@
 ---
 title: "Transfers"
-description: "ERC-20 and native token transfers enriched with symbols and USD pricing."
+description: "Token transfer events across supported chains, with chain-specific event and trace coverage."
 ---
 
-**5 tables** in this category.
+**7 tables** in this category.
 
 ## Tables
 
@@ -12,8 +12,10 @@ description: "ERC-20 and native token transfers enriched with symbols and USD pr
 | `agent.ethereum_transfers` | `agent` | `tokens_ethereum.transfers` | `contract_address, block_number, tx_hash, evt_index` |
 | `agent.base_transfers` | `agent` | `tokens_base.transfers` | `contract_address, block_number, tx_hash, evt_index` |
 | `agent.arbitrum_transfers` | `agent` | `tokens_arbitrum.transfers` | `contract_address, block_number, tx_hash, evt_index` |
-| `agent.bsc_transfers` | `agent` | `tokens_bsc.transfers` | `—` |
+| `agent.bsc_transfers` | `agent` | `tokens_bsc.transfers` | `contract_address, block_number, tx_hash, evt_index` |
 | `agent.tron_transfers` | `agent` | `tokens_tron.transfers` | `contract_address, block_number, tx_hash, evt_index` |
+| `agent.tempo_transfers` | `agent` | `tempo.tip20_transfers` | `block_date, token_address, transfer_from, block_number, log_index` |
+| `agent.robinhood_transfers` | `agent` | `tokens_robinhood.transfers` | `block_number, contract_address, tx_hash, evt_index, item_index` |
 
 ## Related Tables
 
@@ -21,6 +23,12 @@ description: "ERC-20 and native token transfers enriched with symbols and USD pr
 - `agent.base_prices_day`
 - `agent.ethereum_erc20`
 - `agent.ethereum_prices_day`
+- `agent.robinhood_dataset_coverage`
+- `agent.robinhood_dex_trades`
+- `agent.robinhood_prices_hour`
+- `agent.robinhood_token_metadata`
+- `agent.tempo_chain_daily`
+- `agent.tempo_dex_swaps`
 
 ## Sample Queries
 
@@ -33,6 +41,36 @@ WHERE symbol = 'USDC'
   AND block_date = today() - 1
 ORDER BY amount_usd DESC
 LIMIT 20
+```
+
+### 2. Daily transfer count on Tempo
+
+```sql
+SELECT block_date, count() AS transfer_count FROM agent.tempo_transfers WHERE block_date >= '2026-01-01' GROUP BY block_date ORDER BY block_date
+```
+
+### 3. Top transfer recipients by volume
+
+```sql
+SELECT to, count() AS transfer_count, sum(amount_raw) AS total_raw FROM agent.tempo_transfers WHERE block_date >= today() - 30 GROUP BY to ORDER BY transfer_count DESC LIMIT 20
+```
+
+### 4. Largest priced Robinhood transfers in the last seven days
+
+```sql
+SELECT block_time, token_standard, symbol, from_address, to_address,
+       amount, amount_usd, tx_hash
+FROM agent.robinhood_transfers WHERE block_date >= today() - 7
+  AND price_available = 1
+ORDER BY amount_usd DESC LIMIT 20
+```
+
+### 5. Daily transfer activity by token standard
+
+```sql
+SELECT block_date, token_standard, count() AS transfers,
+       uniq(from_address) AS senders, uniq(to_address) AS receivers
+FROM agent.robinhood_transfers WHERE block_date >= toDate('2026-07-01') GROUP BY block_date, token_standard ORDER BY block_date DESC, token_standard LIMIT 100
 ```
 
 ## Table Schemas
@@ -184,6 +222,31 @@ ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. In
 
 ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. Includes WETH wrap/unwrap. Enriched with tx_from, tx_to, tx_index from transaction lookup. One row per transfer event or trace.
 
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_number, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `block_month` | `Date` | UTC block month (partition key) |
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `trace_address` | `Array(Int64)` | Non-empty for native trace-based transfers. Empty string for event-based ERC-20 transfers. |
+| `token_standard` | `String` | 'erc20' for ERC-20 Transfer events, 'native' for ETH/BNB/TRX trace transfers. |
+| `tx_from` | `String` | Transaction sender (EOA that signed the tx). From transaction lookup. |
+| `tx_to` | `String` | Transaction recipient (first-level contract called). From transaction lookup. |
+| `tx_index` | `UInt32` | Transaction index in block |
+| `from` | `String` | Transfer sender address. |
+| `to` | `String` | Transfer recipient address. |
+| `contract_address` | `String` | Token contract address. Zero address (0x0000...0000) for native token transfers. |
+| `symbol` | `String` | Token symbol |
+| `amount_raw` | `UInt256` | Raw uint256 transfer amount. Divide by 10^decimals for human-readable value. |
+| `amount` | `Float64` | Amount in display units (decimal-adjusted) |
+| `price_usd` | `Float64` | USD price at transfer time |
+| `amount_usd` | `Nullable(Float64)` | USD value of transfer |
+
 <Tip>
 
 - BSC transfer tables can be very large — always filter on block_date first
@@ -245,5 +308,93 @@ ERC-20 Transfer events plus native token (ETH/BNB/TRX) trace-based transfers. In
 - Native transfers from trace data may include internal contract-to-contract transfers
 - Does not include ERC-721 (NFT) or ERC-1155 (multi-token) transfers
 - amount_raw is raw — you must know the token's decimals to interpret correctly
+
+</Warning>
+
+### `agent.tempo_transfers`
+
+TIP-20 token transfers on the Tempo chain. Same schema as other chain transfer tables.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date, token_address, transfer_from, block_number, log_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `block_number` | `UInt64` | Block number |
+| `transaction_index` | `UInt32` | Transaction index in block |
+| `log_index` | `UInt32` | Event log index in transaction |
+| `transaction_hash` | `String` | Transaction hash |
+| `transfer_from` | `String` |  |
+| `transfer_to` | `String` |  |
+| `amount_usd` | `Float64` | USD value of transfer |
+| `token_address` | `String` | Token contract address |
+| `token_symbol` | `String` | Token symbol |
+
+<Tip>
+
+- Filter on block_date for partition pruning
+
+</Tip>
+
+<Warning>
+
+- No USD amounts — join with Tempo prices for valuation
+- Smaller chain with fewer tokens — coverage is limited compared to Ethereum
+- Includes type 0x76 batched payment transactions unique to Tempo
+
+</Warning>
+
+### `agent.robinhood_transfers`
+
+Canonical Robinhood Chain ERC-20, ERC-721, and ERC-1155 transfer events enriched with token metadata and optional hourly USD prices. Historical coverage begins at block 0 and includes pre-public-launch mainnet activity.
+
+**Engine**: View | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_number, contract_address, tx_hash, evt_index, item_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `unique_key` | `String` | Stable transfer item key; ERC-1155 batch items have distinct item_index values. |
+| `blockchain` | `String` |  |
+| `block_month` | `Date` |  |
+| `block_date` | `Date` | UTC block date. Required lower-bound filter for large-table queries. |
+| `block_time` | `DateTime64(3, 'UTC')` |  |
+| `block_number` | `UInt64` |  |
+| `tx_hash` | `String` |  |
+| `tx_index` | `UInt32` |  |
+| `evt_index` | `UInt32` |  |
+| `item_index` | `UInt32` |  |
+| `token_standard` | `String` | Transfer standard: erc20, erc721, or erc1155. |
+| `tx_from` | `String` |  |
+| `tx_to` | `String` |  |
+| `from_address` | `String` |  |
+| `to_address` | `String` |  |
+| `contract_address` | `String` |  |
+| `amount_raw` | `UInt256` | Raw event amount before decimal scaling. |
+| `token_id` | `UInt256` | NFT token ID; meaningful when has_token_id is true. |
+| `has_token_id` | `Bool` |  |
+| `symbol` | `Nullable(String)` |  |
+| `token_name` | `Nullable(String)` |  |
+| `decimals` | `Nullable(Int64)` |  |
+| `metadata_available` | `UInt8` |  |
+| `amount` | `Nullable(Float64)` |  |
+| `price_available` | `UInt8` |  |
+| `price_usd` | `Nullable(Float64)` |  |
+| `amount_usd` | `Nullable(Float64)` |  |
+| `coverage_semantics` | `String` | Explicit reminder that this view is event-only and excludes trace-derived transfers. |
+
+<Tip>
+
+- Always include a block_date lower bound; this is a large historical fact view
+- Use token_standard to distinguish ERC-20, ERC-721, and ERC-1155 rows
+- Use has_token_id and item_index for NFT and ERC-1155 batch-transfer analysis
+- Rows before 2026-07-01 are canonical pre-public-launch mainnet activity
+- Check metadata_available and price_available before using enriched fields
+
+</Tip>
+
+<Warning>
+
+- Event-only: no native ETH transfers or trace-derived internal transfers
+- Only standard ERC-20, ERC-721, and ERC-1155 transfer events are included
+- Metadata and USD values are nullable for unknown or unpriced tokens
 
 </Warning>

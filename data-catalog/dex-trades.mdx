@@ -1,9 +1,9 @@
 ---
 title: "DEX Trades"
-description: "Enriched swap events across 6 chains with token symbols, USD amounts, and protocol attribution."
+description: "Enriched swap events across supported chains with token symbols, USD amounts, and protocol attribution."
 ---
 
-**6 tables** in this category.
+**8 tables** in this category.
 
 ## Tables
 
@@ -15,6 +15,8 @@ description: "Enriched swap events across 6 chains with token symbols, USD amoun
 | `agent.bsc_dex_trades` | `agent` | `dex_bnb.trades` | `block_time, tx_hash, evt_index` |
 | `agent.tron_dex_trades` | `agent` | `dex_tron.trades` | `block_time, tx_hash, evt_index` |
 | `agent.hyperevm_dex_trades` | `agent` | `dex_hyperevm.trades` | `block_time, tx_hash, evt_index` |
+| `agent.tempo_dex_swaps` | `agent` | `tempo.dex_swaps` | `block_date, transaction_hash` |
+| `agent.robinhood_dex_trades` | `agent` | `dex_robinhood.trades` | `block_date, block_number, tx_hash, evt_index` |
 
 ## Related Tables
 
@@ -25,6 +27,12 @@ description: "Enriched swap events across 6 chains with token symbols, USD amoun
 - `agent.ethereum_prices_day`
 - `agent.hyperliquid_market_data`
 - `agent.hyperliquid_perp_meta`
+- `agent.robinhood_dataset_coverage`
+- `agent.robinhood_prices_hour`
+- `agent.robinhood_token_metadata`
+- `agent.robinhood_transfers`
+- `agent.tempo_chain_daily`
+- `agent.tempo_transfers`
 
 ## Sample Queries
 
@@ -50,6 +58,26 @@ WHERE project = 'uniswap' AND version = '3'
   AND block_date >= today() - 1
 ORDER BY block_time DESC
 LIMIT 20
+```
+
+### 3. Daily DEX volume on Tempo
+
+```sql
+SELECT block_date, sum(amount_usd) AS volume_usd FROM agent.tempo_dex_swaps GROUP BY block_date ORDER BY block_date
+```
+
+### 4. Top traded token pairs
+
+```sql
+SELECT token_pair, count() AS trades, sum(amount_usd) AS volume_usd FROM agent.tempo_dex_swaps GROUP BY token_pair ORDER BY volume_usd DESC LIMIT 20
+```
+
+### 5. Robinhood daily DEX volume since public launch
+
+```sql
+SELECT block_date, project, version,
+       count() AS trades, sumIf(amount_usd, price_available = 1) AS volume_usd
+FROM agent.robinhood_dex_trades WHERE block_date >= toDate('2026-07-01') GROUP BY block_date, project, version ORDER BY block_date DESC, volume_usd DESC LIMIT 100
 ```
 
 ## Table Schemas
@@ -352,5 +380,99 @@ Enriched DEX swap events with token symbols, decimals, USD amounts, and protocol
 - No aggregator attribution — a swap routed through 1inch still shows as the underlying DEX
 - USD prices from CoinGecko hourly — illiquid or brand-new tokens may have null amount_usd
 - Does not include limit orders, RFQ fills, or off-chain matching
+
+</Warning>
+
+### `agent.tempo_dex_swaps`
+
+DEX swap events on the Tempo chain. Same schema as other chain dex_trades tables.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date, transaction_hash`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `block_number` | `UInt64` | Block number |
+| `transaction_index` | `UInt32` | Transaction index in block |
+| `transaction_hash` | `String` | Transaction hash |
+| `user_address` | `String` |  |
+| `token_in` | `String` |  |
+| `token_in_symbol` | `String` |  |
+| `amount_in_usd` | `Float64` |  |
+| `token_out` | `String` |  |
+| `token_out_symbol` | `String` |  |
+| `amount_out_usd` | `Float64` |  |
+| `reason_hex` | `String` |  |
+
+<Tip>
+
+- Small table (<15K rows) — no partition pruning needed, full scans are fast
+
+</Tip>
+
+<Warning>
+
+- Very small chain — limited liquidity and protocol coverage compared to Ethereum or Base
+- USD prices depend on Tempo-specific pricing pipeline — coverage gaps for obscure tokens
+
+</Warning>
+
+### `agent.robinhood_dex_trades`
+
+Enriched Robinhood Chain Uniswap V2, V3, and V4 swap events from the verified mapped-pool registry. Includes canonical mainnet history from block 0, including pre-public-launch activity before July 1, 2026.
+
+**Engine**: View | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date, block_number, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `unique_key` | `String` | Stable swap-event key built from chain, protocol, version, transaction hash, and event index. |
+| `blockchain` | `String` |  |
+| `project` | `String` |  |
+| `version` | `String` |  |
+| `block_month` | `Date` |  |
+| `block_date` | `Date` | UTC block date. Required lower-bound filter for large-table queries. |
+| `block_time` | `DateTime64(3, 'UTC')` | UTC block timestamp, including canonical pre-public-launch history. |
+| `block_number` | `UInt64` |  |
+| `token_bought_amount_raw` | `UInt256` |  |
+| `token_sold_amount_raw` | `UInt256` |  |
+| `token_bought_address` | `String` |  |
+| `token_sold_address` | `String` |  |
+| `token_bought_symbol` | `Nullable(String)` |  |
+| `token_sold_symbol` | `Nullable(String)` |  |
+| `token_bought_decimals` | `Nullable(Int64)` |  |
+| `token_sold_decimals` | `Nullable(Int64)` |  |
+| `token_bought_amount` | `Nullable(Float64)` |  |
+| `token_sold_amount` | `Nullable(Float64)` |  |
+| `token_bought_price_usd` | `Nullable(Float64)` |  |
+| `token_sold_price_usd` | `Nullable(Float64)` |  |
+| `amount_usd` | `Nullable(Float64)` | One-sided nullable USD value derived from the bought or sold token when hourly pricing is available. |
+| `price_available` | `UInt8` | 1 when amount_usd could be calculated from an hourly token price; otherwise 0. |
+| `taker` | `String` | Best available initiating address. |
+| `taker_source` | `String` | How taker attribution was derived. |
+| `maker` | `Nullable(String)` |  |
+| `swap_sender` | `String` |  |
+| `project_contract_address` | `String` |  |
+| `tx_hash` | `String` |  |
+| `evt_index` | `UInt32` |  |
+| `registry_source` | `String` | Mapped-pool registry source used to recognize the swap contract. |
+| `tx_from` | `String` |  |
+| `tx_to` | `String` |  |
+
+<Tip>
+
+- Always include a block_date lower bound; this is a large historical fact view
+- Use agent.robinhood_dataset_coverage to verify complete-through bounds before historical analysis
+- Rows before 2026-07-01 are canonical pre-public-launch mainnet activity, not public-user activity
+- amount_usd is nullable; check price_available before USD aggregation
+- Filter by project and version to compare Uniswap V2, V3, and V4
+
+</Tip>
+
+<Warning>
+
+- Only pools recognized by the verified mapped-pool registry are included
+- Coverage is limited to supported Uniswap V2, V3, and V4 event models
+- No aggregator-level attribution, RFQ fills, limit orders, or off-chain matching
+- USD values are absent when token metadata or hourly pricing is unavailable
 
 </Warning>

@@ -1,21 +1,46 @@
 ---
 title: "Token Metadata"
-description: "ERC-20 contract registry mapping addresses to symbols, names, and decimals."
+description: "Token contract metadata including name, symbol, decimals, and source-specific attributes."
 ---
 
-**1 tables** in this category.
+**2 tables** in this category.
 
 ## Tables
 
 | View Name | Database | Source | ORDER BY |
 |-----------|----------|--------|----------|
 | `agent.ethereum_erc20` | `agent` | `tokens.erc20` | `contract_address` |
+| `agent.robinhood_token_metadata` | `agent` | `tokens_robinhood.metadata` | `contract_address` |
 
 ## Related Tables
 
 - `agent.ethereum_dex_trades`
 - `agent.ethereum_prices_day`
 - `agent.ethereum_transfers`
+- `agent.robinhood_dex_trades`
+- `agent.robinhood_prices_hour`
+- `agent.robinhood_transfers`
+
+## Sample Queries
+
+### 1. Look up token by symbol
+
+```sql
+SELECT contract_address, symbol, name, decimals FROM agent.ethereum_erc20 WHERE symbol = 'USDC'
+```
+
+### 2. Find tokens by partial name
+
+```sql
+SELECT contract_address, symbol, name, decimals FROM agent.ethereum_erc20 WHERE name ILIKE '%uniswap%' LIMIT 20
+```
+
+### 3. Look up Robinhood tokens by symbol
+
+```sql
+SELECT contract_address, symbol, name, decimals, metadata_source FROM agent.robinhood_token_metadata WHERE symbol = 'USDC' ORDER BY contract_address LIMIT 20
+```
+
 ## Table Schemas
 
 ### `agent.ethereum_erc20`
@@ -45,5 +70,36 @@ ERC-20 token metadata registry: contract address, symbol, name, and decimals. Us
 - Ethereum-only. Other chains do not have a separate erc20 metadata table exposed.
 - May not include every token — new or very obscure tokens might be missing
 - Symbol and name are from deployment — tokens can rebrand but this table reflects original metadata
+
+</Warning>
+
+### `agent.robinhood_token_metadata`
+
+Current Robinhood Chain token metadata snapshot keyed by contract address, with symbol, name, decimals, and metadata provenance.
+
+**Engine**: MergeTree | **ORDER BY**: `contract_address`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` |  |
+| `contract_address` | `String` | Lowercase Robinhood Chain token contract address and join key. |
+| `symbol` | `Nullable(String)` | Nullable ticker symbol; symbols are not unique. |
+| `name` | `Nullable(String)` |  |
+| `decimals` | `Nullable(Int64)` | Nullable token decimals used to scale raw amounts. |
+| `metadata_source` | `String` | Provenance of the resolved metadata. |
+
+<Tip>
+
+- Dimension table; place it on the RIGHT side of a LEFT ANY JOIN
+- Join on contract_address, never symbol
+- This is a current snapshot, not a history of token metadata changes
+
+</Tip>
+
+<Warning>
+
+- Current snapshot only; historical symbol or metadata changes are not retained
+- Some contracts may have null or misleading self-reported metadata
+- A token symbol is not a unique identifier
 
 </Warning>

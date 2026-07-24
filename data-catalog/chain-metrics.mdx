@@ -3,15 +3,19 @@ title: "Chain Metrics"
 description: "Daily chain-level aggregates including transaction counts, active addresses, gas usage, and contract deployments."
 ---
 
-**3 tables** in this category.
+**7 tables** in this category.
 
 ## Tables
 
 | View Name | Database | Source | ORDER BY |
 |-----------|----------|--------|----------|
-| `agent.ethereum_chain_daily` | `agent` | `chain_metrics_ethereum.daily` | `—` |
-| `agent.base_chain_daily` | `agent` | `chain_metrics_base.daily` | `—` |
-| `agent.arbitrum_chain_daily` | `agent` | `chain_metrics_arbitrum.daily` | `—` |
+| `agent.ethereum_chain_daily` | `agent` | `chain_metrics_ethereum.daily` | `block_date` |
+| `agent.base_chain_daily` | `agent` | `chain_metrics_base.daily` | `block_date` |
+| `agent.arbitrum_chain_daily` | `agent` | `chain_metrics_arbitrum.daily` | `block_date` |
+| `agent.tempo_chain_daily` | `agent` | `tempo.metrics_daily` | `block_date` |
+| `agent.tempo_stablecoin_supply` | `agent` | `tempo.stablecoin_supply` | `block_date, token_address` |
+| `agent.robinhood_chain_daily` | `agent` | `metrics_robinhood.chain_activity_daily` | `date` |
+| `agent.robinhood_dataset_coverage` | `agent` | `metrics_robinhood.dataset_coverage` | `—` |
 
 ## Related Tables
 
@@ -22,11 +26,67 @@ description: "Daily chain-level aggregates including transaction counts, active 
 - `agent.ethereum_dex_trades`
 - `agent.ethereum_staking_daily`
 - `agent.ethereum_tvl_daily`
+- `agent.robinhood_dex_trades`
+- `agent.robinhood_transfers`
+- `agent.tempo_dex_swaps`
+- `agent.tempo_transfers`
+
+## Sample Queries
+
+### 1. Weekly active addresses and tx count
+
+```sql
+SELECT toStartOfWeek(block_date) AS week,
+       sum(tx_count) AS txs,
+       sum(active_senders) AS senders
+FROM agent.ethereum_chain_daily WHERE block_date >= today() - 90 GROUP BY week ORDER BY week
+```
+
+### 2. Daily gas and contract deployments
+
+```sql
+SELECT block_date, avg_gas_price_gwei, contract_deployments FROM agent.ethereum_chain_daily WHERE block_date >= today() - 30 ORDER BY block_date
+```
+
+### 3. Tempo daily activity overview
+
+```sql
+SELECT block_date, tx_count, active_senders, contract_deployments FROM agent.tempo_chain_daily ORDER BY block_date DESC LIMIT 30
+```
+
+### 4. Stablecoin supply trends on Tempo
+
+```sql
+SELECT block_date, symbol, supply FROM agent.tempo_stablecoin_supply ORDER BY block_date DESC, supply DESC LIMIT 50
+```
+
+### 5. Robinhood activity around public launch
+
+```sql
+SELECT date, blocks, transactions, successful_transactions,
+       failed_transactions, unique_active_addresses
+FROM agent.robinhood_chain_daily WHERE date >= toDate('2026-06-15') ORDER BY date
+```
+
 ## Table Schemas
 
 ### `agent.ethereum_chain_daily`
 
 Daily chain-level activity metrics in the style of Artemis ez_metrics. Transaction counts, active addresses (HLL approximate), gas usage, native value transferred, and contract deployments.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | Partition key. One row per day. |
+| `tx_count` | `UInt64` | Total transactions (including failed). |
+| `successful_tx_count` | `UInt64` | Transactions with receipt_status = 1. |
+| `active_senders` | `UInt64` | Approximate unique from_address count (HLL, ~2% error). |
+| `active_receivers` | `UInt64` | Approximate unique to_address count (HLL, ~2% error). |
+| `total_gas_used` | `UInt64` | Sum of receipt_gas_used across all transactions. |
+| `avg_gas_price_gwei` | `Float64` | Mean receipt_effective_gas_price / 1e9. |
+| `total_native_transferred` | `Float64` | Sum of transaction value in native units (ETH/BNB). Float64. |
+| `contract_deployments` | `UInt64` | Count of transactions that deployed a new contract. |
 
 <Tip>
 
@@ -50,6 +110,20 @@ Daily chain-level activity metrics in the style of Artemis ez_metrics. Transacti
 
 Daily chain-level activity metrics in the style of Artemis ez_metrics. Transaction counts, active addresses (HLL approximate), gas usage, native value transferred, and contract deployments.
 
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | Partition key. One row per day. |
+| `tx_count` | `UInt64` | Total transactions (including failed). |
+| `successful_tx_count` | `UInt64` | Transactions with receipt_status = 1. |
+| `active_senders` | `UInt64` | Approximate unique from_address count (HLL, ~2% error). |
+| `active_receivers` | `UInt64` | Approximate unique to_address count (HLL, ~2% error). |
+| `total_gas_used` | `UInt64` | Sum of receipt_gas_used across all transactions. |
+| `avg_gas_price_gwei` | `Float64` | Mean receipt_effective_gas_price / 1e9. |
+| `total_native_transferred` | `Float64` | Sum of transaction value in native units (ETH/BNB). Float64. |
+| `contract_deployments` | `UInt64` | Count of transactions that deployed a new contract. |
+
 <Tip>
 
 - active_senders and active_receivers use HLL (uniq) — approximately 2% error margin
@@ -71,6 +145,20 @@ Daily chain-level activity metrics in the style of Artemis ez_metrics. Transacti
 
 Daily chain-level activity metrics in the style of Artemis ez_metrics. Transaction counts, active addresses (HLL approximate), gas usage, native value transferred, and contract deployments.
 
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | Partition key. One row per day. |
+| `tx_count` | `UInt64` | Total transactions (including failed). |
+| `successful_tx_count` | `UInt64` | Transactions with receipt_status = 1. |
+| `active_senders` | `UInt64` | Approximate unique from_address count (HLL, ~2% error). |
+| `active_receivers` | `UInt64` | Approximate unique to_address count (HLL, ~2% error). |
+| `total_gas_used` | `UInt64` | Sum of receipt_gas_used across all transactions. |
+| `avg_gas_price_gwei` | `Float64` | Mean receipt_effective_gas_price / 1e9. |
+| `total_native_transferred` | `Float64` | Sum of transaction value in native units (ETH/BNB). Float64. |
+| `contract_deployments` | `UInt64` | Count of transactions that deployed a new contract. |
+
 <Tip>
 
 - active_senders and active_receivers use HLL (uniq) — approximately 2% error margin
@@ -84,5 +172,150 @@ Daily chain-level activity metrics in the style of Artemis ez_metrics. Transacti
 - HLL-based active_senders/receivers are ~2% approximate
 - L2 gas price does not reflect actual user cost (excludes L1 data posting fees)
 - No USD valuation of native transfers
+
+</Warning>
+
+### `agent.tempo_chain_daily`
+
+Daily chain-level metrics for Tempo. Same schema as other chain_daily tables (tx_count, active_senders, gas, contract_deployments).
+
+**Engine**: ReplacingMergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `total_blocks` | `UInt64` |  |
+| `total_txs` | `UInt64` |  |
+| `user_txs` | `UInt64` |  |
+| `dau` | `UInt64` |  |
+| `wau` | `UInt64` |  |
+| `mau` | `UInt64` |  |
+| `new_users` | `UInt64` |  |
+| `returning_users` | `UInt64` |  |
+| `total_transfers` | `UInt64` |  |
+| `stablecoin_transfer_volume` | `Float64` |  |
+| `stablecoin_dau` | `UInt64` |  |
+| `stablecoin_txns` | `UInt64` |  |
+| `unique_tokens_transferred` | `UInt64` |  |
+| `bridge_net_flow_usd` | `Float64` |  |
+| `total_fees_usd` | `Float64` |  |
+| `avg_fee_usd` | `Float64` |  |
+| `median_fee_usd` | `Float64` |  |
+| `sponsored_fee_pct` | `Float64` |  |
+| `dex_volume_usd` | `Float64` |  |
+| `dex_trade_count` | `UInt64` |  |
+| `contract_deployments_from_traces` | `UInt64` |  |
+| `batched_tx_count` | `UInt64` |  |
+
+<Tip>
+
+- Very small table — no optimization needed
+- active_senders and active_receivers use HLL (~2% approximate)
+
+</Tip>
+
+<Warning>
+
+- HLL-based active_senders/receivers are ~2% approximate — not exact unique counts
+- New chain — limited historical data compared to Ethereum or Base
+- No USD valuation of native transfers — join with prices manually
+
+</Warning>
+
+### `agent.tempo_stablecoin_supply`
+
+Daily stablecoin supply on the Tempo chain by token.
+
+**Engine**: ReplacingMergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date, token_address`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `token_address` | `String` | Token contract address |
+| `token_symbol` | `String` | Token symbol |
+| `mint_count` | `UInt64` |  |
+| `burn_count` | `UInt64` |  |
+| `mint_volume_usd` | `Float64` |  |
+| `burn_volume_usd` | `Float64` |  |
+| `net_supply_change_usd` | `Float64` |  |
+
+<Tip>
+
+- Very small table — no optimization needed
+
+</Tip>
+
+<Warning>
+
+- Only covers recognized stablecoin tokens on Tempo — new stablecoins may not be included
+- Supply derived from transfer events — may not match issuer-reported circulating supply exactly
+
+</Warning>
+
+### `agent.robinhood_chain_daily`
+
+Daily Robinhood Chain activity for complete UTC days, including blocks, transaction outcomes, unique active addresses, gas usage, and raw fees. History includes the pre-public-launch mainnet period.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(date)` | **ORDER BY**: `date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | `Date` | Complete UTC calendar date. |
+| `blocks` | `UInt64` | Number of canonical blocks for the complete UTC day. |
+| `transactions` | `UInt64` | Total transactions included in those blocks. |
+| `successful_transactions` | `UInt64` |  |
+| `failed_transactions` | `UInt64` |  |
+| `unique_active_addresses` | `UInt64` | Unique addresses participating in daily transactions. |
+| `gas_used` | `UInt256` |  |
+| `fees_raw` | `UInt256` | Raw gas fees without decimal or USD conversion. |
+
+<Tip>
+
+- Only complete UTC days are published; the current partial day is intentionally absent
+- July 1, 2026 is the public-launch boundary, not the canonical-history start
+- fees_raw is denominated in raw wei-like gas-fee units
+
+</Tip>
+
+<Warning>
+
+- Current partial UTC day is excluded
+- No token-transfer, DEX-volume, or USD fee metrics
+- Pre-July 1 rows describe pre-public-launch mainnet activity
+
+</Warning>
+
+### `agent.robinhood_dataset_coverage`
+
+Authoritative coverage contract for Robinhood analyst-facing datasets. Reports block-0 origin, contiguous complete-through bounds, raw live tip, internal gaps, and semantic limitations for each audited dataset.
+
+**Engine**: View
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `dataset` | `String` | Audited internal dataset represented by this coverage row. |
+| `coverage_state` | `String` | historically_complete, bounded_backfill, or live_only. |
+| `first_covered_block` | `Nullable(UInt64)` | Start of the first contiguous audited range. |
+| `first_covered_date` | `Nullable(Date)` |  |
+| `complete_through_block` | `Nullable(UInt64)` | End of the first contiguous audited range starting at first_covered_block. |
+| `complete_through_date` | `Nullable(Date)` |  |
+| `raw_live_tip` | `Nullable(UInt64)` | Latest complete finalized raw-ingestion block used for comparison. |
+| `internal_gaps` | `Nullable(UInt32)` | Number of gaps between audited range segments. |
+| `semantic_coverage` | `String` | Dataset-specific inclusion boundary or limitation. |
+| `observed_at` | `DateTime` | Time the coverage view was evaluated. |
+
+<Tip>
+
+- Check coverage_state='historically_complete' and internal_gaps=0 before claiming complete history
+- Use semantic_coverage to preserve dataset-specific limits such as event-only transfers or mapped-pool DEX coverage
+- Event-row minima are not coverage boundaries because valid block ranges may contain zero matching events
+
+</Tip>
+
+<Warning>
+
+- Coverage rows describe audited range completeness, not row-level event density
+- A historically_complete state remains subject to semantic_coverage
+- Prices and token-metadata snapshot history are not certified by this coverage contract
 
 </Warning>

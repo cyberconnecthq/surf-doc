@@ -3,18 +3,20 @@ title: "Bridges"
 description: "Cross-chain bridge volume aggregated daily."
 ---
 
-**1 tables** in this category.
+**2 tables** in this category.
 
 ## Tables
 
 | View Name | Database | Source | ORDER BY |
 |-----------|----------|--------|----------|
 | `agent.bridge_volume_daily` | `agent` | `bridges.bridge_volume_daily` | `block_date, project, version, source_chain` |
+| `agent.tempo_bridge_flows_daily` | `agent` | `tempo.bridge_flows_daily` | `block_date, token_symbol` |
 
 ## Related Tables
 
 - `agent.ethereum_chain_daily`
 - `agent.ethereum_prices_day`
+- `agent.tempo_chain_daily`
 
 ## Sample Queries
 
@@ -27,6 +29,12 @@ FROM bridges_ethereum.deposits
 WHERE block_date >= today() - 7
 GROUP BY bridge_name
 ORDER BY transfers DESC
+```
+
+### 2. Daily net bridge flows into Tempo
+
+```sql
+SELECT block_date, sum(volume_usd) AS total_bridge_volume FROM agent.tempo_bridge_flows_daily GROUP BY block_date ORDER BY block_date
 ```
 
 ## Table Schemas
@@ -63,5 +71,37 @@ Daily cross-chain bridge volume in USD with directional flow tracking. One row p
 - Not all bridge protocols are indexed — newer or smaller bridges may be missing
 - USD pricing from hourly CoinGecko — same limitations as DEX prices
 - Mayan bridge uses a separate volume model with different source methodology
+
+</Warning>
+
+### `agent.tempo_bridge_flows_daily`
+
+Daily bridge flow volumes into/out of the Tempo chain.
+
+**Engine**: ReplacingMergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_date, token_symbol`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `token_address` | `String` | Token contract address |
+| `token_symbol` | `String` | Token symbol |
+| `inflow_count` | `UInt64` |  |
+| `inflow_usd` | `Float64` |  |
+| `outflow_count` | `UInt64` |  |
+| `outflow_usd` | `Float64` |  |
+| `net_flow_usd` | `Float64` |  |
+| `cumulative_net_flow_usd` | `Float64` |  |
+
+<Tip>
+
+- Very small table (~100 rows) — no optimization needed
+
+</Tip>
+
+<Warning>
+
+- Only covers bridges with Tempo as an endpoint — no pass-through flows
+- Very small dataset — limited statistical significance for trend analysis
+- USD pricing depends on bridge-time hourly prices — gaps for unpriced tokens
 
 </Warning>

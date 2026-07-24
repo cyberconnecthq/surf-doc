@@ -1,9 +1,9 @@
 ---
 title: "Prices"
-description: "Daily token prices combining CoinGecko data and DEX VWAP calculations."
+description: "Token prices at chain-specific daily or hourly granularity from market and onchain sources."
 ---
 
-**3 tables** in this category.
+**6 tables** in this category.
 
 ## Tables
 
@@ -12,6 +12,9 @@ description: "Daily token prices combining CoinGecko data and DEX VWAP calculati
 | `agent.ethereum_prices_day` | `agent` | `prices_ethereum.day` | `contract_address, block_date` |
 | `agent.base_prices_day` | `agent` | `prices_base.day` | `contract_address, block_date` |
 | `agent.arbitrum_prices_day` | `agent` | `prices_arbitrum.day` | `contract_address, block_date` |
+| `agent.tron_prices_day` | `agent` | `prices_tron.day` | `contract_address, block_date` |
+| `agent.hyperevm_prices_day` | `agent` | `prices_hyperevm.day` | `contract_address, block_date` |
+| `agent.robinhood_prices_hour` | `agent` | `prices_robinhood.hour` | `contract_address, hour` |
 
 ## Related Tables
 
@@ -19,6 +22,11 @@ description: "Daily token prices combining CoinGecko data and DEX VWAP calculati
 - `agent.base_dex_trades`
 - `agent.ethereum_dex_trades`
 - `agent.ethereum_erc20`
+- `agent.hyperevm_dex_trades`
+- `agent.robinhood_dex_trades`
+- `agent.robinhood_token_metadata`
+- `agent.robinhood_transfers`
+- `agent.tron_dex_trades`
 
 ## Sample Queries
 
@@ -30,6 +38,32 @@ FROM agent.ethereum_prices_day
 WHERE symbol = 'WETH'
   AND block_date >= today() - 30
 ORDER BY block_date
+```
+
+### 2. TRX daily price history
+
+```sql
+SELECT block_date, price FROM agent.tron_prices_day WHERE symbol = 'TRX' AND block_date >= '2026-01-01' ORDER BY block_date
+```
+
+### 3. Available Tron tokens with prices
+
+```sql
+SELECT symbol, contract_address, count() AS days_with_price FROM agent.tron_prices_day GROUP BY symbol, contract_address ORDER BY days_with_price DESC LIMIT 50
+```
+
+### 4. Available HyperEVM tokens with prices
+
+```sql
+SELECT symbol, contract_address, count() AS days_with_price FROM agent.hyperevm_prices_day GROUP BY symbol, contract_address ORDER BY days_with_price DESC LIMIT 50
+```
+
+### 5. Hourly prices for a Robinhood token
+
+```sql
+SELECT hour, symbol, price, price_source, observed_at FROM agent.robinhood_prices_hour WHERE contract_address = '0x0bd7d308f8e1639fab988df18a8011f41eacad73'
+  AND hour >= now() - INTERVAL 7 DAY
+ORDER BY hour
 ```
 
 ## Table Schemas
@@ -136,5 +170,102 @@ Daily token prices combining CoinGecko hourly snapshots and DEX VWAP calculation
 - DEX VWAP can be skewed by low-liquidity pools or wash trading
 - New tokens may have no price for the first few days after deployment
 - Stablecoins may show slight depegs in CoinGecko data during volatility
+
+</Warning>
+
+### `agent.tron_prices_day`
+
+Daily token prices on TRON. CoinGecko + DEX VWAP combined.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `contract_address` | `String` | Contract address |
+| `decimals` | `Int64` | Token decimals |
+| `symbol` | `String` | Token symbol |
+| `price` | `Nullable(Float64)` | Token price in USD |
+| `volume_usd` | `Float64` | Trading volume in USD |
+| `source` | `String` | Price data source (coingecko, dex_vwap, etc.) |
+
+<Tip>
+
+- Dimension table — use as RIGHT side in JOINs
+- Join key: (contract_address, block_date)
+
+</Tip>
+
+<Warning>
+
+- Tron token addresses use base58 format — ensure join keys match
+- Fewer tokens covered than Ethereum — many Tron tokens may lack CoinGecko prices
+- DEX VWAP can be skewed by low-liquidity SunSwap pools
+
+</Warning>
+
+### `agent.hyperevm_prices_day`
+
+Daily token prices on HyperEVM. CoinGecko + DEX VWAP combined.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `contract_address, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `contract_address` | `String` | Contract address |
+| `decimals` | `UInt8` | Token decimals |
+| `symbol` | `String` | Token symbol |
+| `price` | `Nullable(Float64)` | Token price in USD |
+| `volume_usd` | `Float64` | Trading volume in USD |
+| `source` | `String` | Price data source (coingecko, dex_vwap, etc.) |
+
+<Tip>
+
+- Dimension table — use as RIGHT side in JOINs
+- Join key: (contract_address, block_date)
+
+</Tip>
+
+<Warning>
+
+- Newer chain — fewer tokens covered than established chains
+- DEX VWAP relies on HyperEVM DEX liquidity, which is thinner than Ethereum
+- Data starts from HyperEVM launch — no historical price backfill before that
+
+</Warning>
+
+### `agent.robinhood_prices_hour`
+
+Deduplicated hourly USD prices for supported Robinhood Chain token contracts. The agent view applies FINAL to the ReplacingMergeTree source so retry and backfill versions do not create duplicate contract-hour rows.
+
+**Engine**: View | **Partition**: `toYYYYMM(hour)` | **ORDER BY**: `contract_address, hour`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `hour` | `DateTime` | UTC price hour and logical time key. |
+| `blockchain` | `String` |  |
+| `contract_address` | `String` | Robinhood token contract address. |
+| `symbol` | `String` |  |
+| `decimals` | `UInt8` |  |
+| `price` | `Float64` | USD price for the contract and hour. |
+| `price_source` | `String` | Price-provider or derivation provenance. |
+| `observed_at` | `DateTime` | Version timestamp used by the source ReplacingMergeTree. |
+
+<Tip>
+
+- Filter by contract_address and an hour range
+- The agent view already applies FINAL; do not add another FINAL modifier
+- Use observed_at to inspect when a contract-hour price version was produced
+
+</Tip>
+
+<Warning>
+
+- Only explicitly supported tokens have prices; this is not every Robinhood token
+- One price per hour, not OHLCV or intrahour observations
+- Missing hours remain absent rather than forward-filled
 
 </Warning>

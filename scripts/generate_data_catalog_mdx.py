@@ -11,10 +11,10 @@ OUTPUT_DIR = Path(__file__).parent.parent / "data-catalog"
 
 
 CATEGORY_DESCRIPTIONS = {
-    "DEX Trades": "Enriched swap events across 6 chains with token symbols, USD amounts, and protocol attribution.",
-    "Prices": "Daily token prices combining CoinGecko data and DEX VWAP calculations.",
-    "Token Metadata": "ERC-20 contract registry mapping addresses to symbols, names, and decimals.",
-    "Transfers": "ERC-20 and native token transfers enriched with symbols and USD pricing.",
+    "DEX Trades": "Enriched swap events across supported chains with token symbols, USD amounts, and protocol attribution.",
+    "Prices": "Token prices at chain-specific daily or hourly granularity from market and onchain sources.",
+    "Token Metadata": "Token contract metadata including name, symbol, decimals, and source-specific attributes.",
+    "Transfers": "Token transfer events across supported chains, with chain-specific event and trace coverage.",
     "TVL / Fees / Yields": "Protocol-level daily aggregates for total value locked, fee revenue, and yield rates.",
     "Lending & Staking": "Protocol-level daily activity aggregates for lending and staking protocols.",
     "Bridges": "Cross-chain bridge volume aggregated daily.",
@@ -130,10 +130,12 @@ def generate_overview(catalog: dict) -> str:
             lines.append(f'| {pipeline} | {schedule} | {lag} |')
         lines += [
             '',
-            'Check freshness for any table:',
+            'Check freshness with the table-specific time column documented on its category page. For Robinhood Chain, use the audited coverage view:',
             '',
             '```sql',
-            'SELECT max(block_date) FROM agent.<table_name>',
+            'SELECT dataset, coverage_state, complete_through_block, raw_live_tip, internal_gaps',
+            'FROM agent.robinhood_dataset_coverage',
+            'ORDER BY dataset',
             '```',
         ]
 
@@ -161,7 +163,7 @@ def generate_category_page(cat_name: str, cat_desc: str, tables: list) -> str:
     for t in tables:
         name = t.get("table_name", "")
         db = t.get("database", "")
-        src = t.get("source", "")
+        src = t.get("source") or "—"
         order = t.get("ordering_key", "—")
         if not order:
             order = "—"

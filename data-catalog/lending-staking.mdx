@@ -9,8 +9,8 @@ description: "Protocol-level daily activity aggregates for lending and staking p
 
 | View Name | Database | Source | ORDER BY |
 |-----------|----------|--------|----------|
-| `agent.ethereum_lending_daily` | `agent` | `lending_ethereum.daily` | `—` |
-| `agent.ethereum_staking_daily` | `agent` | `staking_ethereum.daily` | `—` |
+| `agent.ethereum_lending_daily` | `agent` | `lending_ethereum.daily` | `project, version, block_date` |
+| `agent.ethereum_staking_daily` | `agent` | `staking_ethereum.daily` | `entity, block_date` |
 
 ## Related Tables
 
@@ -18,11 +18,59 @@ description: "Protocol-level daily activity aggregates for lending and staking p
 - `agent.ethereum_prices_day`
 - `agent.ethereum_tvl_daily`
 - `agent.ethereum_yields_daily`
+
+## Sample Queries
+
+### 1. Largest Aave V3 supply events this week
+
+```sql
+SELECT block_time, token_address, depositor, amount
+FROM lending_ethereum.base_supply
+WHERE project = 'aave' AND version = '3'
+  AND transaction_type = 'Supply'
+  AND block_date >= today() - 7
+ORDER BY amount DESC
+LIMIT 10
+```
+
+### 2. Daily ETH staked by entity
+
+```sql
+SELECT toDate(block_time) AS day,
+       entity, sum(amount_staked) AS eth_staked
+FROM staking_ethereum.deposits
+WHERE block_date >= today() - 30
+GROUP BY day, entity
+ORDER BY day DESC, eth_staked DESC
+LIMIT 50
+```
+
 ## Table Schemas
 
 ### `agent.ethereum_lending_daily`
 
 Protocol-level daily lending activity metrics aligned with DefiLlama format. One row per (project, version, block_date). Covers deposits, withdrawals, borrows, repayments, and liquidations with USD volumes and participant counts. Sources from 15+ lending protocols (Aave v1/v2/v3, Compound, Morpho, Spark, etc.).
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Lending protocol name (lowercase): aave, compound, morpho, spark, etc. |
+| `version` | `String` | Protocol version: '1', '2', '3', 'etherfi', 'horizon', 'lido', etc. |
+| `deposit_volume_usd` | `Float64` | Total USD deposited (supply-side inflows) on this day. |
+| `withdraw_volume_usd` | `Float64` | Total USD withdrawn (supply-side outflows) on this day. |
+| `deposit_count` | `UInt64` | Number of deposit transactions. |
+| `withdraw_count` | `UInt64` | Number of withdrawal transactions. |
+| `active_depositors` | `UInt64` | Unique depositor addresses active on this day. |
+| `borrow_volume_usd` | `Float64` | Total USD borrowed on this day. |
+| `repay_volume_usd` | `Float64` | Total USD repaid on this day. |
+| `borrow_count` | `UInt64` | Number of borrow transactions. |
+| `repay_count` | `UInt64` | Number of repayment transactions. |
+| `active_borrowers` | `UInt64` | Unique borrower addresses active on this day. |
+| `liquidation_volume_usd` | `Float64` | Combined supply + borrow liquidation USD volume. |
+| `liquidation_count` | `UInt64` | Number of liquidation events (borrow-side). |
 
 <Tip>
 
@@ -45,6 +93,23 @@ Protocol-level daily lending activity metrics aligned with DefiLlama format. One
 ### `agent.ethereum_staking_daily`
 
 Ethereum beacon chain staking flows by entity, aggregated daily. One row per (entity, entity_category, block_date). Tracks deposits, withdrawals (full + partial), net flow in both ETH and USD. Entity attribution maps validators to staking providers (Lido, Coinbase, Rocket Pool, etc.).
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `entity, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `blockchain` | `String` | Blockchain network name |
+| `entity` | `String` | Staking provider or operator name. |
+| `entity_category` | `String` | Provider type: 'liquid_staking', 'cex', 'solo', 'staking_pool', 'others'. |
+| `deposits_eth` | `Float64` | ETH deposited to beacon chain by this entity on this day. |
+| `withdrawals_eth` | `Float64` | ETH withdrawn (full + partial) by this entity on this day. |
+| `net_flow_eth` | `Float64` | deposits_eth - withdrawals_eth. Positive = net inflow. |
+| `deposit_count` | `UInt64` | Number of 32 ETH deposit transactions. |
+| `withdrawal_count` | `UInt64` | Number of withdrawal events. |
+| `deposits_usd` | `Float64` | USD value of deposits (ETH * daily WETH price). |
+| `withdrawals_usd` | `Float64` | USD value of withdrawals. |
+| `net_flow_usd` | `Float64` | USD value of net flow. |
 
 <Tip>
 

@@ -3,22 +3,23 @@ title: "Curated Analytics"
 description: "Dashboard-ready pre-computed analytics — whale trades, hot markets, leaderboards, and daily reports."
 ---
 
-**11 tables** in this category.
+**12 tables** in this category.
 
 ## Tables
 
 | View Name | Database | Source | ORDER BY |
 |-----------|----------|--------|----------|
 | `curated.polymarket_market_ranking` | `curated` | `polymarket_polygon.market_ranking` | `condition_id` |
-| `curated.polymarket_whale_trades` | `curated` | `polymarket_polygon.whale_trades_enriched` | `—` |
+| `curated.polymarket_whale_trades` | `curated` | `polymarket_polygon.whale_trades_enriched` | `block_time, tx_hash, evt_index` |
 | `curated.polymarket_hot_markets` | `curated` | `polymarket_polygon.hot_markets` | `—` |
-| `curated.polymarket_leaderboard` | `curated` | `polymarket_polygon.leaderboard` | `—` |
+| `curated.polymarket_leaderboard` | `curated` | `polymarket_polygon.leaderboard` | `address` |
 | `curated.polymarket_market_report` | `curated` | `polymarket_polygon.market_report_daily_v5` | `date, condition_id` |
 | `curated.kalshi_market_report` | `curated` | `kalshi.market_report_mv` | `date, market_ticker` |
-| `curated.kalshi_daily_categorized` | `curated` | `kalshi.market_daily_categorized` | `date, market_ticker` |
+| `curated.kalshi_daily_categorized` | `curated` | `kalshi.market_report_categorized_v2` | `date, category, subcategory` |
 | `curated.prediction_category_daily` | `curated` | `prediction_markets.category_daily` | `—` |
-| `curated.prediction_matched_markets` | `curated` | `prediction_markets.matched_markets` | `—` |
+| `curated.prediction_matched_markets` | `curated` | `prediction_markets.matched_markets` | `polymarket_condition_id` |
 | `curated.prediction_matched_daily` | `curated` | `prediction_markets.matched_daily` | `—` |
+| `curated.polymarket_smart_money` | `curated` | `polymarket_polygon.smart_money_positioning` | `condition_id` |
 | `curated.eigenlayer_operator_shares` | `curated` | `eigenlayer_ethereum.operator_shares_cumulative_by_day` | `—` |
 
 ## Related Tables
@@ -29,8 +30,10 @@ description: "Dashboard-ready pre-computed analytics — whale trades, hot marke
 - `curated.polymarket_market_details`
 - `curated.polymarket_open_interest_daily`
 - `curated.polymarket_positions`
+- `curated.polymarket_smart_money_wallets`
 - `curated.polymarket_trades`
 - `curated.polymarket_volume_daily`
+- `curated.polymarket_wallet_profiles`
 - `curated.prediction_markets_daily`
 
 ## Sample Queries
@@ -47,16 +50,30 @@ GROUP BY date, source
 ORDER BY date DESC, source
 ```
 
-### 2. Daily ETH staked by entity
+### 2. Top 20 hottest Polymarket markets right now
 
 ```sql
-SELECT toDate(block_time) AS day,
-       entity, sum(amount_staked) AS eth_staked
-FROM staking_ethereum.deposits
-WHERE block_date >= today() - 30
-GROUP BY day, entity
-ORDER BY day DESC, eth_staked DESC
-LIMIT 50
+SELECT title, category, trade_count, volume_usd, unique_traders FROM curated.polymarket_hot_markets ORDER BY volume_usd DESC LIMIT 20
+```
+
+### 3. Hot markets in a specific category
+
+```sql
+SELECT title, trade_count, volume_usd, unique_traders FROM curated.polymarket_hot_markets WHERE category = 'Politics' ORDER BY volume_usd DESC LIMIT 10
+```
+
+### 4. Daily volume by category across platforms
+
+```sql
+SELECT date, source, category, sum(volume_usd) AS total_volume FROM curated.prediction_category_daily WHERE date >= today() - 30 GROUP BY date, source, category ORDER BY date, source, total_volume DESC
+```
+
+### 5. Category market share comparison
+
+```sql
+SELECT category, source, sum(volume_usd) AS volume_usd,
+  sum(market_count) AS total_markets
+FROM curated.prediction_category_daily WHERE date >= today() - 7 GROUP BY category, source ORDER BY volume_usd DESC LIMIT 20
 ```
 
 ## Table Schemas
@@ -104,6 +121,45 @@ Pre-computed denormalized market ranking table for Polymarket. One row per condi
 
 Large Polymarket trades enriched with market metadata, category, wallet age context, and whale tier classification. Includes maker/taker wallet creation date and age in days. Pre-filtered for high-value trades only.
 
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `block_time, tx_hash, evt_index`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `block_date` | `Date` | UTC block date |
+| `block_time` | `DateTime64(3)` | UTC block timestamp |
+| `block_number` | `UInt64` | Block number |
+| `tx_hash` | `String` | Transaction hash |
+| `evt_index` | `UInt32` | Event log index in transaction |
+| `exchange_address` | `String` |  |
+| `protocol` | `String` |  |
+| `project` | `String` | Protocol name |
+| `order_hash` | `String` |  |
+| `maker_address` | `String` | Maker wallet address. |
+| `taker_address` | `String` | Taker wallet address. |
+| `outcome_token_id` | `String` |  |
+| `shares` | `Float64` |  |
+| `amount_usd` | `Float64` | Trade notional in USD. |
+| `price` | `Float64` | Token price in USD |
+| `fee_usd` | `Float64` |  |
+| `condition_id` | `String` | Market condition identifier. |
+| `question` | `String` | Market question text (pre-joined). |
+| `outcome_index` | `UInt8` |  |
+| `outcome_label` | `String` | Outcome name (e.g., 'Yes', 'No'). |
+| `category` | `String` | Market category (pre-joined from categorization model). |
+| `market_slug` | `String` |  |
+| `market_end_date` | `DateTime` |  |
+| `neg_risk` | `UInt8` | Whether this is a neg-risk market. |
+| `question_id` | `String` |  |
+| `event_slug` | `String` |  |
+| `event_title` | `String` | Event title |
+| `whale_tier` | `String` | Size-based classification of the trade (e.g., 'mega', 'large'). |
+| `maker_owner_address` | `String` |  |
+| `maker_wallet_created_at` | `DateTime64(3)` |  |
+| `maker_wallet_age_days` | `Nullable(Int64)` |  |
+| `taker_owner_address` | `String` |  |
+| `taker_wallet_created_at` | `DateTime64(3)` |  |
+| `taker_wallet_age_days` | `Nullable(Int64)` |  |
+
 <Tip>
 
 - whale_tier classifies trades by size — filter for specific tiers
@@ -124,6 +180,18 @@ Large Polymarket trades enriched with market metadata, category, wallet age cont
 
 Most active Polymarket markets by trading activity in the last 7 days. Pre-computed VIEW with trade count, volume, and unique trader count per condition. Enriched with title, category, and subcategory.
 
+**Engine**: View
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `condition_id` | `String` | Market condition identifier. |
+| `title` | `String` | Market question text. |
+| `category` | `String` | Market category. |
+| `subcategory` | `String` | Market subcategory. |
+| `trade_count` | `UInt64` | Number of trades in the last 7 days. |
+| `volume_usd` | `Float64` | Total USD volume in the last 7 days. |
+| `unique_traders` | `UInt64` | Approximate unique trader count (taker addresses) in the last 7 days. |
+
 <Tip>
 
 - This is a VIEW — results are always current (last 7 days from query time)
@@ -142,6 +210,20 @@ Most active Polymarket markets by trading activity in the last 7 days. Pre-compu
 ### `curated.polymarket_leaderboard`
 
 All-time Polymarket trader leaderboard with per-address PnL, volume, positions, and win/loss record. Aggregated from user_positions across all markets. Volume is one-sided deduped shares traded. PnL is cost-basis methodology.
+
+**Engine**: MergeTree | **ORDER BY**: `address`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `address` | `String` | Polymarket proxy wallet address. |
+| `username` | `String` |  |
+| `pnl` | `Float64` | All-time profit/loss in USD (cost-basis methodology). |
+| `volume` | `Float64` | All-time one-sided trading volume in shares. |
+| `positions` | `UInt64` | Total number of positions taken (all time). |
+| `positions_won` | `UInt64` | Positions that resolved in the trader's favor. |
+| `positions_lost` | `UInt64` | Positions that resolved against the trader. |
+| `positions_open` | `UInt64` | Currently open positions. |
+| `total_trades` | `UInt64` | Total trade count across all positions. |
 
 <Tip>
 
@@ -238,20 +320,16 @@ Daily per-market Kalshi report with volume, open interest, and trade counts. Mat
 
 Daily Kalshi volume and OI pre-aggregated by Paradigm-compatible category taxonomy. One row per (date, category, subcategory). Ready for dashboard consumption without additional aggregation. The Kalshi equivalent of the categorized Polymarket report.
 
-**Engine**: MergeTree | **Partition**: `toYYYYMM(date)` | **ORDER BY**: `date, market_ticker`
+**Engine**: MergeTree | **Partition**: `toYYYYMM(date)` | **ORDER BY**: `date, category, subcategory`
 
 | Column | Type | Description |
 |--------|------|-------------|
 | `date` | `Date` | Report date. |
-| `series_ticker` | `String` |  |
-| `event_ticker` | `String` | Event ticker (Kalshi) |
-| `market_ticker` | `String` | Unique market identifier (Kalshi) |
-| `title` | `String` | Market title |
+| `source` | `String` | Price data source (coingecko, dex_vwap, etc.) |
 | `category` | `String` | Paradigm-compatible category (e.g., 'Sports', 'Politics', 'Crypto'). |
 | `subcategory` | `String` | Finer subdivision (e.g., 'NFL', 'NBA', 'Presidential'). |
-| `daily_volume_usd` | `UInt64` |  |
+| `notional_volume_usd` | `UInt64` | Daily notional trading volume (one-sided, USD) |
 | `open_interest_usd` | `Float64` | Cumulative open interest (USD) |
-| `status` | `String` | Market status (active, closed, resolved) |
 
 <Tip>
 
@@ -271,6 +349,18 @@ Daily Kalshi volume and OI pre-aggregated by Paradigm-compatible category taxono
 ### `curated.prediction_category_daily`
 
 Cross-platform daily volume, OI, and market count by category. Extends prediction_markets_daily with count(DISTINCT market) per category. One row per (date, source, category, subcategory). Used by the prediction markets dashboard for category breakdowns and time series.
+
+**Engine**: View
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | `Date` | Calendar date. |
+| `source` | `String` | 'Kalshi' or 'Polymarket'. |
+| `category` | `String` | Paradigm-compatible category. |
+| `subcategory` | `String` | Finer subdivision. |
+| `volume_usd` | `Float64` | Category-level total volume in USD. |
+| `open_interest_usd` | `Float64` | Category-level total OI in USD. |
+| `market_count` | `UInt64` | Number of distinct markets contributing to this category on this day. |
 
 <Tip>
 
@@ -292,6 +382,25 @@ Cross-platform daily volume, OI, and market count by category. Extends predictio
 
 Same-event market pairs across Polymarket and Kalshi, exposed as a curated dashboard-ready view. Each row is a one-to-one (condition_id, market_ticker) pair with match confidence, type, and live volume/OI from both platforms.
 
+**Engine**: MergeTree | **ORDER BY**: `polymarket_condition_id`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `polymarket_condition_id` | `String` |  |
+| `polymarket_question` | `String` |  |
+| `polymarket_event_slug` | `String` |  |
+| `kalshi_market_ticker` | `String` |  |
+| `kalshi_title` | `String` |  |
+| `kalshi_event_ticker` | `String` |  |
+| `confidence` | `UInt8` |  |
+| `match_type` | `String` |  |
+| `category` | `String` | Market category |
+| `polymarket_volume_usd` | `Float64` |  |
+| `polymarket_is_active` | `UInt8` |  |
+| `kalshi_volume_contracts` | `Float64` |  |
+| `kalshi_open_interest_contracts` | `Float64` |  |
+| `kalshi_status` | `String` |  |
+
 <Tip>
 
 - Pre-enriched with metadata from both platforms — no additional JOINs needed for display
@@ -311,6 +420,23 @@ Same-event market pairs across Polymarket and Kalshi, exposed as a curated dashb
 
 Daily cross-platform volume and OI comparison for matched Polymarket-Kalshi market pairs. Dashboard-ready curated view with side-by-side daily metrics. One row per (condition_id, market_ticker, date).
 
+**Engine**: View
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `date` | `Date` | Report date |
+| `polymarket_condition_id` | `String` |  |
+| `polymarket_question` | `String` |  |
+| `kalshi_market_ticker` | `String` |  |
+| `kalshi_title` | `String` |  |
+| `confidence` | `UInt8` |  |
+| `match_type` | `String` |  |
+| `category` | `String` | Market category |
+| `polymarket_volume_usd` | `Float64` |  |
+| `polymarket_oi_usd` | `Float64` |  |
+| `kalshi_volume_contracts` | `Float64` |  |
+| `kalshi_oi_contracts` | `Float64` |  |
+
 <Tip>
 
 - Filter on date for partition pruning
@@ -323,6 +449,38 @@ Daily cross-platform volume and OI comparison for matched Polymarket-Kalshi mark
 
 - Only matched markets — unmatched activity excluded
 - Date coverage limited to overlap period with data on both platforms
+
+</Warning>
+
+### `curated.polymarket_smart_money`
+
+Aggregated smart money positioning across Polymarket markets. Dashboard-ready view showing net direction and conviction of verified smart money wallets per condition. Same data as agent.polymarket_smart_money_positioning.
+
+**Engine**: MergeTree | **ORDER BY**: `condition_id`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `condition_id` | `String` | Polymarket condition ID |
+| `question` | `String` |  |
+| `category` | `String` | Market category |
+| `smart_wallets_yes` | `UInt64` |  |
+| `smart_wallets_no` | `UInt64` |  |
+| `smart_wallets_involved` | `UInt64` |  |
+| `smart_buy_volume_usd` | `Float64` |  |
+| `smart_sell_volume_usd` | `Float64` |  |
+| `net_smart_direction` | `String` |  |
+| `smart_conviction` | `Nullable(Float64)` |  |
+
+<Tip>
+
+- Dimension table (<2K rows) — no optimization needed
+- Join key: condition_id (to polymarket_market_details for market context)
+
+</Tip>
+
+<Warning>
+
+- Only covers verified smart money wallets (~500 addresses)
 
 </Warning>
 

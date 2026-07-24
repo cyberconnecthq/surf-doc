@@ -1,9 +1,9 @@
 ---
 title: "Data Catalog"
-description: "58 analyst-ready ClickHouse tables for crypto data analysis"
+description: "85 analyst-ready ClickHouse tables for crypto data analysis"
 ---
 
-> **58 tables** across 11 categories, available via a readonly ClickHouse account.
+> **85 tables** across 11 categories, available via a readonly ClickHouse account.
 
 The Surf Data Catalog documents all tables available to agents and analysts. Tables are organized into categories and exposed as ClickHouse views in the `agent` and `curated` databases.
 
@@ -38,17 +38,17 @@ Always filter on `block_date` first — it is the partition key for most tables 
 
 | Category | Tables | Description |
 |----------|--------|-------------|
-| [DEX Trades](/data-catalog/dex-trades) | 6 | Enriched swap events across 6 chains with token symbols, USD amounts, and protocol attribution. |
-| [Prices](/data-catalog/prices) | 3 | Daily token prices combining CoinGecko data and DEX VWAP calculations. |
-| [Token Metadata](/data-catalog/token-metadata) | 1 | ERC-20 contract registry mapping addresses to symbols, names, and decimals. |
-| [Transfers](/data-catalog/transfers) | 5 | ERC-20 and native token transfers enriched with symbols and USD pricing. |
-| [TVL / Fees / Yields](/data-catalog/tvl-fees-yields) | 6 | Protocol-level daily aggregates for total value locked, fee revenue, and yield rates. |
+| [DEX Trades](/data-catalog/dex-trades) | 8 | Enriched swap events across supported chains with token symbols, USD amounts, and protocol attribution. |
+| [Prices](/data-catalog/prices) | 6 | Token prices at chain-specific daily or hourly granularity from market and onchain sources. |
+| [Token Metadata](/data-catalog/token-metadata) | 2 | Token contract metadata including name, symbol, decimals, and source-specific attributes. |
+| [Transfers](/data-catalog/transfers) | 7 | Token transfer events across supported chains, with chain-specific event and trace coverage. |
+| [TVL / Fees / Yields](/data-catalog/tvl-fees-yields) | 7 | Protocol-level daily aggregates for total value locked, fee revenue, and yield rates. |
 | [Lending & Staking](/data-catalog/lending-staking) | 2 | Protocol-level daily activity aggregates for lending and staking protocols. |
-| [Bridges](/data-catalog/bridges) | 1 | Cross-chain bridge volume aggregated daily. |
-| [Prediction Markets](/data-catalog/prediction-markets) | 17 | Polymarket, Kalshi, and cross-platform prediction market data — trades, market details, prices, volume, and open interest. |
-| [Curated Analytics](/data-catalog/curated-analytics) | 11 | Dashboard-ready pre-computed analytics — whale trades, hot markets, leaderboards, and daily reports. |
+| [Bridges](/data-catalog/bridges) | 2 | Cross-chain bridge volume aggregated daily. |
+| [Prediction Markets](/data-catalog/prediction-markets) | 29 | Polymarket, Kalshi, and cross-platform prediction market data — trades, market details, prices, volume, and open interest. |
+| [Curated Analytics](/data-catalog/curated-analytics) | 12 | Dashboard-ready pre-computed analytics — whale trades, hot markets, leaderboards, and daily reports. |
 | [Hyperliquid](/data-catalog/hyperliquid) | 3 | Perpetual futures market data, funding rates, and contract metadata from Hyperliquid L1. |
-| [Chain Metrics](/data-catalog/chain-metrics) | 3 | Daily chain-level aggregates including transaction counts, active addresses, gas usage, and contract deployments. |
+| [Chain Metrics](/data-catalog/chain-metrics) | 7 | Daily chain-level aggregates including transaction counts, active addresses, gas usage, and contract deployments. |
 
 ## Query Best Practices
 
@@ -62,38 +62,45 @@ Always filter on `block_date` first — it is the partition key for most tables 
 8. Use toStartOfWeek/toStartOfMonth for time-series rollups, not GROUP BY toString(block_date)
 9. When counting unique addresses, uniq() is faster than count(DISTINCT) and equally accurate
 10. For cross-table analysis, filter each table independently in CTEs before joining
-11. Handle NULLs explicitly — use ifNull(col, default) or coalesce(). ClickHouse 3-valued logic silently drops NULL rows in WHERE filters.
-12. FINAL syntax: FROM table_name alias FINAL (not FROM table_name FINAL alias). Place FINAL after the alias.
+11. FINAL syntax: FROM table_name alias FINAL (not FROM table_name FINAL alias). Place FINAL after the alias.
+12. ORDER BY index is a prefix index — filtering on column N only works if columns 1..N-1 are also filtered. Check each table's ordering_key.
+13. JOINs: put the smaller table on the RIGHT (it becomes the hash table). Check size_class: 'dimension' tables (<1M rows) always go RIGHT.
+14. Bloom filter skip indices (listed in skip_indices) enable fast point lookups on non-ORDER-BY columns like address or tx_hash. Use = or IN with literal values — bloom filters don't work with IN (SELECT ...) subqueries.
+15. Use LEFT ANY JOIN (not LEFT JOIN) for dimension lookups — it returns at most one match per row, uses less memory, and avoids accidental row duplication. Use it for: erc20 token lookups, market_details enrichment, perp_meta, wallet_profiles.
+16. Nullable column hazards: (1) WHERE nullable_col = 'x' silently drops all NULL rows — use ifNull(col, default) if you want NULLs included. (2) sum()/avg() over Nullable columns silently skip NULLs — wrap with ifNull(col, 0) to count them as zero. (3) GROUP BY treats NULL as a distinct group.
+17. Outer JOIN NULL handling: ClickHouse defaults to join_use_nulls=1 (non-matching rows produce NULL). Set join_use_nulls=0 to get default type values (0, empty string) instead — saves memory and avoids downstream NULL surprises.
 
 ## Entity Linking
 
 Common join patterns across tables:
 
-- `token_address -> symbol: JOIN agent.ethereum_erc20 ON contract_address`
-- `condition_id -> market_question: JOIN agent.polymarket_market_details ON condition_id`
-- `market_ticker -> category: Use curated.kalshi_daily_categorized (pre-joined)`
-- `coin -> max_leverage: JOIN agent.hyperliquid_perp_meta ON coin`
-- `project + version -> TVL: JOIN agent.ethereum_tvl_daily ON (project, version, block_date)`
+- `token_address -> symbol: LEFT ANY JOIN agent.ethereum_erc20 ON contract_address = token_bought_address (or token_sold_address). Dimension table — always on RIGHT.`
+- `condition_id -> market_question: LEFT ANY JOIN agent.polymarket_market_details ON condition_id. Dimension table — always on RIGHT.`
+- `market_ticker -> category: Use curated.kalshi_daily_categorized (pre-joined with categories, no JOIN needed).`
+- `coin -> max_leverage: LEFT ANY JOIN agent.hyperliquid_perp_meta ON coin. Dimension table — always on RIGHT.`
+- `project + version -> TVL: LEFT ANY JOIN agent.ethereum_tvl_daily ON (project, version, block_date). Filter TVL table by date range in CTE first.`
+- `address -> wallet_label: LEFT ANY JOIN agent.polymarket_wallet_profiles ON address. Dimension table.`
+- `address -> is_smart_money: LEFT ANY JOIN agent.polymarket_smart_money_wallets ON address. Dimension table — 500 rows.`
 
 ## Data Freshness
 
 | Pipeline | Schedule | Typical Lag |
 |----------|----------|-------------|
 | Ethereum raw (BQ) | 12:00 UTC | ~1 day |
-| Base raw (cryo) | Sensor (6h) | ~6 hours |
+| Base raw (cryo) | Sensor-driven | ~6 hours |
 | Arbitrum raw (BQ) | 12:30 UTC | ~1 day |
-| Polygon raw (BQ) | Every 30 min | ~1 hour |
 | TRON raw (BQ) | 13:30 UTC | ~1 day |
-| Bitcoin raw (BQ) | 14:00 UTC | ~1 day |
 | HyperEVM (S3) | 13:00 UTC | ~1 day |
-| CoinGecko prices | Hourly | ~1 hour |
-| RPC snapshots | Daily | ~1 day |
-| Kalshi API | Every 6h | ~6 hours |
-| Polymarket (BQ) | 03:00 UTC | ~1 day |
+| Hyperliquid Info API | Hourly | ~1 hour |
+| CoinGecko prices | Daily (12:00 UTC) | ~1 day |
+| Kalshi API | Every 30 min | ~30 min |
+| Polymarket (BQ) | Every 1h | ~1 hour |
 | dbt models | Post-ingestion | +30 min |
 
-Check freshness for any table:
+Check freshness with the table-specific time column documented on its category page. For Robinhood Chain, use the audited coverage view:
 
 ```sql
-SELECT max(block_date) FROM agent.<table_name>
+SELECT dataset, coverage_state, complete_through_block, raw_live_tip, internal_gaps
+FROM agent.robinhood_dataset_coverage
+ORDER BY dataset
 ```

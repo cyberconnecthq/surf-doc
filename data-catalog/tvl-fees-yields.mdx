@@ -3,7 +3,7 @@ title: "TVL / Fees / Yields"
 description: "Protocol-level daily aggregates for total value locked, fee revenue, and yield rates."
 ---
 
-**6 tables** in this category.
+**7 tables** in this category.
 
 ## Tables
 
@@ -14,10 +14,12 @@ description: "Protocol-level daily aggregates for total value locked, fee revenu
 | `agent.arbitrum_tvl_daily` | `agent` | `tvl_arbitrum.daily` | `project, version, block_date` |
 | `agent.tron_tvl_daily` | `agent` | `tvl_tron.daily` | `project, version, block_date` |
 | `agent.ethereum_fees_daily` | `agent` | `fees_ethereum.daily` | `project, version, block_date` |
+| `agent.base_fees_daily` | `agent` | `fees_base.daily` | `project, version, block_date` |
 | `agent.ethereum_yields_daily` | `agent` | `yields_ethereum.daily` | `project, version, block_date` |
 
 ## Related Tables
 
+- `agent.base_dex_trades`
 - `agent.ethereum_lending_daily`
 - `agent.ethereum_prices_day`
 
@@ -49,7 +51,19 @@ ORDER BY daily_fees_usd DESC
 LIMIT 20
 ```
 
-### 3. Top yielding pools today
+### 3. Daily total protocol fees on Base
+
+```sql
+SELECT block_date, sum(daily_fees_usd) AS total_fees FROM agent.base_fees_daily WHERE block_date >= '2026-01-01' GROUP BY block_date ORDER BY block_date
+```
+
+### 4. Top Base protocols by revenue
+
+```sql
+SELECT project, version, sum(daily_revenue_usd) AS total_revenue FROM agent.base_fees_daily WHERE block_date >= today() - 30 GROUP BY project, version ORDER BY total_revenue DESC LIMIT 20
+```
+
+### 5. Top yielding pools today
 
 ```sql
 SELECT project, symbol, pool_meta, apy, tvl_usd
@@ -220,6 +234,40 @@ Protocol-level daily fee and revenue metrics following the DefiLlama 6-field sta
 - Coverage depends on individual protocol models — not every DeFi protocol is included
 - Fee calculations use on-chain events + CoinGecko pricing — same price gaps as TVL
 - Some protocol fees (off-chain, governance-voted distributions) may not be captured
+
+</Warning>
+
+### `agent.base_fees_daily`
+
+Daily protocol fee revenue on Base chain. Same schema as ethereum_fees_daily.
+
+**Engine**: MergeTree | **Partition**: `toYYYYMM(block_date)` | **ORDER BY**: `project, version, block_date`
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `blockchain` | `String` | Blockchain network name |
+| `project` | `String` | Protocol name |
+| `version` | `String` | Protocol version |
+| `block_date` | `Date` | UTC block date |
+| `daily_fees_usd` | `Nullable(Float64)` | Total fees collected in USD |
+| `daily_user_fees_usd` | `Nullable(Float64)` | Fees paid by end users |
+| `daily_revenue_usd` | `Nullable(Float64)` | Total protocol revenue in USD |
+| `daily_protocol_revenue_usd` | `Nullable(Float64)` | Revenue retained by protocol treasury |
+| `daily_holders_revenue_usd` | `Nullable(Float64)` | Revenue distributed to token holders |
+| `daily_supply_side_revenue_usd` | `Nullable(Float64)` | Revenue to LPs / supply-side participants |
+
+<Tip>
+
+- Dimension table — small enough for full scans
+- Filter on block_date for time-series analysis
+
+</Tip>
+
+<Warning>
+
+- Fewer protocols covered than Ethereum fees — Base DeFi ecosystem is smaller
+- USD pricing via CoinGecko — same coverage gaps as other USD-denominated tables
+- L2 gas fees (user cost) not included — this covers protocol-level fee revenue only
 
 </Warning>
 
